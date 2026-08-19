@@ -187,6 +187,13 @@ select { min-width: 142px; }
 .dday.soon { color: var(--terracotta-deep); }
 
 .metrics { display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr; gap: 8px; margin-top: 17px; padding: 12px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.card-summary-row { display: grid; grid-template-columns: minmax(0, 1fr) 190px; gap: 14px; margin-top: 17px; align-items: stretch; }
+.card-summary-row .metrics { margin-top: 0; }
+.card-map-preview { position: relative; min-height: 132px; overflow: hidden; border: 1px solid var(--line); border-radius: 10px; background: #e7eef0; }
+.card-map-preview-label { position: absolute; z-index: 1; top: 7px; left: 7px; padding: 3px 7px; border-radius: 5px; color: var(--navy); background: rgba(255,253,249,.88); font-size: 10px; font-weight: 800; pointer-events: none; }
+.card-map-preview iframe { display: block; width: 100%; height: 132px; border: 0; }
+.card-map-preview-link { position: absolute; z-index: 1; right: 7px; bottom: 7px; padding: 4px 7px; border-radius: 5px; color: #fffaf4; background: rgba(37,76,74,.9); font-size: 10px; font-weight: 800; text-decoration: none; }
+.card-map-preview-link:hover { background: var(--terracotta-deep); }
 .metric { min-width: 0; padding: 0 10px; border-left: 1px solid var(--line); }
 .metric:first-child { padding-left: 0; border-left: 0; }
 .metric-label { display: block; color: var(--faint); font-size: 11px; }
@@ -205,6 +212,8 @@ select { min-width: 142px; }
 .tenant-chip { color: var(--navy); background: #e7eef0; }
 .tag { padding: 2px 7px; border-radius: 5px; background: var(--paper-2); color: #785d43; }
 .card-actions { margin-left: auto; display: inline-flex; gap: 8px; }
+.upload-btn { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border: 1px solid var(--terracotta); border-radius: 6px; color: #fffaf4; background: var(--terracotta); font-size: 17px; font-weight: 900; line-height: 1; cursor: pointer; }
+.upload-btn:hover { border-color: var(--terracotta-deep); background: var(--terracotta-deep); }
 .text-btn { border: 0; padding: 0; color: var(--terracotta-deep); background: transparent; font-size: 11.5px; font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
 .text-btn:hover { color: var(--navy); }
 .empty { padding: 56px 20px; text-align: center; border: 1px dashed var(--line-strong); border-radius: 14px; color: var(--muted); background: rgba(255,253,249,.5); }
@@ -337,6 +346,8 @@ dialog::backdrop { background: rgba(24, 40, 44, .45); backdrop-filter: blur(3px)
   .criteria-card { max-width: none; }
   .stats { grid-template-columns: repeat(2, 1fr); }
   .metrics { grid-template-columns: repeat(2, 1fr); gap: 12px 0; }
+  .card-summary-row { grid-template-columns: 1fr; }
+  .card-map-preview, .card-map-preview iframe { min-height: 112px; height: 112px; }
   .metric:nth-child(3) { border-left: 0; padding-left: 0; }
   .metric:nth-child(3), .metric:nth-child(4) { padding-top: 8px; border-top: 1px solid var(--line); }
   .lower-grid { grid-template-columns: 1fr; }
@@ -454,6 +465,10 @@ function riskClass(item) { return beginnerRiskClass(item.beginner_risk_level || 
 function mapUrl(item) {
   const query = item.map_query || item.address || item.complex || "";
   return item.map_url || `https://map.naver.com/p/search/${encodeURIComponent(query)}`;
+}
+function mapEmbedUrl(item) {
+  const query = item.map_query || item.address || item.complex || "";
+  return `https://www.google.com/maps?q=${encodeURIComponent(query)}&output=embed&hl=ko`;
 }
 function bulletHtml(values, className) {
   const rows = (Array.isArray(values) ? values : []).filter(Boolean);
@@ -1094,14 +1109,21 @@ function cardHtml(item) {
       </div>
       <div class="bid-date"><span>${dateTitle}</span><strong>${dateLabel(nextDate)}</strong>${ddayHtml(item)}</div>
     </div>
-    <div class="metrics">
+    <div class="card-summary-row">
+      <div class="metrics">
       <div class="metric"><span class="metric-label">공개목록 건물면적</span><strong class="metric-value">${areaHtml(item)}</strong></div>
       <div class="metric"><span class="metric-label">감정가</span><strong class="metric-value">${money(item.appraisal)}</strong></div>
       <div class="metric"><span class="metric-label">최저가</span><strong class="metric-value">${money(item.minimum_price)}${ratio}</strong></div>
       ${final}
+      </div>
+      <div class="card-map-preview" aria-label="지도 미리보기">
+        <span class="card-map-preview-label">지도 미리보기</span>
+        <iframe loading="lazy" title="${esc(item.complex)} 지도 미리보기" src="${esc(mapEmbedUrl(item))}" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <a class="card-map-preview-link" href="${esc(mapUrl(item))}" target="_blank" rel="noopener">네이버지도 ↗</a>
+      </div>
     </div>
     <div class="card-flags"><span class="risk-chip ${riskClass(item)}">주의 단계: ${esc(beginnerLevel)} · ${esc(riskFlags)}</span><span class="tenant-chip">임차인: ${esc(tenantStatus)}</span></div>
-    <div class="card-foot"><span class="case">사건 ${esc(item.case_display || item.case_no)}</span>${tags}${lastDate}<span>${esc(item.area_note || "면적 상세 확인 필요")}</span><span class="card-actions"><button class="text-btn" data-detail-id="${esc(item.id)}">상세 보기</button><a class="text-btn" href="${esc(mapUrl(item))}" target="_blank" rel="noopener">지도 보기</a><a class="text-btn" href="${esc(item.official_url)}" target="_blank" rel="noopener">${item.source_type === "onbid" ? "온비드 원문" : "법원 원문"}</a></span></div>
+    <div class="card-foot"><span class="case">사건 ${esc(item.case_display || item.case_no)}</span>${tags}${lastDate}<span>${esc(item.area_note || "면적 상세 확인 필요")}</span><span class="card-actions"><button class="upload-btn" type="button" data-registry-upload-id="${esc(item.id)}" title="등기부등본 업로드" aria-label="${esc(item.complex)} 등기부등본 업로드">＋</button><button class="text-btn" data-detail-id="${esc(item.id)}">상세 보기</button><a class="text-btn" href="${esc(mapUrl(item))}" target="_blank" rel="noopener">지도 보기</a><a class="text-btn" href="${esc(item.official_url)}" target="_blank" rel="noopener">${item.source_type === "onbid" ? "온비드 원문" : "법원 원문"}</a></span></div>
   </li>`;
 }
 function sortRows(rows) {
@@ -1132,6 +1154,7 @@ function render() {
     card.querySelector(".card-kicker")?.prepend(badge);
   });
   document.querySelectorAll("[data-detail-id]").forEach((button) => button.addEventListener("click", () => openDetail(button.dataset.detailId)));
+  document.querySelectorAll("[data-registry-upload-id]").forEach((button) => button.addEventListener("click", () => openDetail(button.dataset.registryUploadId, true)));
   const more = $("#moreBtn");
   if (more) more.addEventListener("click", () => { state.limit += 30; render(); });
 }
@@ -1146,7 +1169,7 @@ function detailHtml(item) {
   const caseInfo = [item.case_type, item.case_received_date ? `접수 ${dateLabel(item.case_received_date)}` : ""].filter(Boolean).join(" · ");
   return `<div class="dialog-inner"><div class="dialog-head"><div><div class="card-kicker"><span class="status-badge ${statusClass(statusLabel(item))}">${esc(statusLabel(item))}</span><span>${esc(item.district)} · ${esc(item.case_display || item.case_no)}</span></div><h2>${esc(item.complex)}</h2><p>${esc(item.address)}</p></div><button class="close-dialog" type="button" aria-label="닫기">×</button></div><div class="detail-grid"><div class="detail-item"><span>${nextDate ? "다음 입찰일" : "최근 입찰일"}</span><strong>${dateLabel(nextDate || item.bid_date)} · ${item.is_upcoming ? "입찰 예정" : "지난 회차"}</strong></div>${item.last_bid_date ? `<div class="detail-item"><span>직전 입찰일</span><strong>${dateLabel(item.last_bid_date)}</strong></div>` : ""}<div class="detail-item"><span>유찰·재매각 추적</span><strong>${esc(tracking)}</strong></div><div class="detail-item"><span>주의 수준</span><strong>${esc(item.risk_level || "확인 필요")}</strong></div><div class="detail-item"><span>임차인 정보</span><strong>${esc(item.tenant_status || "확인 필요")}</strong></div><div class="detail-item"><span>점유 상태</span><strong>${esc(item.occupancy_status || "확인 필요")}</strong></div>${caseInfo ? `<div class="detail-item"><span>사건 유형</span><strong>${esc(caseInfo)}</strong></div>` : ""}<div class="detail-item"><span>공개목록 건물면적</span><strong>${areaHtml(item)}</strong></div><div class="detail-item"><span>감정가</span><strong>${fullWon(item.appraisal)}</strong></div><div class="detail-item"><span>최저가</span><strong>${fullWon(item.minimum_price)}${item.minimum_ratio != null ? ` (${item.minimum_ratio}%)` : ""}</strong></div>${item.claim_amount != null ? `<div class="detail-item"><span>청구금액(참고)</span><strong>${fullWon(item.claim_amount)}</strong></div>` : ""}${item.final_price != null ? `<div class="detail-item"><span>매각가</span><strong>${fullWon(item.final_price)}</strong></div>` : ""}<div class="detail-item"><span>회차</span><strong>${item.auction_round ? `${item.auction_round}회` : "확인 필요"}</strong></div></div><div class="detail-warning"><h3>초보자 주의사항</h3>${bulletHtml(item.beginner_warnings, "warning-list")}</div><div class="detail-section"><h3>임차인·점유 확인</h3><p><b>임차인 상태:</b> ${esc(item.tenant_status || "확인 필요")}</p><p>${esc(item.tenant_note || "공식 서류 확인 필요")}</p><p><b>관련 문구:</b> ${esc(tenantEvidence)}</p><p><b>자동 감지 주의:</b> ${esc((item.risk_flags || []).join(", ") || "특이 문구 자동 감지 없음")}</p><p><b>점유:</b> ${esc(item.occupancy_status || "현황조사서·현장 확인 필요")}</p></div><div class="detail-section"><h3>입찰 전 확인 순서</h3>${bulletHtml(item.bid_checklist, "checklist")}</div><div class="detail-section"><h3>회차 이력</h3><p>${esc(history || "공개된 회차 이력 없음")}</p></div><div class="detail-section"><h3>권리 참고문구</h3><p>${esc(rightsReference)}</p></div><div class="detail-section"><h3>권리·임차인 메모</h3><p>${esc(item.rights_note)}</p></div><div class="detail-section"><h3>공개목록 특이사항</h3><p>${esc(tags)}</p></div><div class="detail-section"><h3>초등학교 접근성</h3><p>${esc(item.school_access)}</p></div><div class="detail-section"><h3>최근 실거래가 대비</h3><p>${esc(item.market_note || "실거래가 확인 필요")}</p></div><div class="detail-section"><h3>면적 주의</h3><p>${esc(item.area_note)}</p></div><div class="dialog-actions"><a href="${esc(mapUrl(item))}" target="_blank" rel="noopener">네이버지도 위치 보기 ↗</a><a href="${esc(item.source_url)}" target="_blank" rel="noopener">공개 검색목록 열기</a><a class="secondary" href="${esc(item.official_url)}" target="_blank" rel="noopener">대한민국 법원경매정보</a></div></div>`;
 }
-function openDetail(id) {
+function openDetail(id, focusRegistryUpload = false) {
   const baseItem = auctions.find((row) => row.id === id);
   if (!baseItem) return;
   const item = withSavedRegistryAnalysis(baseItem);
@@ -1159,6 +1182,10 @@ function openDetail(id) {
   dialog.querySelector(".close-dialog").addEventListener("click", () => dialog.close());
   dialog.addEventListener("click", (event) => { if (event.target === dialog) dialog.close(); }, { once: true });
   if (typeof dialog.showModal === "function") dialog.showModal();
+  if (focusRegistryUpload) {
+    switchDetailTab(dialog, "analysis", item);
+    dialog.querySelector("[data-registry-file]")?.click();
+  }
 }
 function setPressed(selector, value) { document.querySelectorAll(selector).forEach((el) => el.setAttribute("aria-pressed", String(el.dataset.value === value))); }
 document.querySelectorAll("[data-district]").forEach((button) => button.addEventListener("click", () => { state.district = state.district === button.dataset.district ? "" : button.dataset.district; setPressed("[data-district]", state.district); state.limit = 30; render(); }));
