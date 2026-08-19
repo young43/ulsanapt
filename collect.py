@@ -160,6 +160,116 @@ def auction_event(item: dict[str, Any]) -> dict[str, Any] | None:
     }
 
 
+def annotate_risk_profile(item: dict[str, Any]) -> dict[str, Any]:
+    """초보자가 확인할 권리·임차인·점유 체크 항목을 보수적으로 붙인다."""
+    for key, default in (
+        ("case_type", ""),
+        ("claim_amount", None),
+        ("case_received_date", ""),
+        ("case_command_date", ""),
+        ("rights_reference", ""),
+        ("special_notes", ""),
+    ):
+        item.setdefault(key, default)
+    text = " ".join(
+        str(item.get(key) or "")
+        for key in (
+            "rights_note",
+            "special_notes",
+            "rights_reference",
+            "status_raw",
+            "risk_tags",
+        )
+    )
+    tenant_terms = (
+        "임차인",
+        "임대차",
+        "주택임차권",
+        "임차권등기",
+        "전세권",
+        "보증금",
+        "대항력",
+        "배당요구",
+        "확정일자",
+    )
+    rights_terms = (
+        "근저당",
+        "저당권",
+        "압류",
+        "가압류",
+        "가처분",
+        "경매개시",
+        "유치권",
+        "법정지상권",
+        "토지별도등기",
+        "제시외",
+    )
+    tenant_text = text.replace("매수신청보증금", "")
+    tenant_evidence = [term for term in tenant_terms if term in tenant_text]
+    rights_evidence = [term for term in rights_terms if term in text]
+
+    if tenant_evidence:
+        tenant_status = "임차권 관련 문구 있음"
+        tenant_note = "임차인 존재·보증금 인수 여부가 확정된다는 뜻은 아니며, 공식 서류 대조가 필요합니다."
+    elif item.get("source_type") == "onbid":
+        tenant_status = "온비드 공개목록만으로 확인 불가"
+        tenant_note = "온비드 공고문과 처분기관 자료에서 점유·임대차 조건을 별도로 확인하세요."
+    else:
+        tenant_status = "공개자료에서 임차인 정보 미확인"
+        tenant_note = "임차인이 없다는 뜻이 아닙니다. 매각물건명세서·현황조사서에서 반드시 확인하세요."
+
+    occupancy_terms = [term for term in ("점유", "거주", "명도", "공실") if term in text]
+    occupancy_status = (
+        "점유 관련 문구 있음 — 현황조사서·현장 재확인"
+        if occupancy_terms
+        else "실제 점유·공실 여부 확인 필요"
+    )
+
+    risk_flags: list[str] = []
+    if item.get("is_reauction"):
+        risk_flags.append("유찰·재매각 이력")
+    if tenant_evidence:
+        risk_flags.append("임차권·보증금 문구")
+    if rights_evidence:
+        risk_flags.append("권리 관련 문구")
+    if item.get("source_type") == "onbid":
+        risk_flags.append("공매 조건 별도 확인")
+
+    warnings = [
+        "임차인 없음으로 단정하지 말고, 매각물건명세서·현황조사서에서 임차인·보증금·전입일·확정일자·배당요구를 확인하세요.",
+        "낙찰가 외에 취득세·법무사비·명도비·수리비·체납관리비 등 추가 비용을 예산에 넣으세요.",
+        "등기사항증명서에서 말소기준권리와 매각으로 소멸하지 않을 수 있는 권리를 확인하세요.",
+    ]
+    if tenant_evidence:
+        warnings.insert(
+            0,
+            "임차권 관련 문구가 있습니다. 보증금 인수 여부·전입일·확정일자·배당요구 여부를 확인하기 전에는 입찰하지 마세요.",
+        )
+    if item.get("is_reauction"):
+        warnings.append("유찰·재매각 사유와 매수신청보증금 비율을 이번 회차 공식 공고에서 다시 확인하세요.")
+    if item.get("source_type") == "onbid":
+        warnings.insert(0, "온비드는 법원경매와 절차·권리 구조가 다를 수 있으므로 온비드 공고문과 처분기관 조건을 우선 확인하세요.")
+
+    checklist = [
+        "매각물건명세서: 임차인, 보증금, 전입일, 확정일자, 배당요구, 인수조건",
+        "현황조사서: 실제 점유자, 공실 여부, 점유 관계와 현장 상태",
+        "등기사항증명서: 말소기준권리, 근저당·압류·가압류·전세권·임차권등기",
+        "현장·관리사무소: 누수·수리비·체납관리비·명도 가능성",
+    ]
+    if item.get("source_type") == "onbid":
+        checklist.insert(0, "온비드 공고문: 처분기관, 인도·명도 조건, 체납·보증금·입찰보증금 조건")
+
+    item["tenant_status"] = tenant_status
+    item["tenant_evidence"] = tenant_evidence
+    item["tenant_note"] = tenant_note
+    item["occupancy_status"] = occupancy_status
+    item["risk_flags"] = risk_flags
+    item["risk_level"] = "주의 필요" if risk_flags else "확인 필요"
+    item["beginner_warnings"] = list(dict.fromkeys(warnings))
+    item["bid_checklist"] = checklist
+    return item
+
+
 def parse_pyeong(value: str, label: str) -> float | None:
     match = re.search(rf"{re.escape(label)}\s*([\d.]+)\s*평", value or "")
     return float(match.group(1)) if match else None
@@ -670,10 +780,29 @@ def apply_official_detail(item: dict[str, Any], result: dict[str, Any], today: d
         item["is_upcoming"] = False
         item["status"] = latest.get("status") or item.get("status")
 
+    base_info = result.get("csBaseInfo") or {}
+    special_notes = [
+        clean(str(dxdy_info.get("gdsSpcfcRmk") or "")),
+        clean(str(dxdy_info.get("dspslGdsRmk") or "")),
+        clean(str(dxdy_info.get("ndstrcRghCtt") or "")),
+    ]
+    special_notes = list(dict.fromkeys(note for note in special_notes if note))
+    reauction_marker = item.get("is_reauction") or any("재매각" in note for note in special_notes)
     item["failed_count"] = failed_count
     item["is_failed"] = failed_count > 0
-    item["is_reauction"] = failed_count > 0
-    item["previous_status"] = "유찰" if failed_count else item.get("previous_status") or ""
+    item["is_reauction"] = failed_count > 0 or reauction_marker
+    item["previous_status"] = "유찰" if failed_count else ("재매각" if reauction_marker else item.get("previous_status") or "")
+    item["case_type"] = clean(str(base_info.get("csNm") or ""))
+    item["claim_amount"] = parse_int(base_info.get("clmAmt"))
+    item["case_received_date"] = parse_date(str(base_info.get("csRcptYmd") or ""))
+    item["case_command_date"] = parse_date(str(base_info.get("csCmdcYmd") or ""))
+    item["rights_reference"] = clean(str(dxdy_info.get("tprtyRnkHypthcStngDts") or ""))
+    item["special_notes"] = " / ".join(special_notes)
+    if special_notes:
+        detail_note = "공식 상세 비고: " + " / ".join(special_notes)
+        current_rights_note = clean(str(item.get("rights_note") or ""))
+        if detail_note not in current_rights_note:
+            item["rights_note"] = f"{current_rights_note} {detail_note}".strip()
     item["source_origin"] = "official_detail"
     item["source_name"] = "대한민국 법원경매정보 공식 상세조회"
     item["source_kind"] = "공식 사건 상세 응답"
@@ -1235,7 +1364,7 @@ def merge_auction_group(group: list[dict[str, Any]], today: date) -> dict[str, A
     )
     if failed_count > 0 and f"유찰 {failed_count}회" not in merged["risk_tags"]:
         merged["risk_tags"].insert(0, f"유찰 {failed_count}회")
-    return merged
+    return annotate_risk_profile(merged)
 
 
 def deduplicate(items: list[dict[str, Any]], today: date | None = None) -> list[dict[str, Any]]:

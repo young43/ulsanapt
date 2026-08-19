@@ -196,6 +196,11 @@ select { min-width: 142px; }
 .card-foot { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; padding-top: 12px; color: var(--muted); font-size: 11.5px; }
 .card-foot span { display: inline-flex; gap: 4px; align-items: center; }
 .card-foot .case { color: var(--navy); font-weight: 700; }
+.card-flags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.risk-chip, .tenant-chip { display: inline-flex; align-items: center; gap: 4px; min-height: 25px; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; }
+.risk-chip { color: #8b3d32; background: var(--red-bg); }
+.risk-chip.unknown { color: #765c38; background: #f7eddc; }
+.tenant-chip { color: var(--navy); background: #e7eef0; }
 .tag { padding: 2px 7px; border-radius: 5px; background: var(--paper-2); color: #785d43; }
 .card-actions { margin-left: auto; display: inline-flex; gap: 8px; }
 .text-btn { border: 0; padding: 0; color: var(--terracotta-deep); background: transparent; font-size: 11.5px; font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
@@ -234,6 +239,21 @@ dialog::backdrop { background: rgba(24, 40, 44, .45); backdrop-filter: blur(3px)
 .detail-section { margin-top: 18px; }
 .detail-section h3 { margin: 0 0 6px; font-size: 13px; }
 .detail-section p { margin: 0; color: var(--muted); font-size: 12.5px; }
+.detail-warning { margin-top: 18px; padding: 14px 15px; border: 1px solid #ead3b8; border-radius: 11px; background: #fff7ec; }
+.detail-warning h3 { margin: 0 0 8px; color: #76553b; font-size: 14px; }
+.detail-warning p { margin: 0; color: #76553b; font-size: 12px; }
+.warning-list, .checklist { display: grid; gap: 7px; margin: 0; padding: 0; list-style: none; color: var(--muted); font-size: 12px; }
+.warning-list li, .checklist li { position: relative; padding-left: 18px; }
+.warning-list li::before { content: "!"; position: absolute; left: 0; top: 1px; display: grid; place-items: center; width: 14px; height: 14px; border-radius: 50%; color: #fff; background: var(--terracotta); font-size: 10px; font-weight: 800; }
+.checklist li::before { content: "✓"; position: absolute; left: 0; color: var(--green); font-weight: 800; }
+.guide-panel { margin-top: 28px; padding: 22px; border: 1px solid #d9e2df; border-radius: 15px; background: #f2f8f5; }
+.guide-panel h2 { margin: 0; font-size: 18px; letter-spacing: -.03em; }
+.guide-panel > p { margin: 7px 0 16px; color: var(--muted); font-size: 12.5px; }
+.guide-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.guide-step { padding: 13px; border-radius: 10px; background: rgba(255,255,255,.7); }
+.guide-step b { display: block; color: var(--navy); font-size: 12px; }
+.guide-step span { display: block; margin-top: 4px; color: var(--muted); font-size: 11.5px; line-height: 1.55; }
+.guide-foot { margin: 14px 0 0 !important; color: #6e5a45 !important; font-size: 11.5px !important; }
 .dialog-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--line); }
 .dialog-actions a { display: inline-flex; align-items: center; min-height: 36px; padding: 7px 12px; border-radius: 8px; color: #fffaf4; background: var(--navy); font-size: 12px; font-weight: 700; text-decoration: none; }
 .dialog-actions a.secondary { color: var(--navy); background: var(--paper-2); }
@@ -246,6 +266,7 @@ dialog::backdrop { background: rgba(24, 40, 44, .45); backdrop-filter: blur(3px)
   .metric:nth-child(3) { border-left: 0; padding-left: 0; }
   .metric:nth-child(3), .metric:nth-child(4) { padding-top: 8px; border-top: 1px solid var(--line); }
   .lower-grid { grid-template-columns: 1fr; }
+  .guide-grid { grid-template-columns: repeat(2, 1fr); }
   .filters-wrap { position: static; top: auto; z-index: auto; backdrop-filter: none; }
 }
 @media (max-width: 620px) {
@@ -268,6 +289,7 @@ dialog::backdrop { background: rgba(24, 40, 44, .45); backdrop-filter: blur(3px)
   .card-title { font-size: 17px; }
   .card-actions { width: 100%; margin-left: 0; }
   .detail-grid { grid-template-columns: 1fr; }
+  .guide-grid { grid-template-columns: 1fr; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; } }
 """
@@ -338,6 +360,11 @@ function appraisalGap(item) {
   const value = Number(item.discount_vs_appraisal);
   return value >= 0 ? `${value.toFixed(1)}% 할인` : `${Math.abs(value).toFixed(1)}% 할증`;
 }
+function riskClass(item) { return item.risk_level === "주의 필요" ? "" : "unknown"; }
+function bulletHtml(values, className) {
+  const rows = (Array.isArray(values) ? values : []).filter(Boolean);
+  return rows.length ? `<ul class="${className}">${rows.map((value) => `<li>${esc(value)}</li>`).join("")}</ul>` : `<p>자동 확인된 내용이 없습니다. 공식 서류를 직접 확인하세요.</p>`;
+}
 function match(item) {
   if (state.district && item.district !== state.district) return false;
   if (state.status && item.status !== state.status) return false;
@@ -346,7 +373,7 @@ function match(item) {
   if (state.upcoming && !item.is_upcoming) return false;
   if (state.failedOnly && !item.is_reauction) return false;
   if (state.q) {
-    const hay = [item.complex, item.address, item.case_no, item.district, item.status, statusLabel(item), item.auction_kind, item.next_bid_date, item.last_bid_date, ...(item.risk_tags || [])].join(" ").toLowerCase();
+    const hay = [item.complex, item.address, item.case_no, item.district, item.status, statusLabel(item), item.auction_kind, item.next_bid_date, item.last_bid_date, item.tenant_status, item.occupancy_status, ...(item.risk_tags || []), ...(item.risk_flags || [])].join(" ").toLowerCase();
     if (!state.q.split(/\s+/).filter(Boolean).every((word) => hay.includes(word))) return false;
   }
   return true;
@@ -362,6 +389,8 @@ function cardHtml(item) {
   const nextDate = item.next_bid_date || item.bid_date;
   const dateTitle = item.next_bid_date ? "다음 입찰일" : "최근 입찰일";
   const lastDate = item.last_bid_date ? `<span>직전 회차 ${dateLabel(item.last_bid_date)}</span>` : "";
+  const riskFlags = (item.risk_flags || []).slice(0, 2).join(" · ") || "공식 서류 확인 필요";
+  const tenantStatus = item.tenant_status || "임차인 정보 확인 필요";
   return `<li class="auction-card${item.is_interest ? " interest" : ""}${item.is_upcoming ? " upcoming" : ""}">
     <div class="card-head">
       <div>
@@ -377,6 +406,7 @@ function cardHtml(item) {
       <div class="metric"><span class="metric-label">최저가</span><strong class="metric-value">${money(item.minimum_price)}${ratio}</strong></div>
       ${final}
     </div>
+    <div class="card-flags"><span class="risk-chip ${riskClass(item)}">주의: ${esc(riskFlags)}</span><span class="tenant-chip">임차인: ${esc(tenantStatus)}</span></div>
     <div class="card-foot"><span class="case">사건 ${esc(item.case_display || item.case_no)}</span>${tags}${lastDate}<span>${esc(item.area_note || "면적 상세 확인 필요")}</span><span class="card-actions"><button class="text-btn" data-detail-id="${esc(item.id)}">상세 보기</button><a class="text-btn" href="${esc(item.official_url)}" target="_blank" rel="noopener">${item.source_type === "onbid" ? "온비드 원문" : "법원 원문"}</a></span></div>
   </li>`;
 }
@@ -415,8 +445,12 @@ function detailHtml(item) {
   const tags = (item.risk_tags || []).length ? item.risk_tags.join(", ") : "표시된 특이사항 없음";
   const nextDate = item.next_bid_date || "";
   const history = (item.auction_history || []).map((event) => `${dateLabel(event.bid_date)} ${event.status || ""}${event.auction_round ? ` · ${event.auction_round}회` : ""}`).join(" → ");
-  const tracking = item.is_reauction ? `유찰 ${item.failed_count || 0}회 후 ${item.is_upcoming ? "재매각 예정" : "재매각 일정 확인 필요"}` : "신건 또는 유찰 이력 없음";
-  return `<div class="dialog-inner"><div class="dialog-head"><div><div class="card-kicker"><span class="status-badge ${statusClass(statusLabel(item))}">${esc(statusLabel(item))}</span><span>${esc(item.district)} · ${esc(item.case_display || item.case_no)}</span></div><h2>${esc(item.complex)}</h2><p>${esc(item.address)}</p></div><button class="close-dialog" type="button" aria-label="닫기">×</button></div><div class="detail-grid"><div class="detail-item"><span>${nextDate ? "다음 입찰일" : "최근 입찰일"}</span><strong>${dateLabel(nextDate || item.bid_date)} · ${item.is_upcoming ? "입찰 예정" : "지난 회차"}</strong></div>${item.last_bid_date ? `<div class="detail-item"><span>직전 입찰일</span><strong>${dateLabel(item.last_bid_date)}</strong></div>` : ""}<div class="detail-item"><span>유찰·재매각 추적</span><strong>${esc(tracking)}</strong></div><div class="detail-item"><span>공개목록 건물면적</span><strong>${areaHtml(item)}</strong></div><div class="detail-item"><span>감정가</span><strong>${fullWon(item.appraisal)}</strong></div><div class="detail-item"><span>최저가</span><strong>${fullWon(item.minimum_price)}${item.minimum_ratio != null ? ` (${item.minimum_ratio}%)` : ""}</strong></div>${item.final_price != null ? `<div class="detail-item"><span>매각가</span><strong>${fullWon(item.final_price)}</strong></div>` : ""}<div class="detail-item"><span>회차</span><strong>${item.auction_round ? `${item.auction_round}회` : "확인 필요"}</strong></div></div><div class="detail-section"><h3>회차 이력</h3><p>${esc(history || "공개된 회차 이력 없음")}</p></div><div class="detail-section"><h3>초등학교 접근성</h3><p>${esc(item.school_access)}</p></div><div class="detail-section"><h3>권리·임차인 메모</h3><p>${esc(item.rights_note)}</p></div><div class="detail-section"><h3>공개목록 특이사항</h3><p>${esc(tags)}</p></div><div class="detail-section"><h3>최근 실거래가 대비</h3><p>${esc(item.market_note || "실거래가 확인 필요")}</p></div><div class="detail-section"><h3>면적 주의</h3><p>${esc(item.area_note)}</p></div><div class="dialog-actions"><a href="${esc(item.source_url)}" target="_blank" rel="noopener">공개 검색목록 열기</a><a class="secondary" href="${esc(item.official_url)}" target="_blank" rel="noopener">대한민국 법원경매정보</a></div></div>`;
+  const failedText = item.failed_count ? `유찰 ${item.failed_count}회 후 ` : "";
+  const tracking = item.is_reauction ? `${failedText}${item.is_upcoming ? "재매각 예정" : "재매각 일정 확인 필요"}` : "신건 또는 유찰 이력 없음";
+  const tenantEvidence = (item.tenant_evidence || []).join(", ") || "특정 문구 없음(임차인 없음 확정 아님)";
+  const rightsReference = item.rights_reference || "공식 상세 권리 참고문구 없음 — 등기사항증명서 확인 필요";
+  const caseInfo = [item.case_type, item.case_received_date ? `접수 ${dateLabel(item.case_received_date)}` : ""].filter(Boolean).join(" · ");
+  return `<div class="dialog-inner"><div class="dialog-head"><div><div class="card-kicker"><span class="status-badge ${statusClass(statusLabel(item))}">${esc(statusLabel(item))}</span><span>${esc(item.district)} · ${esc(item.case_display || item.case_no)}</span></div><h2>${esc(item.complex)}</h2><p>${esc(item.address)}</p></div><button class="close-dialog" type="button" aria-label="닫기">×</button></div><div class="detail-grid"><div class="detail-item"><span>${nextDate ? "다음 입찰일" : "최근 입찰일"}</span><strong>${dateLabel(nextDate || item.bid_date)} · ${item.is_upcoming ? "입찰 예정" : "지난 회차"}</strong></div>${item.last_bid_date ? `<div class="detail-item"><span>직전 입찰일</span><strong>${dateLabel(item.last_bid_date)}</strong></div>` : ""}<div class="detail-item"><span>유찰·재매각 추적</span><strong>${esc(tracking)}</strong></div><div class="detail-item"><span>주의 수준</span><strong>${esc(item.risk_level || "확인 필요")}</strong></div><div class="detail-item"><span>임차인 정보</span><strong>${esc(item.tenant_status || "확인 필요")}</strong></div><div class="detail-item"><span>점유 상태</span><strong>${esc(item.occupancy_status || "확인 필요")}</strong></div>${caseInfo ? `<div class="detail-item"><span>사건 유형</span><strong>${esc(caseInfo)}</strong></div>` : ""}<div class="detail-item"><span>공개목록 건물면적</span><strong>${areaHtml(item)}</strong></div><div class="detail-item"><span>감정가</span><strong>${fullWon(item.appraisal)}</strong></div><div class="detail-item"><span>최저가</span><strong>${fullWon(item.minimum_price)}${item.minimum_ratio != null ? ` (${item.minimum_ratio}%)` : ""}</strong></div>${item.claim_amount != null ? `<div class="detail-item"><span>청구금액(참고)</span><strong>${fullWon(item.claim_amount)}</strong></div>` : ""}${item.final_price != null ? `<div class="detail-item"><span>매각가</span><strong>${fullWon(item.final_price)}</strong></div>` : ""}<div class="detail-item"><span>회차</span><strong>${item.auction_round ? `${item.auction_round}회` : "확인 필요"}</strong></div></div><div class="detail-warning"><h3>초보자 주의사항</h3>${bulletHtml(item.beginner_warnings, "warning-list")}</div><div class="detail-section"><h3>임차인·점유 확인</h3><p><b>임차인 상태:</b> ${esc(item.tenant_status || "확인 필요")}</p><p>${esc(item.tenant_note || "공식 서류 확인 필요")}</p><p><b>관련 문구:</b> ${esc(tenantEvidence)}</p><p><b>자동 감지 주의:</b> ${esc((item.risk_flags || []).join(", ") || "특이 문구 자동 감지 없음")}</p><p><b>점유:</b> ${esc(item.occupancy_status || "현황조사서·현장 확인 필요")}</p></div><div class="detail-section"><h3>입찰 전 확인 순서</h3>${bulletHtml(item.bid_checklist, "checklist")}</div><div class="detail-section"><h3>회차 이력</h3><p>${esc(history || "공개된 회차 이력 없음")}</p></div><div class="detail-section"><h3>권리 참고문구</h3><p>${esc(rightsReference)}</p></div><div class="detail-section"><h3>권리·임차인 메모</h3><p>${esc(item.rights_note)}</p></div><div class="detail-section"><h3>공개목록 특이사항</h3><p>${esc(tags)}</p></div><div class="detail-section"><h3>초등학교 접근성</h3><p>${esc(item.school_access)}</p></div><div class="detail-section"><h3>최근 실거래가 대비</h3><p>${esc(item.market_note || "실거래가 확인 필요")}</p></div><div class="detail-section"><h3>면적 주의</h3><p>${esc(item.area_note)}</p></div><div class="dialog-actions"><a href="${esc(item.source_url)}" target="_blank" rel="noopener">공개 검색목록 열기</a><a class="secondary" href="${esc(item.official_url)}" target="_blank" rel="noopener">대한민국 법원경매정보</a></div></div>`;
 }
 function openDetail(id) {
   const item = auctions.find((row) => row.id === id);
@@ -466,6 +500,7 @@ def build() -> None:
     status_counts = Counter(item.get("status", "확인 필요") for item in auctions)
     upcoming = sum(1 for item in auctions if item.get("is_upcoming"))
     reauction = sum(1 for item in auctions if item.get("is_reauction"))
+    tenant_caution = sum(1 for item in auctions if item.get("tenant_evidence"))
     interest = sum(1 for item in auctions if item.get("is_interest"))
     discounts = [
         item["discount_vs_appraisal"]
@@ -483,6 +518,7 @@ def build() -> None:
     official_search = sources.get("official_search", {})
     public_list = sources.get("public_list", {})
     market = sources.get("market", {})
+    lease_guide_url = "https://www.easylaw.go.kr/CSP/CnpClsMain.laf?ccfNo=2&cciNo=3&cnpClsNo=1&csmSeq=629"
 
     district_order = ["중구", "남구", "북구"]
     district_chips = "".join(
@@ -507,9 +543,9 @@ def build() -> None:
     market_url = market.get("url", "https://rt.molit.go.kr/pt/gis/gis.do?mobileAt=&srhThingSecd=C")
     official_window = filters.get("official_future_window_days", 14)
     notice = (
-        f"공식 법원목록에서 다음 {official_window}일의 입찰 예정 {upcoming}건을 확인했습니다. 이 중 유찰 후 재매각 추적 대상은 {reauction}건이며, 최근 {history_days}일 일정목록도 함께 보여줍니다."
+        f"공식 법원목록에서 다음 {official_window}일의 입찰 예정 {upcoming}건을 확인했습니다. 이 중 유찰 후 재매각 추적 대상은 {reauction}건이며, 임차권 관련 문구가 확인된 {tenant_caution}건은 별도 주의가 필요합니다. 최근 {history_days}일 일정목록도 함께 보여줍니다."
         if upcoming
-        else f"현재 공식 법원목록의 다음 {official_window}일 예정목록에서 지역 조건에 맞는 물건은 확인되지 않았습니다. 최근 {history_days}일 일정목록의 사례를 함께 표시합니다."
+        else f"현재 공식 법원목록의 다음 {official_window}일 예정목록에서 지역 조건에 맞는 물건은 확인되지 않았습니다. 임차권 관련 문구가 확인된 {tenant_caution}건을 포함해 최근 {history_days}일 일정목록의 사례를 함께 표시합니다."
     )
     scope_text = "·".join(filters.get("included_districts", ["중구", "남구", "북구"]))
     excluded_text = "·".join(filters.get("excluded_districts", ["동구", "울주군"]))
@@ -550,6 +586,13 @@ def build() -> None:
     </section>
 
     <div class="notice"><span class="notice-icon">!</span><p>{notice}<br><b>중요:</b> 법원·온비드 공개목록의 ‘건물면적’은 전용면적과 다를 수 있어 관심 면적 충족 여부를 최종 확정하지 않습니다. 입찰 전 공식 원문과 공고문을 확인하세요.</p></div>
+
+    <section class="guide-panel" aria-label="초보자 경매 확인 순서">
+      <h2>경매를 처음 보는 분은 이 순서로 확인하세요</h2>
+      <p>목록의 ‘임차인 정보 미확인’은 안전하다는 뜻이 아닙니다. 아래 서류를 확인하기 전에는 입찰가를 정하지 마세요.</p>
+      <div class="guide-grid"><div class="guide-step"><b>1. 매각물건명세서</b><span>임차인·보증금·배당요구·매수인이 인수할 내용 확인</span></div><div class="guide-step"><b>2. 현황조사서</b><span>실제 거주자·점유자·공실 여부와 현장 상황 확인</span></div><div class="guide-step"><b>3. 등기사항증명서</b><span>말소기준권리와 근저당·압류·전세권·임차권등기 확인</span></div><div class="guide-step"><b>4. 비용·현장</b><span>명도·수리·체납관리비·취득세까지 포함해 총비용 계산</span></div></div>
+      <p class="guide-foot">임차인의 대항력·우선변제권은 전입·점유·확정일자·배당요구 시점에 따라 달라질 수 있습니다. <a href="{lease_guide_url}" target="_blank" rel="noopener">생활법령정보의 임차인 안내 ↗</a></p>
+    </section>
 
     <section class="filters-wrap" aria-label="경매 검색 및 필터">
       <div class="filters">
