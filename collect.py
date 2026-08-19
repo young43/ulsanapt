@@ -168,6 +168,308 @@ def make_naver_map_url(item: dict[str, Any]) -> str:
     return f"{NAVER_MAP_URL}{quote(query, safe='')}"
 
 
+MARKET_FIELD_LABELS = {
+    "kb_price": "KB 시세",
+    "recent_same_area": "최근 동일평형 실거래가",
+    "recent_3m_average": "최근 3개월 평균 실거래가",
+    "recent_1y_average": "최근 1년 평균 실거래가",
+    "recent_high": "최근 최고 실거래가",
+    "recent_low": "최근 최저 실거래가",
+    "current_lowest_listing": "현재 최저 매물가",
+    "current_average_asking": "현재 평균 호가",
+    "same_building_similar_floor": "동일 동·유사 층 실거래가",
+}
+CONSERVATIVE_MARKET_FIELDS = (
+    "kb_price",
+    "recent_same_area",
+    "recent_3m_average",
+    "recent_1y_average",
+    "same_building_similar_floor",
+    "current_lowest_listing",
+)
+RIGHTS_DATE_RE = re.compile(
+    r"20\d{2}\s*[./-]\s*\d{1,2}(?:\s*[./-]\s*\d{1,2})?"
+)
+RIGHTS_EVENT_LABELS = (
+    ("주택임차권", ("주택임차권",)),
+    ("임차권등기", ("임차권등기",)),
+    ("전세권", ("전세권",)),
+    ("가처분", ("가처분",)),
+    ("가등기", ("가등기",)),
+    ("가압류", ("가압류",)),
+    ("압류", ("압류",)),
+    ("유치권", ("유치권",)),
+    ("법정지상권", ("법정지상권",)),
+    ("근저당권", ("근저당", "근저당권")),
+    ("저당권", ("저당권",)),
+    ("소유권 이전", ("소유권이전", "소유권 이전")),
+    ("경매개시", ("경매개시",)),
+)
+SPECIAL_RIGHT_LABELS = (
+    ("전세권", ("전세권",)),
+    ("가처분", ("가처분",)),
+    ("가등기", ("가등기",)),
+    ("유치권", ("유치권",)),
+    ("법정지상권", ("법정지상권",)),
+    ("대지권 미등기", ("대지권미등기", "대지권 미등기")),
+    ("토지별도등기", ("토지별도등기",)),
+    ("제시외", ("제시외",)),
+)
+
+
+def build_market_analysis(item: dict[str, Any]) -> dict[str, Any]:
+    """시세 원자료와 보수적 시세 계산을 분리한다.
+
+    현재 수집기는 시세 API를 연결하지 않았으므로 대부분 None이다.
+    향후 시세 수집기를 추가할 때 이 함수의 후보 필드와 계산 기준만 바꾼다.
+    """
+    aliases = {
+        "kb_price": ("kb_price",),
+        "recent_same_area": ("recent_same_area", "recent_transaction_price", "market_price"),
+        "recent_3m_average": ("recent_3m_average",),
+        "recent_1y_average": ("recent_1y_average",),
+        "recent_high": ("recent_high",),
+        "recent_low": ("recent_low",),
+        "current_lowest_listing": ("current_lowest_listing",),
+        "current_average_asking": ("current_average_asking",),
+        "same_building_similar_floor": ("same_building_similar_floor",),
+    }
+    values: dict[str, int | None] = {}
+    for field, names in aliases.items():
+        value = next((parse_int(item.get(name)) for name in names if item.get(name) not in (None, "")), None)
+        values[field] = value if value and value > 0 else None
+
+    candidates = [values[field] for field in CONSERVATIVE_MARKET_FIELDS if values.get(field)]
+    if not candidates:
+        conservative = None
+        method = "데이터 부족 — KB·실거래·호가 자료가 연결되지 않았습니다."
+        status = "데이터 없음"
+    else:
+        conservative = min(candidates)
+        method = "입력된 시세 후보 중 최저값을 보수적 시세로 사용 (기준 변경 가능)"
+        status = "참고용 계산"
+    return {
+        "fields": values,
+        "field_labels": MARKET_FIELD_LABELS,
+        "conservative_price": conservative,
+        "conservative_method": method,
+        "status": status,
+        "source_note": "시세는 자동 확정하지 않으며, 국토교통부·KB·현장 매물 자료를 대조해야 합니다.",
+    }
+
+
+def _rights_context(raw: str, start: int, end: int, radius: int = 100) -> str:
+    return clean(raw[max(0, start - radius): min(len(raw), end + radius)])
+
+
+def _normalize_rights_date(value: str) -> tuple[str, str] | None:
+    parts = [int(part) for part in re.findall(r"\d+", value)]
+    if len(parts) < 2:
+        return None
+    try:
+        year, month = parts[0], parts[1]
+        if len(parts) >= 3:
+            normalized = date(year, month, parts[2]).isoformat()
+            return normalized, f"{year:04d}.{month:02d}.{parts[2]:02d}"
+        normalized = f"{year:04d}-{month:02d}"
+        return normalized, f"{year:04d}.{month:02d}"
+    except ValueError:
+        return None
+
+
+def build_rights_analysis(item: dict[str, Any]) -> dict[str, Any]:
+    sources = (
+        ("공식 권리 참고문구", str(item.get("rights_reference") or "")),
+        ("공식 상세 비고", str(item.get("special_notes") or "")),
+        ("공개목록·권리 메모", str(item.get("rights_note") or "")),
+    )
+    events: list[dict[str, Any]] = []
+    special_rights: list[dict[str, Any]] = []
+    for source, raw in sources:
+        if not raw:
+            continue
+        for match in RIGHTS_DATE_RE.finditer(raw):
+            normalized = _normalize_rights_date(match.group(0))
+            if not normalized:
+                continue
+            date_value, date_display = normalized
+            context = _rights_context(raw, match.start(), match.end())
+            label = next(
+                (candidate for candidate, terms in RIGHTS_EVENT_LABELS if any(term in context for term in terms)),
+                "권리 관련 문구",
+            )
+            is_candidate = (
+                source == "공식 권리 참고문구"
+                and label in {"근저당권", "저당권", "전세권", "주택임차권", "임차권등기", "가등기", "가처분"}
+            )
+            event = {
+                "date": date_value,
+                "date_display": date_display,
+                "label": label,
+                "source": source,
+                "evidence": context,
+                "is_reference_candidate": is_candidate,
+            }
+            if event not in events:
+                events.append(event)
+
+        for label, terms in SPECIAL_RIGHT_LABELS:
+            if not any(term in raw for term in terms):
+                continue
+            term = next(term for term in terms if term in raw)
+            index = raw.find(term)
+            clue = _rights_context(raw, index, index + len(term), radius=120)
+            candidate = {
+                "label": label,
+                "status": f"{label} 문구 — 순위·소멸 여부 확인 필요",
+                "source": source,
+                "evidence": clue,
+            }
+            if candidate not in special_rights:
+                special_rights.append(candidate)
+
+    event_map: dict[tuple[str, str], dict[str, Any]] = {}
+    for event in events:
+        key = (event["date"], event["label"])
+        if key not in event_map:
+            event_map[key] = event
+        else:
+            previous = event_map[key]
+            if event["source"] not in previous["source"]:
+                previous["source"] = f"{previous['source']} / {event['source']}"
+            previous["is_reference_candidate"] = previous["is_reference_candidate"] or event["is_reference_candidate"]
+            if len(event.get("evidence", "")) > len(previous.get("evidence", "")):
+                previous["evidence"] = event["evidence"]
+    events = list(event_map.values())
+    special_map: dict[str, dict[str, Any]] = {}
+    for right in special_rights:
+        if right["label"] not in special_map:
+            special_map[right["label"]] = right
+        else:
+            previous = special_map[right["label"]]
+            if right["source"] not in previous["source"]:
+                previous["source"] = f"{previous['source']} / {right['source']}"
+            if len(right.get("evidence", "")) > len(previous.get("evidence", "")):
+                previous["evidence"] = right["evidence"]
+    special_rights = list(special_map.values())
+    events.sort(key=lambda event: (event["date"], event["label"]))
+    candidate_dates = [event["date"] for event in events if event["is_reference_candidate"]]
+    candidate_date = min(candidate_dates) if candidate_dates else ""
+    for event in events:
+        if event["is_reference_candidate"] and event["date"] == candidate_date:
+            event["status"] = "말소기준권리 후보 — 공식 참고문구 기준"
+        elif candidate_date and event["date"] < candidate_date:
+            event["status"] = "선순위 가능성 — 인수 여부 확인 필요"
+        elif candidate_date and event["date"] > candidate_date:
+            event["status"] = "후순위 가능성 — 소멸 여부 확인 필요"
+        else:
+            event["status"] = "순위 확인 필요"
+
+    if candidate_date:
+        summary = f"말소기준권리 후보 {candidate_date.replace('-', '.') } — 등기사항증명서로 최종 확인 필요"
+    elif events:
+        summary = "등기 관련 날짜는 일부 확인되지만 말소기준권리 후보를 특정할 수 없습니다."
+    else:
+        summary = "등기 날짜 자료 없음 — 등기사항증명서 확인 필요"
+    acquisition_summary = (
+        "선순위 권리 존재 가능성 — 낙찰자 인수 여부 확인 필요"
+        if any(event["status"].startswith("선순위") for event in events) or special_rights
+        else "현재 수집 문구만으로 낙찰자 인수권리를 확정할 수 없음 — 최신 서류 확인 필요"
+    )
+    return {
+        "timeline": events,
+        "special_rights": special_rights,
+        "reference_candidate_date": candidate_date,
+        "summary": summary,
+        "acquisition_summary": acquisition_summary,
+        "source_note": "권리 순위·소멸은 자동 확정하지 않습니다. 최신 등기사항증명서와 매각물건명세서를 대조하세요.",
+    }
+
+
+def build_tenant_analysis(item: dict[str, Any], rights: dict[str, Any]) -> dict[str, Any]:
+    text_sources = (
+        ("공식 상세 비고", str(item.get("special_notes") or "")),
+        ("공식 권리 참고문구", str(item.get("rights_reference") or "")),
+        ("권리·임차인 메모", str(item.get("rights_note") or "")),
+    )
+    clues: list[dict[str, str]] = []
+    tenant_terms = tuple(item.get("tenant_evidence") or ())
+    for source, raw in text_sources:
+        if raw and any(term in raw for term in tenant_terms):
+            clues.append({"source": source, "text": clean(raw)[:500]})
+    strong_terms = {"대항력", "주택임차권", "임차권등기", "전세권"}
+    strong_clue = bool(strong_terms.intersection(tenant_terms))
+    if tenant_terms:
+        opposability = (
+            "대항력 가능성 — 점유·전입·확정일자·배당요구 확인 필요"
+            if strong_clue
+            else "임차권 관련 문구 있음 — 대항력 요건 확인 필요"
+        )
+        status = "구조화된 임차인 정보 없음 — 관련 문구만 확인"
+    elif item.get("source_type") == "onbid":
+        opposability = "확인 필요 — 온비드 공고문·처분기관 자료 대조"
+        status = "온비드 공개목록만으로 임차인별 정보 확인 불가"
+    else:
+        opposability = "확인 필요 — 공개자료에서 전입·점유·확정일자 미확인"
+        status = "공개자료에서 임차인별 정보 미확인"
+    return {
+        "structured_data_available": False,
+        "records": [],
+        "status": status,
+        "evidence_terms": list(tenant_terms),
+        "evidence": clues,
+        "move_in_date": None,
+        "fixed_date": None,
+        "occupancy": "확인 필요",
+        "deposit": None,
+        "monthly_rent": None,
+        "distribution_requested": None,
+        "distribution_date": None,
+        "priority_assessment": "선순위·후순위 산정 불가 — 전입일·말소기준권리·점유 자료 필요",
+        "opposability_assessment": opposability,
+        "expected_distribution": None,
+        "estimated_unpaid_deposit": None,
+        "estimated_takeover_amount": None,
+        "takeover_assessment": "산정 불가 — 임차보증금·배당요구·권리순위 원문 확인 필요",
+        "reference_right_date": rights.get("reference_candidate_date") or None,
+    }
+
+
+def build_occupancy_analysis(item: dict[str, Any], tenant: dict[str, Any]) -> dict[str, Any]:
+    text = " ".join(
+        str(item.get(key) or "")
+        for key in ("rights_note", "special_notes", "status_raw", "occupancy_status")
+    )
+    if "소유자 점유" in text:
+        occupancy_type, difficulty, reason = "소유자 점유", "낮음", "공개문구상 소유자 점유가 표시되어 있으나 현장 확인이 필요합니다."
+    elif "임차인 점유" in text:
+        occupancy_type, difficulty, reason = "임차인 점유", "보통", "임차인 점유 문구가 있어 배당·퇴거 일정을 확인해야 합니다."
+    elif "공실" in text:
+        occupancy_type, difficulty, reason = "공실", "낮음", "공실 문구가 있으나 현장 재확인이 필요합니다."
+    else:
+        occupancy_type, difficulty, reason = "점유자 불명", "확인 필요", "소유자·임차인·공실을 특정할 공개문구가 없습니다."
+    if tenant.get("evidence_terms") and occupancy_type == "점유자 불명":
+        difficulty = "높음"
+        reason = "임차권 관련 문구는 있으나 실제 점유 여부가 확인되지 않았습니다."
+    return {
+        "type": occupancy_type,
+        "difficulty": difficulty,
+        "reason": reason,
+        "source_note": "현황조사서·현장·관리사무소 확인 필요",
+    }
+
+
+def build_management_analysis(item: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "total": parse_int(item.get("management_fee_arrears")),
+        "common": parse_int(item.get("management_fee_common")),
+        "exclusive": parse_int(item.get("management_fee_exclusive")),
+        "period": clean(str(item.get("management_fee_period") or "")),
+        "status": "관리사무소 확인 필요 — 공개자료에 체납 내역 없음",
+        "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요.",
+    }
+
+
 def annotate_risk_profile(item: dict[str, Any]) -> dict[str, Any]:
     """초보자가 확인할 권리·임차인·점유 체크 항목을 보수적으로 붙인다."""
     for key, default in (
@@ -245,6 +547,15 @@ def annotate_risk_profile(item: dict[str, Any]) -> dict[str, Any]:
     if item.get("source_type") == "onbid":
         risk_flags.append("공매 조건 별도 확인")
 
+    item["tenant_evidence"] = tenant_evidence
+    market_analysis = build_market_analysis(item)
+    rights_analysis = build_rights_analysis(item)
+    tenant_analysis = build_tenant_analysis(item, rights_analysis)
+    occupancy_analysis = build_occupancy_analysis(item, tenant_analysis)
+    management_analysis = build_management_analysis(item)
+    if rights_analysis["special_rights"]:
+        risk_flags.append("특수권리 문구 — 순위·소멸 확인 필요")
+
     warnings = [
         "임차인 없음으로 단정하지 말고, 매각물건명세서·현황조사서에서 임차인·보증금·전입일·확정일자·배당요구를 확인하세요.",
         "낙찰가 외에 취득세·법무사비·명도비·수리비·체납관리비 등 추가 비용을 예산에 넣으세요.",
@@ -269,6 +580,34 @@ def annotate_risk_profile(item: dict[str, Any]) -> dict[str, Any]:
     if item.get("source_type") == "onbid":
         checklist.insert(0, "온비드 공고문: 처분기관, 인도·명도 조건, 체납·보증금·입찰보증금 조건")
 
+    red_reasons: list[str] = []
+    yellow_reasons: list[str] = []
+    if rights_analysis["special_rights"]:
+        red_reasons.append("특수권리 문구가 있어 선순위·소멸 여부 확인이 필요합니다.")
+    if any(term in tenant_evidence for term in ("대항력", "주택임차권", "임차권등기", "전세권")):
+        red_reasons.append("임차권·대항력 관련 문구가 있어 보증금 인수 가능성을 확인해야 합니다.")
+    if tenant_evidence:
+        yellow_reasons.append("임차권 관련 문구는 있으나 전입일·확정일자·배당요구 자료가 구조화되어 있지 않습니다.")
+    if not tenant_analysis["structured_data_available"]:
+        yellow_reasons.append("임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.")
+    if occupancy_analysis["type"] == "점유자 불명":
+        yellow_reasons.append("현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.")
+    if market_analysis["conservative_price"] is None:
+        yellow_reasons.append("KB 시세·실거래가·호가 자료가 없어 보수적 시세를 계산할 수 없습니다.")
+    if not rights_analysis["timeline"]:
+        yellow_reasons.append("등기 날짜 자료가 없어 권리 순위 판단은 등기사항증명서 확인이 필요합니다.")
+    if item.get("is_reauction"):
+        yellow_reasons.append("유찰·재매각 이력이 있어 이번 회차 조건을 다시 확인해야 합니다.")
+    if red_reasons:
+        beginner_risk_level = "빨강"
+        beginner_risk_reasons = red_reasons + yellow_reasons
+    elif yellow_reasons:
+        beginner_risk_level = "노랑"
+        beginner_risk_reasons = yellow_reasons
+    else:
+        beginner_risk_level = "초록"
+        beginner_risk_reasons = ["현재 수집된 공개문구에서 별도 위험 신호가 확인되지 않았습니다. 최신 원문 확인은 필요합니다."]
+
     item["tenant_status"] = tenant_status
     item["tenant_evidence"] = tenant_evidence
     item["tenant_note"] = tenant_note
@@ -277,6 +616,19 @@ def annotate_risk_profile(item: dict[str, Any]) -> dict[str, Any]:
     item["risk_level"] = "주의 필요" if risk_flags else "확인 필요"
     item["beginner_warnings"] = list(dict.fromkeys(warnings))
     item["bid_checklist"] = checklist
+    item["market_analysis"] = market_analysis
+    item["rights_analysis"] = rights_analysis
+    item["tenant_analysis"] = tenant_analysis
+    item["occupancy_analysis"] = occupancy_analysis
+    item["management_analysis"] = management_analysis
+    item["estimated_takeover_amount"] = tenant_analysis["estimated_takeover_amount"]
+    item["beginner_risk_level"] = beginner_risk_level
+    item["beginner_risk_reasons"] = list(dict.fromkeys(beginner_risk_reasons))
+    item["analysis_sources"] = [
+        "법원·온비드 공개목록",
+        "공식 사건 상세 응답(확인된 물건만)",
+        "rights_reference / special_notes / rights_note",
+    ]
     return item
 
 

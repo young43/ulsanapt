@@ -199,6 +199,8 @@ select { min-width: 142px; }
 .card-flags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
 .risk-chip, .tenant-chip { display: inline-flex; align-items: center; gap: 4px; min-height: 25px; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; }
 .risk-chip { color: #8b3d32; background: var(--red-bg); }
+.risk-chip.risk-yellow { color: #76501e; background: #f4dfb9; }
+.risk-chip.risk-green { color: #22634f; background: #d4eee3; }
 .risk-chip.unknown { color: #765c38; background: #f7eddc; }
 .tenant-chip { color: var(--navy); background: #e7eef0; }
 .tag { padding: 2px 7px; border-radius: 5px; background: var(--paper-2); color: #785d43; }
@@ -257,6 +259,67 @@ dialog::backdrop { background: rgba(24, 40, 44, .45); backdrop-filter: blur(3px)
 .dialog-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--line); }
 .dialog-actions a { display: inline-flex; align-items: center; min-height: 36px; padding: 7px 12px; border-radius: 8px; color: #fffaf4; background: var(--navy); font-size: 12px; font-weight: 700; text-decoration: none; }
 .dialog-actions a.secondary { color: var(--navy); background: var(--paper-2); }
+.detail-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; margin-top: 18px; padding: 4px; border: 1px solid var(--line); border-radius: 11px; background: var(--paper-2); }
+.detail-tab { min-height: 36px; border: 0; border-radius: 8px; color: var(--muted); background: transparent; font-size: 12px; font-weight: 800; }
+.detail-tab[aria-selected="true"] { color: var(--navy); background: var(--paper); box-shadow: 0 2px 8px rgba(65,45,27,.08); }
+.detail-panel[hidden] { display: none; }
+.analysis-summary { margin-top: 18px; padding: 17px; border: 1px solid #d9e2df; border-radius: 13px; background: #f2f8f5; }
+.analysis-summary.risk-red { border-color: #e4b3ac; background: #fff1ee; }
+.analysis-summary.risk-yellow { border-color: #ead3b8; background: #fff7ec; }
+.analysis-summary.risk-green { border-color: #cce1d9; background: #edf8f3; }
+.analysis-summary-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.analysis-summary-head h3 { margin: 0; font-size: 16px; }
+.analysis-summary-head p { margin: 5px 0 0; color: var(--muted); font-size: 12px; }
+.risk-level { display: inline-flex; align-items: center; min-height: 28px; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 900; white-space: nowrap; }
+.risk-level.risk-red { color: #8b3028; background: #f4d5cf; }
+.risk-level.risk-yellow { color: #76501e; background: #f4dfb9; }
+.risk-level.risk-green { color: #22634f; background: #d4eee3; }
+.analysis-summary-reasons { display: grid; gap: 4px; margin: 12px 0 0; padding: 0; list-style: none; color: #76553b; font-size: 12px; }
+.analysis-summary-reasons li::before { content: "•"; margin-right: 6px; color: var(--terracotta); font-weight: 900; }
+.analysis-summary-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: 15px; }
+.analysis-stat { min-width: 0; padding: 10px 11px; border-radius: 9px; background: rgba(255,255,255,.65); }
+.analysis-stat span { display: block; color: var(--muted); font-size: 10.5px; }
+.analysis-stat strong { display: block; margin-top: 3px; color: var(--navy); font-size: 14px; line-height: 1.35; }
+.analysis-layout { display: grid; gap: 12px; margin-top: 14px; }
+.analysis-card { padding: 15px; border: 1px solid var(--line); border-radius: 12px; background: rgba(255,253,249,.72); }
+.analysis-card h3 { margin: 0 0 7px; color: var(--navy); font-size: 14px; }
+.analysis-card > p { margin: 0 0 10px; color: var(--muted); font-size: 12px; }
+.analysis-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.analysis-value { min-width: 0; padding: 10px; border-radius: 9px; background: var(--paper-2); }
+.analysis-value span { display: block; color: var(--muted); font-size: 10.5px; }
+.analysis-value strong { display: block; margin-top: 3px; color: var(--ink); font-size: 13px; line-height: 1.35; overflow-wrap: anywhere; }
+.analysis-value small { display: block; margin-top: 3px; color: var(--faint); font-size: 10.5px; line-height: 1.4; }
+.analysis-note, .analysis-source { color: var(--muted); font-size: 11.5px; line-height: 1.55; }
+.analysis-note { margin: 10px 0 0; padding: 9px 10px; border-radius: 8px; background: #fff7ec; }
+.analysis-source { margin: 10px 0 0; }
+.analysis-list { display: grid; gap: 6px; margin: 8px 0 0; padding: 0; list-style: none; color: var(--muted); font-size: 12px; }
+.analysis-list li { position: relative; padding-left: 17px; }
+.analysis-list li::before { content: "✓"; position: absolute; left: 0; color: var(--green); font-weight: 900; }
+.rights-timeline { display: grid; gap: 9px; margin: 10px 0 0; padding: 0; list-style: none; }
+.rights-event { position: relative; display: grid; grid-template-columns: 92px minmax(0,1fr); gap: 10px; padding: 10px 11px 10px 14px; border-left: 3px solid var(--line-strong); border-radius: 0 9px 9px 0; background: var(--paper-2); }
+.rights-event::before { content: ""; position: absolute; left: -7px; top: 14px; width: 9px; height: 9px; border: 2px solid var(--paper); border-radius: 50%; background: var(--line-strong); }
+.rights-event.candidate { border-left-color: var(--terracotta); background: #fff5e9; }
+.rights-event.candidate::before { background: var(--terracotta); }
+.rights-event time { color: var(--navy); font-size: 11px; font-weight: 900; }
+.rights-event strong { display: block; color: var(--ink); font-size: 12px; }
+.rights-event span { display: block; margin-top: 2px; color: var(--terracotta-deep); font-size: 11px; font-weight: 700; }
+.rights-event small { display: block; margin-top: 4px; color: var(--muted); font-size: 10.5px; line-height: 1.45; }
+.finance-card { background: #fbfaf6; }
+.finance-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; }
+.finance-field { display: grid; gap: 4px; min-width: 0; }
+.finance-field span { color: var(--muted); font-size: 11px; }
+.finance-field input { width: 100%; min-height: 36px; border: 1px solid var(--line-strong); border-radius: 8px; padding: 6px 8px; color: var(--ink); background: var(--paper); font-size: 12px; }
+.finance-checks { display: flex; flex-wrap: wrap; gap: 8px 14px; margin-top: 11px; }
+.finance-check { display: inline-flex; gap: 5px; align-items: center; color: var(--muted); font-size: 11.5px; }
+.finance-check input { accent-color: var(--navy); }
+.analysis-results { display: grid; gap: 10px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); }
+.analysis-result-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.analysis-result { padding: 11px; border-radius: 9px; background: var(--paper-2); }
+.analysis-result span { display: block; color: var(--muted); font-size: 10.5px; }
+.analysis-result strong { display: block; margin-top: 3px; color: var(--navy); font-size: 14px; line-height: 1.35; }
+.analysis-result small { display: block; margin-top: 3px; color: var(--faint); font-size: 10.5px; line-height: 1.45; }
+.analysis-caution { margin: 0; padding: 10px 11px; border-radius: 9px; color: #76553b; background: #fff7ec; font-size: 11.5px; line-height: 1.55; }
+.analysis-empty { margin: 0; padding: 10px 11px; border-radius: 9px; color: var(--muted); background: var(--paper-2); font-size: 12px; }
 
 @media (max-width: 820px) {
   .hero { grid-template-columns: 1fr; }
@@ -267,6 +330,9 @@ dialog::backdrop { background: rgba(24, 40, 44, .45); backdrop-filter: blur(3px)
   .metric:nth-child(3), .metric:nth-child(4) { padding-top: 8px; border-top: 1px solid var(--line); }
   .lower-grid { grid-template-columns: 1fr; }
   .guide-grid { grid-template-columns: repeat(2, 1fr); }
+  .analysis-summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .analysis-grid, .finance-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .analysis-result-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .filters-wrap { position: static; top: auto; z-index: auto; backdrop-filter: none; }
 }
 @media (max-width: 620px) {
@@ -290,6 +356,10 @@ dialog::backdrop { background: rgba(24, 40, 44, .45); backdrop-filter: blur(3px)
   .card-actions { width: 100%; margin-left: 0; }
   .detail-grid { grid-template-columns: 1fr; }
   .guide-grid { grid-template-columns: 1fr; }
+  .analysis-summary-head { display: block; }
+  .analysis-summary-head .risk-level { margin-top: 10px; }
+  .analysis-summary-grid, .analysis-grid, .finance-grid, .analysis-result-grid { grid-template-columns: 1fr; }
+  .rights-event { grid-template-columns: 1fr; gap: 2px; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; } }
 """
@@ -300,6 +370,10 @@ const RAW = window.__AUCTIONS__ || { auctions: [] };
 const auctions = Array.isArray(RAW.auctions) ? RAW.auctions : [];
 const today = new Date(); today.setHours(0, 0, 0, 0);
 const state = { q: "", district: "", status: "", source: "", interest: false, upcoming: false, failedOnly: false, sort: "next_bid_date", limit: 30 };
+const FINANCE_STORAGE_KEY = "ulsan-auction-finance-profile-v1";
+const GLOBAL_FINANCE_FIELDS = ["cash", "annual_income", "spouse_income", "existing_debt", "existing_annual_debt_service", "loan_term_years", "interest_rate", "emergency_cash", "ltv_rate", "dsr_rate", "target_discount", "first_home", "newlywed", "newborn_special"];
+const PROPERTY_FINANCE_FIELDS = ["expected_bid_price", "expected_takeover_amount", "acquisition_cost", "legal_fee", "eviction_cost", "management_arrears", "repair_cost"];
+let financeProfileCache = null;
 const $ = (selector) => document.querySelector(selector);
 const listEl = $("#auctionList");
 
@@ -360,7 +434,7 @@ function appraisalGap(item) {
   const value = Number(item.discount_vs_appraisal);
   return value >= 0 ? `${value.toFixed(1)}% 할인` : `${Math.abs(value).toFixed(1)}% 할증`;
 }
-function riskClass(item) { return item.risk_level === "주의 필요" ? "" : "unknown"; }
+function riskClass(item) { return beginnerRiskClass(item.beginner_risk_level || "노랑"); }
 function mapUrl(item) {
   const query = item.map_query || item.address || item.complex || "";
   return item.map_url || `https://map.naver.com/p/search/${encodeURIComponent(query)}`;
@@ -368,6 +442,238 @@ function mapUrl(item) {
 function bulletHtml(values, className) {
   const rows = (Array.isArray(values) ? values : []).filter(Boolean);
   return rows.length ? `<ul class="${className}">${rows.map((value) => `<li>${esc(value)}</li>`).join("")}</ul>` : `<p>자동 확인된 내용이 없습니다. 공식 서류를 직접 확인하세요.</p>`;
+}
+function beginnerRiskClass(level) {
+  return level === "빨강" ? "risk-red" : (level === "초록" ? "risk-green" : "risk-yellow");
+}
+function analysisMoney(value, fallback = "데이터 없음") {
+  return value == null || value === "" ? fallback : `${money(value)} (${fullWon(value)})`;
+}
+function analysisText(value, fallback = "확인 필요") {
+  return value == null || value === "" ? fallback : String(value);
+}
+function marketFieldsHtml(item) {
+  const market = item.market_analysis || {};
+  const fields = market.fields || {};
+  const labels = market.field_labels || {
+    kb_price: "KB 시세", recent_same_area: "최근 동일평형 실거래가", recent_3m_average: "최근 3개월 평균 실거래가",
+    recent_1y_average: "최근 1년 평균 실거래가", recent_high: "최근 최고 실거래가", recent_low: "최근 최저 실거래가",
+    current_lowest_listing: "현재 최저 매물가", current_average_asking: "현재 평균 호가", same_building_similar_floor: "동일 동·유사 층 실거래가",
+  };
+  return Object.entries(labels).map(([key, label]) => `<div class="analysis-value"><span>${esc(label)}</span><strong>${analysisMoney(fields[key])}</strong></div>`).join("");
+}
+function rightsTimelineHtml(item) {
+  const rights = item.rights_analysis || {};
+  const events = Array.isArray(rights.timeline) ? rights.timeline : [];
+  if (!events.length) return `<p class="analysis-empty">등기 날짜 자료 없음 — 등기사항증명서에서 직접 확인하세요.</p>`;
+  return `<ol class="rights-timeline">${events.map((event) => `<li class="rights-event${event.is_reference_candidate ? " candidate" : ""}"><time>${esc(event.date_display || dateLabel(event.date))}</time><div><strong>${esc(event.label || "권리 관련 문구")}</strong><span>${esc(event.status || "순위 확인 필요")}</span><small>${esc(event.evidence || "원문 문구 확인 필요")} · ${esc(event.source || "공개자료")}</small></div></li>`).join("")}</ol>`;
+}
+function specialRightsHtml(item) {
+  const rights = item.rights_analysis || {};
+  const rows = Array.isArray(rights.special_rights) ? rights.special_rights : [];
+  if (!rows.length) return `<p class="analysis-empty">현재 수집된 문구에서 특수권리 항목은 확인되지 않았습니다. 등기 원문 최종 확인은 필요합니다.</p>`;
+  return `<ul class="analysis-list">${rows.map((row) => `<li><b>${esc(row.label)}</b> — ${esc(row.status)}<br><small>${esc(row.evidence || "원문 확인 필요")}</small></li>`).join("")}</ul>`;
+}
+function tenantRecordsHtml(item) {
+  const tenant = item.tenant_analysis || {};
+  const records = Array.isArray(tenant.records) ? tenant.records : [];
+  if (!records.length) return `<p class="analysis-empty">임차인별 구조화 자료가 없습니다. 전입일·확정일자·보증금·배당요구 여부는 매각물건명세서와 현황조사서에서 확인하세요.</p>`;
+  return records.map((record, index) => `<div class="analysis-card"><h4>임차인 ${index + 1}</h4><div class="analysis-grid"><div class="analysis-value"><span>전입일</span><strong>${analysisText(record.move_in_date, "데이터 없음")}</strong></div><div class="analysis-value"><span>확정일자</span><strong>${analysisText(record.fixed_date, "데이터 없음")}</strong></div><div class="analysis-value"><span>점유</span><strong>${analysisText(record.occupancy, "확인 필요")}</strong></div><div class="analysis-value"><span>보증금</span><strong>${analysisMoney(record.deposit)}</strong></div><div class="analysis-value"><span>월세</span><strong>${analysisMoney(record.monthly_rent)}</strong></div><div class="analysis-value"><span>배당요구</span><strong>${analysisText(record.distribution_requested, "확인 필요")}</strong></div><div class="analysis-value"><span>배당요구일</span><strong>${analysisText(record.distribution_date, "데이터 없음")}</strong></div><div class="analysis-value"><span>선순위·후순위 예상</span><strong>${analysisText(record.priority_assessment)}</strong></div><div class="analysis-value"><span>대항력 가능성</span><strong>${analysisText(record.opposability_assessment)}</strong></div><div class="analysis-value"><span>예상 배당금</span><strong>${analysisMoney(record.expected_distribution, "산정 불가")}</strong></div><div class="analysis-value"><span>예상 미배당 보증금</span><strong>${analysisMoney(record.estimated_unpaid_deposit, "산정 불가")}</strong></div><div class="analysis-value"><span>낙찰자 인수 가능성</span><strong>${analysisText(record.takeover_assessment)}</strong></div></div></div>`).join("");
+}
+function financeField(name, label, placeholder, step = "1") {
+  return `<label class="finance-field"><span>${esc(label)}</span><input data-finance-field="${esc(name)}" type="number" inputmode="decimal" step="${step}" placeholder="${esc(placeholder)}"></label>`;
+}
+function financeCheck(name, label) {
+  return `<label class="finance-check"><input data-finance-field="${esc(name)}" type="checkbox"><span>${esc(label)}</span></label>`;
+}
+function analysisHtml(item) {
+  const market = item.market_analysis || {};
+  const rights = item.rights_analysis || {};
+  const tenant = item.tenant_analysis || {};
+  const occupancy = item.occupancy_analysis || {};
+  const management = item.management_analysis || {};
+  const tenantEvidence = (item.tenant_evidence || []).join(", ") || "특정 임차권 문구 없음(임차인 없음 확정 아님)";
+  const sources = (item.analysis_sources || []).join(" · ") || "공개목록·공식 상세 응답";
+  return `<div id="analysisSummary"></div>
+    <div class="analysis-layout">
+      <section class="analysis-card"><h3>1~2. 현재 시세와 현재 최저 입찰가</h3><div class="analysis-grid"><div class="analysis-value"><span>보수적 시세</span><strong>${analysisMoney(market.conservative_price)}</strong><small>${esc(market.conservative_method || "데이터 부족")}</small></div><div class="analysis-value"><span>현재 최저 입찰가</span><strong>${analysisMoney(item.minimum_price, "확인 필요")}</strong><small>${item.minimum_ratio != null ? `감정가의 ${esc(item.minimum_ratio)}%` : "비율 확인 필요"}</small></div><div class="analysis-value"><span>감정가</span><strong>${analysisMoney(item.appraisal, "확인 필요")}</strong><small>공식목록 기준</small></div></div><div class="analysis-grid" style="margin-top:8px">${marketFieldsHtml(item)}</div><p class="analysis-note">${esc(market.source_note || "시세 자료가 부족합니다.")}</p></section>
+      <section class="analysis-card"><h3>3. 등기 권리 타임라인</h3><p>${esc(rights.summary || "등기 날짜 자료 없음 — 확인 필요")}</p>${rightsTimelineHtml(item)}<p class="analysis-note"><b>${esc(rights.acquisition_summary || "선순위 권리 존재 가능성 — 확인 필요")}</b><br>${esc(rights.source_note || "최신 등기사항증명서 확인 필요")}</p></section>
+      <section class="analysis-card"><h3>4~8. 임차인·대항력·배당·예상 인수금액</h3><div class="analysis-grid"><div class="analysis-value"><span>임차인 현황</span><strong>${esc(tenant.status || item.tenant_status || "확인 필요")}</strong></div><div class="analysis-value"><span>관련 문구</span><strong>${esc(tenantEvidence)}</strong></div><div class="analysis-value"><span>말소기준권리 날짜</span><strong>${analysisText(tenant.reference_right_date, "데이터 없음")}</strong></div><div class="analysis-value"><span>선순위·후순위 예상</span><strong>${esc(tenant.priority_assessment || "산정 불가")}</strong></div><div class="analysis-value"><span>대항력 가능성</span><strong>${esc(tenant.opposability_assessment || "확인 필요")}</strong></div><div class="analysis-value"><span>예상 인수금액</span><strong>${analysisMoney(tenant.estimated_takeover_amount, "산정 불가")}</strong></div></div>${tenantRecordsHtml(item)}${(tenant.evidence || []).length ? `<ul class="analysis-list">${tenant.evidence.map((clue) => `<li><b>${esc(clue.source)}</b><br>${esc(clue.text)}</li>`).join("")}</ul>` : ""}<p class="analysis-note">임차보증금·예상 배당·미배당금은 원문 자료가 없으면 계산하지 않습니다. 대항력·인수 여부도 확정할 수 없습니다.</p></section>
+      <section class="analysis-card"><h3>9. 현재 점유자 및 명도 위험</h3><div class="analysis-grid"><div class="analysis-value"><span>현재 점유상태</span><strong>${esc(occupancy.type || "점유자 불명")}</strong></div><div class="analysis-value"><span>명도 난이도</span><strong>${esc(occupancy.difficulty || "확인 필요")}</strong></div><div class="analysis-value"><span>근거</span><strong>${esc(occupancy.reason || "현황조사서 확인 필요")}</strong></div></div><p class="analysis-note">${esc(occupancy.source_note || "현황조사서·현장·관리사무소 확인 필요")}</p></section>
+      <section class="analysis-card"><h3>10. 관리비 체납</h3><div class="analysis-grid"><div class="analysis-value"><span>총 체납</span><strong>${analysisMoney(management.total)}</strong></div><div class="analysis-value"><span>공용부분</span><strong>${analysisMoney(management.common)}</strong></div><div class="analysis-value"><span>전용부분</span><strong>${analysisMoney(management.exclusive)}</strong></div><div class="analysis-value"><span>체납기간</span><strong>${analysisText(management.period, "데이터 없음")}</strong></div></div><p class="analysis-note">${esc(management.status || "관리사무소 확인 필요")}<br>${esc(management.source_note || "관리비 승계 여부 확인 필요")}</p></section>
+      <section class="analysis-card"><h3>6~8. 특수권리 경고</h3>${specialRightsHtml(item)}</section>
+      <section class="analysis-card finance-card"><h3>11. 사용자 자금정보 및 예상 대출</h3><p>입력값은 이 기기의 브라우저에만 저장됩니다. 대출 한도·정책대출 대상 여부는 금융기관 심사 전 참고 계산입니다.</p><div class="finance-grid">${financeField("cash", "보유 현금(원)", "예: 100000000", "10000")}${financeField("annual_income", "연소득(원)", "직접 입력", "10000")}${financeField("spouse_income", "배우자 소득(원)", "없으면 0", "10000")}${financeField("existing_debt", "기존 대출 잔액(원)", "직접 입력", "10000")}${financeField("existing_annual_debt_service", "기존 연간 원리금(원)", "DSR 계산용", "10000")}${financeField("loan_term_years", "희망 대출기간(년)", "예: 30", "1")}${financeField("interest_rate", "예상 금리(%)", "금융기관 확인", "0.01")}${financeField("emergency_cash", "최소 비상자금(원)", "남겨둘 금액", "10000")}${financeField("ltv_rate", "LTV 참고비율(%)", "직접 입력", "0.1")}${financeField("dsr_rate", "DSR 참고비율(%)", "직접 입력", "0.1")}${financeField("target_discount", "목표 할인율(%)", "예: 10", "0.1")}${financeField("expected_bid_price", "예상 낙찰가(원)", "비우면 현재 최저가", "10000")}${financeField("expected_takeover_amount", "사용자 입력 예상 인수금액(원)", "원문 확인 후 입력", "10000")}</div><div class="finance-checks">${financeCheck("first_home", "생애최초")}${financeCheck("newlywed", "신혼부부")}${financeCheck("newborn_special", "신생아 특례 대상 검토")}</div><h4 style="margin:16px 0 7px;color:var(--navy);font-size:13px">예상 총취득원가에 넣을 비용</h4><div class="finance-grid">${financeField("acquisition_cost", "취득 관련 세금·비용(원)", "모르면 공란", "10000")}${financeField("legal_fee", "법무비(원)", "모르면 공란", "10000")}${financeField("eviction_cost", "명도 예상비용(원)", "모르면 공란", "10000")}${financeField("management_arrears", "관리비 부담 예상(원)", "모르면 공란", "10000")}${financeField("repair_cost", "수리·인테리어비(원)", "모르면 공란", "10000")}</div><div id="analysisResults" class="analysis-results"></div></section>
+    </div>
+    <p class="analysis-source">분석 근거: ${esc(sources)}. 분석 결과는 원자료를 대체하지 않으며, 최신 매각물건명세서·현황조사서·등기사항증명서·관리사무소 자료를 확인해야 합니다.</p>`;
+}
+function numberValue(value) {
+  if (value == null || value === "") return null;
+  const parsed = Number(String(value).replaceAll(",", "").trim());
+  return Number.isFinite(parsed) ? parsed : null;
+}
+function loadFinanceProfile() {
+  if (financeProfileCache) return financeProfileCache;
+  try {
+    const raw = JSON.parse(localStorage.getItem(FINANCE_STORAGE_KEY) || "{}") || {};
+    financeProfileCache = raw.global || raw.properties ? raw : { global: raw, properties: {} };
+  } catch (error) {
+    financeProfileCache = { global: {}, properties: {} };
+  }
+  return financeProfileCache;
+}
+function saveFinanceProfile(profile) {
+  financeProfileCache = profile;
+  try { localStorage.setItem(FINANCE_STORAGE_KEY, JSON.stringify(profile)); } catch (error) { /* 저장 불가 환경은 화면 계산만 수행 */ }
+}
+function readFinanceProfile(dialog, item) {
+  const stored = loadFinanceProfile();
+  const global = { ...(stored.global || {}) };
+  const properties = { ...(stored.properties || {}) };
+  const property = { ...(properties[item.id] || {}) };
+  dialog.querySelectorAll("[data-finance-field]").forEach((field) => {
+    const key = field.dataset.financeField;
+    const value = field.type === "checkbox" ? field.checked : field.value.trim();
+    if (PROPERTY_FINANCE_FIELDS.includes(key)) property[key] = value;
+    else if (GLOBAL_FINANCE_FIELDS.includes(key)) global[key] = value;
+  });
+  properties[item.id] = property;
+  saveFinanceProfile({ global, properties });
+  return { ...global, ...property };
+}
+function hydrateFinanceForm(dialog, item) {
+  const stored = loadFinanceProfile();
+  const profile = { ...(stored.global || {}), ...((stored.properties || {})[item.id] || {}) };
+  dialog.querySelectorAll("[data-finance-field]").forEach((field) => {
+    const value = profile[field.dataset.financeField];
+    if (field.type === "checkbox") field.checked = Boolean(value);
+    else if (value != null) field.value = value;
+  });
+}
+function calculateFinance(item, profile) {
+  const enteredBid = numberValue(profile.expected_bid_price);
+  const expectedBid = enteredBid ?? numberValue(item.minimum_price);
+  const enteredTakeover = numberValue(profile.expected_takeover_amount);
+  const takeover = enteredTakeover ?? numberValue(item.estimated_takeover_amount);
+  const costNames = ["acquisition_cost", "legal_fee", "eviction_cost", "management_arrears", "repair_cost"];
+  const costs = costNames.map((name) => numberValue(profile[name]));
+  const costsKnown = costs.every((value) => value != null);
+  const extraCosts = costsKnown ? costs.reduce((sum, value) => sum + value, 0) : null;
+  const totalCost = expectedBid != null && takeover != null && extraCosts != null ? expectedBid + takeover + extraCosts : null;
+  const cash = numberValue(profile.cash);
+  const emergencyCash = numberValue(profile.emergency_cash);
+  const usableCash = cash != null && emergencyCash != null ? Math.max(0, cash - emergencyCash) : null;
+  const requiredLoan = totalCost != null && usableCash != null ? Math.max(0, totalCost - usableCash) : null;
+  const ltvRate = numberValue(profile.ltv_rate);
+  const ltvLimit = expectedBid != null && ltvRate != null ? expectedBid * ltvRate / 100 : null;
+  const annualIncome = numberValue(profile.annual_income);
+  const spouseIncome = numberValue(profile.spouse_income) ?? 0;
+  const dsrRate = numberValue(profile.dsr_rate);
+  const existingAnnualDebtService = numberValue(profile.existing_annual_debt_service);
+  const termYears = numberValue(profile.loan_term_years);
+  const interestRate = numberValue(profile.interest_rate);
+  let dsrLimit = null;
+  if (annualIncome != null && dsrRate != null && existingAnnualDebtService != null && termYears != null && interestRate != null && termYears > 0) {
+    const annualPaymentCapacity = Math.max(0, (annualIncome + spouseIncome) * dsrRate / 100 - existingAnnualDebtService);
+    const months = termYears * 12;
+    const monthlyRate = interestRate / 100 / 12;
+    dsrLimit = monthlyRate > 0
+      ? (annualPaymentCapacity / 12) * (1 - (1 + monthlyRate) ** (-months)) / monthlyRate
+      : (annualPaymentCapacity / 12) * months;
+  }
+  const referenceLimits = [ltvLimit, dsrLimit].filter((value) => value != null);
+  const referenceLoanLimit = referenceLimits.length ? Math.min(...referenceLimits) : null;
+  const shortfall = requiredLoan != null && referenceLoanLimit != null ? Math.max(0, requiredLoan - referenceLoanLimit) : null;
+  const market = numberValue(item.market_analysis?.conservative_price);
+  const targetDiscount = numberValue(profile.target_discount);
+  const bidCeiling = market != null && takeover != null && extraCosts != null && targetDiscount != null
+    ? Math.max(0, market * (1 - targetDiscount / 100) - takeover - extraCosts)
+    : null;
+  const actualDiscount = market != null && totalCost != null && market > 0 ? (market - totalCost) / market * 100 : null;
+  const policyFlags = [profile.first_home && "생애최초", profile.newlywed && "신혼부부", profile.newborn_special && "신생아 특례 대상 검토"].filter(Boolean);
+  return {
+    expectedBid,
+    bidSource: enteredBid != null ? "사용자 입력" : "현재 최저입찰가 기준",
+    takeover,
+    takeoverSource: enteredTakeover != null ? "사용자 입력" : "공개자료 기준",
+    costsKnown,
+    extraCosts,
+    totalCost,
+    cash,
+    emergencyCash,
+    usableCash,
+    requiredLoan,
+    ltvRate,
+    ltvLimit,
+    dsrLimit,
+    referenceLoanLimit,
+    shortfall,
+    market,
+    actualDiscount,
+    targetDiscount,
+    bidCeiling,
+    policyFlags,
+  };
+}
+function beginnerSummaryHtml(item, calc) {
+  const level = item.beginner_risk_level || "노랑";
+  const reasons = (item.beginner_risk_reasons || ["공개자료와 최신 원문을 함께 확인하세요."]).slice(0, 5);
+  const oneLine = calc.takeover == null
+    ? "현재 자료만으로 낙찰자 인수금액을 산정할 수 없습니다. 최신 매각물건명세서와 현황조사서를 확인해야 합니다."
+    : "현재 입력값과 공개자료를 기준으로 계산한 참고값입니다. 법률·금융 판단을 대신하지 않습니다.";
+  return `<div class="analysis-summary ${beginnerRiskClass(level)}"><div class="analysis-summary-head"><div><h3>초보자 분석</h3><p>${esc(oneLine)}</p></div><span class="risk-level ${beginnerRiskClass(level)}">${esc(level)} · 초보자 위험도</span></div><ul class="analysis-summary-reasons">${reasons.map((reason) => `<li>${esc(reason)}</li>`).join("")}</ul><div class="analysis-summary-grid"><div class="analysis-stat"><span>보수적 시세</span><strong>${analysisMoney(calc.market)}</strong></div><div class="analysis-stat"><span>현재 최저가</span><strong>${analysisMoney(item.minimum_price, "확인 필요")}</strong></div><div class="analysis-stat"><span>예상 낙찰가 기준</span><strong>${analysisMoney(calc.expectedBid, "확인 필요")}</strong><small>${esc(calc.bidSource)}</small></div><div class="analysis-stat"><span>예상 인수금액</span><strong>${analysisMoney(calc.takeover, "산정 불가")}</strong></div><div class="analysis-stat"><span>예상 총취득원가</span><strong>${analysisMoney(calc.totalCost, "산정 불가")}</strong></div><div class="analysis-stat"><span>시세 대비 할인</span><strong>${calc.actualDiscount == null ? "데이터 부족" : `${calc.actualDiscount.toFixed(1)}%`}</strong></div><div class="analysis-stat"><span>명도 난이도</span><strong>${esc(item.occupancy_analysis?.difficulty || "확인 필요")}</strong></div><div class="analysis-stat"><span>대출 필요 예상액</span><strong>${analysisMoney(calc.requiredLoan, "계산 불가")}</strong></div><div class="analysis-stat"><span>입찰 상한 참고값</span><strong>${analysisMoney(calc.bidCeiling, "계산 불가")}</strong></div></div></div>`;
+}
+function financeResultsHtml(item, calc) {
+  const totalFormula = calc.totalCost != null
+    ? `예상 낙찰가 ${fullWon(calc.expectedBid)} + 인수금액 ${fullWon(calc.takeover)} + 추가비용 ${fullWon(calc.extraCosts)}`
+    : "예상 인수금액과 모든 비용을 입력해야 합산할 수 있습니다.";
+  const loanNote = calc.requiredLoan == null
+    ? "보유 현금·비상자금·예상 총취득원가 입력 필요"
+    : "현금에서 최소 비상자금을 제외한 뒤 계산한 참고 필요 대출액";
+  const ltvNote = calc.ltvLimit == null ? "LTV 참고비율 입력 필요" : `입력한 LTV ${calc.ltvRate}% 기준`;
+  const dsrNote = calc.dsrLimit == null ? "소득·DSR·기존 연간 원리금·기간·금리 입력 필요" : "입력한 DSR·소득·상환조건 기준";
+  const policyNote = calc.policyFlags.length ? `${calc.policyFlags.join(", ")} 대상 가능성 검토 — 자격 확인 필요` : "정책대출 조건을 선택하지 않았습니다.";
+  return `<div class="analysis-result-grid"><div class="analysis-result"><span>예상 필요 대출액</span><strong>${analysisMoney(calc.requiredLoan, "계산 불가")}</strong><small>${esc(loanNote)}</small></div><div class="analysis-result"><span>LTV 기준 참고 한도</span><strong>${analysisMoney(calc.ltvLimit, "계산 불가")}</strong><small>${esc(ltvNote)}</small></div><div class="analysis-result"><span>DSR 기준 참고 한도</span><strong>${analysisMoney(calc.dsrLimit, "계산 불가")}</strong><small>${esc(dsrNote)}</small></div><div class="analysis-result"><span>자기자금 필요액</span><strong>${analysisMoney(calc.usableCash != null && calc.totalCost != null ? Math.max(0, calc.totalCost - (calc.requiredLoan || 0)) : null, "계산 불가")}</strong><small>입력한 현금·비상자금 기준</small></div><div class="analysis-result"><span>예상 잔금 부족액</span><strong>${analysisMoney(calc.shortfall, "계산 불가")}</strong><small>필요 대출액과 입력 기준 한도 차이</small></div><div class="analysis-result"><span>사용자 기준 입찰 상한</span><strong>${analysisMoney(calc.bidCeiling, "계산 불가")}</strong><small>목표 할인율을 적용한 참고값</small></div></div><p class="analysis-caution"><b>예상 총취득원가:</b> ${esc(totalFormula)}<br><b>시세 대비 실제 할인:</b> ${calc.actualDiscount == null ? "보수적 시세 또는 비용 데이터 부족" : `${calc.actualDiscount.toFixed(1)}% · ${fullWon(calc.market - calc.totalCost)}`}<br><b>정책대출:</b> ${esc(policyNote)}<br><b>일반 경락잔금대출:</b> 금융기관별 담보·소득·권리 심사 확인 필요</p>`;
+}
+function refreshAnalysis(dialog, item) {
+  const profile = readFinanceProfile(dialog, item);
+  const calc = calculateFinance(item, profile);
+  const summary = dialog.querySelector("#analysisSummary");
+  const results = dialog.querySelector("#analysisResults");
+  if (summary) summary.innerHTML = beginnerSummaryHtml(item, calc);
+  if (results) results.innerHTML = financeResultsHtml(item, calc);
+}
+function switchDetailTab(dialog, tabName, item) {
+  dialog.querySelectorAll("[data-detail-tab]").forEach((button) => {
+    const active = button.dataset.detailTab === tabName;
+    button.setAttribute("aria-selected", String(active));
+  });
+  dialog.querySelectorAll("[data-detail-panel]").forEach((panel) => {
+    panel.hidden = panel.dataset.detailPanel !== tabName;
+  });
+  if (tabName === "analysis") refreshAnalysis(dialog, item);
+}
+function mountDetailTabs(dialog, item) {
+  const inner = dialog.querySelector(".dialog-inner");
+  if (!inner) return;
+  const head = inner.querySelector(".dialog-head");
+  const basic = document.createElement("section");
+  basic.className = "detail-panel";
+  basic.dataset.detailPanel = "overview";
+  [...inner.children].filter((node) => node !== head).forEach((node) => basic.append(node));
+  const tabs = document.createElement("div");
+  tabs.className = "detail-tabs";
+  tabs.setAttribute("role", "tablist");
+  tabs.innerHTML = `<button class="detail-tab" type="button" role="tab" data-detail-tab="overview" aria-selected="true">기본 정보</button><button class="detail-tab" type="button" role="tab" data-detail-tab="analysis" aria-selected="false">초보자 분석</button>`;
+  const analysis = document.createElement("section");
+  analysis.className = "detail-panel";
+  analysis.dataset.detailPanel = "analysis";
+  analysis.hidden = true;
+  analysis.innerHTML = analysisHtml(item);
+  inner.replaceChildren(head, tabs, basic, analysis);
+  tabs.querySelectorAll("[data-detail-tab]").forEach((button) => button.addEventListener("click", () => switchDetailTab(dialog, button.dataset.detailTab, item)));
+  hydrateFinanceForm(dialog, item);
+  dialog.querySelectorAll("[data-finance-field]").forEach((field) => field.addEventListener(field.type === "checkbox" ? "change" : "input", () => refreshAnalysis(dialog, item)));
+  refreshAnalysis(dialog, item);
 }
 function match(item) {
   if (state.district && item.district !== state.district) return false;
@@ -395,6 +701,7 @@ function cardHtml(item) {
   const lastDate = item.last_bid_date ? `<span>직전 회차 ${dateLabel(item.last_bid_date)}</span>` : "";
   const riskFlags = (item.risk_flags || []).slice(0, 2).join(" · ") || "공식 서류 확인 필요";
   const tenantStatus = item.tenant_status || "임차인 정보 확인 필요";
+  const beginnerLevel = item.beginner_risk_level || "노랑";
   return `<li class="auction-card${item.is_interest ? " interest" : ""}${item.is_upcoming ? " upcoming" : ""}">
     <div class="card-head">
       <div>
@@ -410,7 +717,7 @@ function cardHtml(item) {
       <div class="metric"><span class="metric-label">최저가</span><strong class="metric-value">${money(item.minimum_price)}${ratio}</strong></div>
       ${final}
     </div>
-    <div class="card-flags"><span class="risk-chip ${riskClass(item)}">주의: ${esc(riskFlags)}</span><span class="tenant-chip">임차인: ${esc(tenantStatus)}</span></div>
+    <div class="card-flags"><span class="risk-chip ${riskClass(item)}">초보자 ${esc(beginnerLevel)} · ${esc(riskFlags)}</span><span class="tenant-chip">임차인: ${esc(tenantStatus)}</span></div>
     <div class="card-foot"><span class="case">사건 ${esc(item.case_display || item.case_no)}</span>${tags}${lastDate}<span>${esc(item.area_note || "면적 상세 확인 필요")}</span><span class="card-actions"><button class="text-btn" data-detail-id="${esc(item.id)}">상세 보기</button><a class="text-btn" href="${esc(mapUrl(item))}" target="_blank" rel="noopener">지도 보기</a><a class="text-btn" href="${esc(item.official_url)}" target="_blank" rel="noopener">${item.source_type === "onbid" ? "온비드 원문" : "법원 원문"}</a></span></div>
   </li>`;
 }
@@ -461,9 +768,10 @@ function openDetail(id) {
   if (!item) return;
   const dialog = $("#detailDialog");
   $("#detailContent").innerHTML = detailHtml(item);
+  mountDetailTabs(dialog, item);
   const actionLinks = dialog.querySelectorAll(".dialog-actions a");
-  if (actionLinks[0] && item.source_type === "onbid") actionLinks[0].textContent = "\uc628\ube44\ub4dc \uc6d0\ubb38 \uc5f4\uae30";
-  if (actionLinks[1]) actionLinks[1].textContent = originalLabel(item);
+  if (actionLinks[1] && item.source_type === "onbid") actionLinks[1].textContent = "\uc628\ube44\ub4dc \uc6d0\ubb38 \uc5f4\uae30";
+  if (actionLinks[2]) actionLinks[2].textContent = originalLabel(item);
   dialog.querySelector(".close-dialog").addEventListener("click", () => dialog.close());
   dialog.addEventListener("click", (event) => { if (event.target === dialog) dialog.close(); }, { once: true });
   if (typeof dialog.showModal === "function") dialog.showModal();
