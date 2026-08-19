@@ -599,13 +599,13 @@ def annotate_risk_profile(item: dict[str, Any]) -> dict[str, Any]:
     if item.get("is_reauction"):
         yellow_reasons.append("유찰·재매각 이력이 있어 이번 회차 조건을 다시 확인해야 합니다.")
     if red_reasons:
-        beginner_risk_level = "빨강"
+        beginner_risk_level = "초보자 주의"
         beginner_risk_reasons = red_reasons + yellow_reasons
     elif yellow_reasons:
-        beginner_risk_level = "노랑"
+        beginner_risk_level = "추가 확인 필요"
         beginner_risk_reasons = yellow_reasons
     else:
-        beginner_risk_level = "초록"
+        beginner_risk_level = "비교적 검토 가능"
         beginner_risk_reasons = ["현재 수집된 공개문구에서 별도 위험 신호가 확인되지 않았습니다. 최신 원문 확인은 필요합니다."]
 
     item["tenant_status"] = tenant_status

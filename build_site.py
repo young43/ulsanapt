@@ -320,6 +320,17 @@ dialog::backdrop { background: rgba(24, 40, 44, .45); backdrop-filter: blur(3px)
 .analysis-result small { display: block; margin-top: 3px; color: var(--faint); font-size: 10.5px; line-height: 1.45; }
 .analysis-caution { margin: 0; padding: 10px 11px; border-radius: 9px; color: #76553b; background: #fff7ec; font-size: 11.5px; line-height: 1.55; }
 .analysis-empty { margin: 0; padding: 10px 11px; border-radius: 9px; color: var(--muted); background: var(--paper-2); font-size: 12px; }
+.registry-card { background: #f8f5ee; }
+.registry-controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 10px; }
+.registry-file, .registry-clear, .registry-text-submit { display: inline-flex; align-items: center; justify-content: center; min-height: 36px; padding: 7px 12px; border: 1px solid var(--navy); border-radius: 8px; color: #fffaf4; background: var(--navy); font: inherit; font-size: 12px; font-weight: 800; cursor: pointer; }
+.registry-file input { position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0; pointer-events: none; }
+.registry-clear, .registry-text-submit { color: var(--navy); background: var(--paper); }
+.registry-file:focus-within, .registry-clear:focus-visible, .registry-text-submit:focus-visible { outline: 3px solid rgba(37, 76, 74, .25); outline-offset: 2px; }
+.registry-text { width: 100%; min-height: 88px; margin-top: 10px; border: 1px solid var(--line-strong); border-radius: 8px; padding: 9px 10px; color: var(--ink); background: var(--paper); font: inherit; font-size: 12px; line-height: 1.5; resize: vertical; }
+.registry-status { margin-top: 10px; }
+.registry-meta { margin-top: 10px; color: var(--muted); font-size: 11px; line-height: 1.5; }
+.registry-meta b { color: var(--navy); }
+.registry-result { margin-top: 10px; }
 
 @media (max-width: 820px) {
   .hero { grid-template-columns: 1fr; }
@@ -360,6 +371,7 @@ dialog::backdrop { background: rgba(24, 40, 44, .45); backdrop-filter: blur(3px)
   .analysis-summary-head .risk-level { margin-top: 10px; }
   .analysis-summary-grid, .analysis-grid, .finance-grid, .analysis-result-grid { grid-template-columns: 1fr; }
   .rights-event { grid-template-columns: 1fr; gap: 2px; }
+  .registry-file, .registry-clear, .registry-text-submit { width: 100%; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; } }
 """
@@ -374,6 +386,10 @@ const FINANCE_STORAGE_KEY = "ulsan-auction-finance-profile-v1";
 const GLOBAL_FINANCE_FIELDS = ["cash", "annual_income", "spouse_income", "existing_debt", "existing_annual_debt_service", "loan_term_years", "interest_rate", "emergency_cash", "ltv_rate", "dsr_rate", "target_discount", "first_home", "newlywed", "newborn_special"];
 const PROPERTY_FINANCE_FIELDS = ["expected_bid_price", "expected_takeover_amount", "acquisition_cost", "legal_fee", "eviction_cost", "management_arrears", "repair_cost"];
 let financeProfileCache = null;
+const REGISTRY_STORAGE_PREFIX = "ulsan-auction-registry-analysis-v1:";
+const PDFJS_MODULE_URL = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs";
+const PDFJS_WORKER_URL = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs";
+let pdfjsModulePromise = null;
 const $ = (selector) => document.querySelector(selector);
 const listEl = $("#auctionList");
 
@@ -434,7 +450,7 @@ function appraisalGap(item) {
   const value = Number(item.discount_vs_appraisal);
   return value >= 0 ? `${value.toFixed(1)}% 할인` : `${Math.abs(value).toFixed(1)}% 할증`;
 }
-function riskClass(item) { return beginnerRiskClass(item.beginner_risk_level || "노랑"); }
+function riskClass(item) { return beginnerRiskClass(item.beginner_risk_level || "추가 확인 필요"); }
 function mapUrl(item) {
   const query = item.map_query || item.address || item.complex || "";
   return item.map_url || `https://map.naver.com/p/search/${encodeURIComponent(query)}`;
@@ -444,7 +460,7 @@ function bulletHtml(values, className) {
   return rows.length ? `<ul class="${className}">${rows.map((value) => `<li>${esc(value)}</li>`).join("")}</ul>` : `<p>자동 확인된 내용이 없습니다. 공식 서류를 직접 확인하세요.</p>`;
 }
 function beginnerRiskClass(level) {
-  return level === "빨강" ? "risk-red" : (level === "초록" ? "risk-green" : "risk-yellow");
+  return level === "빨강" || level === "초보자 주의" ? "risk-red" : (level === "초록" || level === "비교적 검토 가능" ? "risk-green" : "risk-yellow");
 }
 function analysisMoney(value, fallback = "데이터 없음") {
   return value == null || value === "" ? fallback : `${money(value)} (${fullWon(value)})`;
@@ -496,6 +512,7 @@ function analysisHtml(item) {
   const sources = (item.analysis_sources || []).join(" · ") || "공개목록·공식 상세 응답";
   return `<div id="analysisSummary"></div>
     <div class="analysis-layout">
+      <section class="analysis-card registry-card"><h3>등기부등본 업로드·재분석</h3><p>PDF 등기부등본을 선택하면 이 브라우저에서 텍스트를 추출해 권리 타임라인과 초보자 주의 단계를 다시 계산합니다. 원문 파일은 서버로 전송하지 않습니다.</p><div class="registry-controls"><label class="registry-file">등기부등본 선택<input data-registry-file type="file" accept=".pdf,.txt,application/pdf,text/plain"></label><button class="registry-clear" type="button" data-registry-clear>저장 결과 삭제</button></div><div class="registry-status analysis-note" data-registry-status>저장된 업로드 분석 결과가 있으면 이 물건에 자동으로 다시 표시합니다.</div><div class="registry-result" data-registry-result>${registryResultHtml(item)}</div><textarea class="registry-text" data-registry-text placeholder="스캔 PDF에서 글자가 추출되지 않으면 OCR 결과나 등기부 내용을 여기에 붙여넣으세요."></textarea><button class="registry-text-submit" type="button" data-registry-text-submit>붙여넣은 텍스트로 다시 분석</button></section>
       <section class="analysis-card"><h3>1~2. 현재 시세와 현재 최저 입찰가</h3><div class="analysis-grid"><div class="analysis-value"><span>보수적 시세</span><strong>${analysisMoney(market.conservative_price)}</strong><small>${esc(market.conservative_method || "데이터 부족")}</small></div><div class="analysis-value"><span>현재 최저 입찰가</span><strong>${analysisMoney(item.minimum_price, "확인 필요")}</strong><small>${item.minimum_ratio != null ? `감정가의 ${esc(item.minimum_ratio)}%` : "비율 확인 필요"}</small></div><div class="analysis-value"><span>감정가</span><strong>${analysisMoney(item.appraisal, "확인 필요")}</strong><small>공식목록 기준</small></div></div><div class="analysis-grid" style="margin-top:8px">${marketFieldsHtml(item)}</div><p class="analysis-note">${esc(market.source_note || "시세 자료가 부족합니다.")}</p></section>
       <section class="analysis-card"><h3>3. 등기 권리 타임라인</h3><p>${esc(rights.summary || "등기 날짜 자료 없음 — 확인 필요")}</p>${rightsTimelineHtml(item)}<p class="analysis-note"><b>${esc(rights.acquisition_summary || "선순위 권리 존재 가능성 — 확인 필요")}</b><br>${esc(rights.source_note || "최신 등기사항증명서 확인 필요")}</p></section>
       <section class="analysis-card"><h3>4~8. 임차인·대항력·배당·예상 인수금액</h3><div class="analysis-grid"><div class="analysis-value"><span>임차인 현황</span><strong>${esc(tenant.status || item.tenant_status || "확인 필요")}</strong></div><div class="analysis-value"><span>관련 문구</span><strong>${esc(tenantEvidence)}</strong></div><div class="analysis-value"><span>말소기준권리 날짜</span><strong>${analysisText(tenant.reference_right_date, "데이터 없음")}</strong></div><div class="analysis-value"><span>선순위·후순위 예상</span><strong>${esc(tenant.priority_assessment || "산정 불가")}</strong></div><div class="analysis-value"><span>대항력 가능성</span><strong>${esc(tenant.opposability_assessment || "확인 필요")}</strong></div><div class="analysis-value"><span>예상 인수금액</span><strong>${analysisMoney(tenant.estimated_takeover_amount, "산정 불가")}</strong></div></div>${tenantRecordsHtml(item)}${(tenant.evidence || []).length ? `<ul class="analysis-list">${tenant.evidence.map((clue) => `<li><b>${esc(clue.source)}</b><br>${esc(clue.text)}</li>`).join("")}</ul>` : ""}<p class="analysis-note">임차보증금·예상 배당·미배당금은 원문 자료가 없으면 계산하지 않습니다. 대항력·인수 여부도 확정할 수 없습니다.</p></section>
@@ -510,6 +527,373 @@ function numberValue(value) {
   if (value == null || value === "") return null;
   const parsed = Number(String(value).replaceAll(",", "").trim());
   return Number.isFinite(parsed) ? parsed : null;
+}
+function registryStorageKey(item) {
+  const identity = item.id || item.tracking_key || item.case_no || item.address || "unknown";
+  return REGISTRY_STORAGE_PREFIX + encodeURIComponent(String(identity));
+}
+function loadRegistryAnalysis(item) {
+  try {
+    const raw = JSON.parse(localStorage.getItem(registryStorageKey(item)) || "null");
+    return raw && typeof raw === "object" ? raw : null;
+  } catch (error) {
+    return null;
+  }
+}
+function saveRegistryAnalysis(item, analysis) {
+  try {
+    localStorage.setItem(registryStorageKey(item), JSON.stringify(analysis));
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+function clearRegistryAnalysis(item) {
+  try {
+    localStorage.removeItem(registryStorageKey(item));
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+function withSavedRegistryAnalysis(item) {
+  const stored = loadRegistryAnalysis(item);
+  if (!stored) return item;
+  const merged = { ...item, registry_analysis: stored };
+  if (stored.rights_analysis) merged.rights_analysis = { ...(item.rights_analysis || {}), ...stored.rights_analysis };
+  if (stored.tenant_analysis) merged.tenant_analysis = { ...(item.tenant_analysis || {}), ...stored.tenant_analysis };
+  if (Array.isArray(stored.tenant_evidence)) merged.tenant_evidence = stored.tenant_evidence.slice();
+  if (stored.beginner_risk_level) merged.beginner_risk_level = stored.beginner_risk_level;
+  if (Array.isArray(stored.beginner_risk_reasons)) merged.beginner_risk_reasons = stored.beginner_risk_reasons.slice();
+  if (Array.isArray(stored.analysis_sources)) merged.analysis_sources = [...new Set([...(item.analysis_sources || []), ...stored.analysis_sources])];
+  return merged;
+}
+function registryNormalizeText(value) {
+  return String(value || "")
+    .replace(/\u00a0/g, " ")
+    .replace(/\r/g, "\n")
+    .replace(/[ \t]+/g, " ")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+function registryContext(text, index, radius = 120) {
+  return registryNormalizeText(text.slice(Math.max(0, index - radius), Math.min(text.length, index + radius)));
+}
+function registryDateMatches(text) {
+  const values = [];
+  const datePattern = /((?:19|20)\d{2})\s*[.\-\/년]\s*(\d{1,2})\s*[.\-\/월]\s*(\d{1,2})\s*일?/g;
+  for (const match of text.matchAll(datePattern)) {
+    const year = Number(match[1]);
+    const month = Number(match[2]);
+    const day = Number(match[3]);
+    if (month >= 1 && month <= 12 && day >= 1 && day <= 31) {
+      values.push({ index: match.index || 0, date: year + "-" + String(month).padStart(2, "0") + "-" + String(day).padStart(2, "0") });
+    }
+  }
+  return values;
+}
+function registryDateNear(text, index, dates) {
+  const before = dates.filter((value) => value.index <= index && index - value.index <= 180).pop();
+  const after = dates.find((value) => value.index > index && value.index - index <= 180) || null;
+  return [before, after].filter(Boolean).sort((a, b) => Math.abs(a.index - index) - Math.abs(b.index - index))[0] || null;
+}
+function registryMoney(value) {
+  const normalized = String(value || "").replaceAll(",", "").replace(/\s+/g, "");
+  if (!normalized) return null;
+  if (/^\d+$/.test(normalized)) return Number(normalized);
+  let total = 0;
+  let found = false;
+  const eok = normalized.match(/(\d+(?:\.\d+)?)억/);
+  const man = normalized.match(/(\d+(?:\.\d+)?)만/);
+  const won = normalized.match(/(\d+(?:\.\d+)?)원/);
+  if (eok) { total += Number(eok[1]) * 100000000; found = true; }
+  if (man) { total += Number(man[1]) * 10000; found = true; }
+  if (won && !eok && !man) { total += Number(won[1]); found = true; }
+  return found && Number.isFinite(total) ? Math.round(total) : null;
+}
+function registryAmountNear(text, index) {
+  const context = text.slice(Math.max(0, index - 120), Math.min(text.length, index + 280));
+  const patterns = [
+    /(?:채권최고액|보증금|전세금|금액)\s*[:：]?\s*(?:금\s*)?([0-9,]+(?:\s*억\s*[0-9,]+)?\s*만?)/g,
+    /금\s*([0-9,]+)\s*원/g,
+  ];
+  for (const pattern of patterns) {
+    for (const match of context.matchAll(pattern)) {
+      const amount = registryMoney(match[1]);
+      if (amount != null) return amount;
+    }
+  }
+  return null;
+}
+const REGISTRY_EVENT_DEFINITIONS = [
+  { label: "소유권보존", regex: /소유권\s*보존/g, kind: "ownership" },
+  { label: "소유권이전", regex: /소유권\s*이전/g, kind: "ownership" },
+  { label: "근저당권", regex: /근저당\s*권(?:설정)?/g, kind: "reference" },
+  { label: "저당권", regex: /저당\s*권(?:설정)?/g, kind: "reference" },
+  { label: "전세권", regex: /전세\s*권(?:설정)?/g, kind: "reference" },
+  { label: "주택임차권", regex: /주택\s*임차\s*권/g, kind: "tenant" },
+  { label: "임차권등기", regex: /임차\s*권\s*등기/g, kind: "tenant" },
+  { label: "가압류", regex: /가압류/g, kind: "reference" },
+  { label: "압류", regex: /압류/g, kind: "reference" },
+  { label: "경매개시결정", regex: /경매\s*개시\s*결정/g, kind: "reference" },
+  { label: "담보가등기", regex: /담보\s*가등기/g, kind: "reference" },
+  { label: "가처분", regex: /가처분/g, kind: "special" },
+  { label: "가등기", regex: /가등기/g, kind: "special" },
+  { label: "신탁", regex: /신탁/g, kind: "special" },
+  { label: "지상권", regex: /지상권/g, kind: "special" },
+  { label: "지역권", regex: /지역권/g, kind: "special" },
+  { label: "예고등기", regex: /예고\s*등기/g, kind: "special" },
+];
+const REGISTRY_REFERENCE_LABELS = new Set(["근저당권", "저당권", "전세권", "주택임차권", "임차권등기", "가압류", "압류", "경매개시결정", "담보가등기"]);
+const REGISTRY_SPECIAL_DEFINITIONS = [
+  { label: "선순위 가처분", regex: /가처분/g },
+  { label: "선순위 가등기", regex: /가등기/g },
+  { label: "유치권 문구", regex: /유치권/g },
+  { label: "법정지상권 문구", regex: /법정지상권/g },
+  { label: "대지권 미등기", regex: /대지권\s*미등기/g },
+  { label: "토지별도등기", regex: /토지\s*별도\s*등기/g },
+  { label: "신탁", regex: /신탁/g },
+  { label: "지상권", regex: /지상권/g },
+  { label: "지역권", regex: /지역권/g },
+  { label: "예고등기", regex: /예고\s*등기/g },
+];
+function registryMatchesFor(text, definition) {
+  return [...text.matchAll(new RegExp(definition.regex.source, "g"))].map((match) => ({
+    index: match.index || 0,
+    evidence: registryContext(text, match.index || 0),
+  }));
+}
+function buildRegistryAnalysis(text, fileName, uploadedAt) {
+  const normalized = registryNormalizeText(text);
+  const dates = registryDateMatches(normalized);
+  const events = [];
+  for (const definition of REGISTRY_EVENT_DEFINITIONS) {
+    for (const match of normalized.matchAll(new RegExp(definition.regex.source, "g"))) {
+      const index = match.index || 0;
+      const nearby = normalized.slice(Math.max(0, index - 4), Math.min(normalized.length, index + 18));
+      if (definition.label === "저당권" && /근저당\s*권/.test(nearby)) continue;
+      if (definition.label === "압류" && /가압류/.test(nearby)) continue;
+      if (definition.label === "가등기" && /담보\s*가등기/.test(nearby)) continue;
+      const date = registryDateNear(normalized, index, dates);
+      if (!date) continue;
+      events.push({
+        date: date.date,
+        date_display: date.date.replaceAll("-", "."),
+        label: definition.label,
+        kind: definition.kind,
+        index,
+        amount: registryAmountNear(normalized, index),
+        evidence: registryContext(normalized, index),
+      });
+    }
+  }
+  events.sort((a, b) => (a.date + a.index).localeCompare(b.date + b.index));
+  const uniqueEvents = [];
+  const seenEvents = new Set();
+  for (const event of events) {
+    const key = event.date + "|" + event.label;
+    if (seenEvents.has(key)) continue;
+    seenEvents.add(key);
+    uniqueEvents.push(event);
+  }
+  const reference = uniqueEvents
+    .filter((event) => REGISTRY_REFERENCE_LABELS.has(event.label))
+    .sort((a, b) => (a.date + a.index).localeCompare(b.date + b.index))[0] || null;
+  const timeline = uniqueEvents.map((event) => {
+    let status = "권리 순위 확인 필요";
+    if (reference && event.date === reference.date && event.label === reference.label) {
+      status = "말소기준권리 후보 — 업로드 등기부 자동 추출";
+    } else if (reference && event.date < reference.date) {
+      status = "선순위 가능성 — 인수 여부 확인 필요";
+    } else if (REGISTRY_REFERENCE_LABELS.has(event.label)) {
+      status = "후순위 가능성 — 소멸 여부 확인 필요";
+    } else if (event.kind === "ownership") {
+      status = "소유권 관련 기록 — 원문 확인 필요";
+    }
+    const amount = event.amount != null ? " · 금액 " + fullWon(event.amount) : "";
+    return {
+      date: event.date,
+      date_display: event.date_display,
+      label: event.label,
+      status,
+      evidence: event.evidence + amount,
+      source: "사용자 업로드 등기부등본",
+      is_reference_candidate: Boolean(reference && event.date === reference.date && event.label === reference.label),
+    };
+  });
+  const specialRights = [];
+  for (const definition of REGISTRY_SPECIAL_DEFINITIONS) {
+    const matches = registryMatchesFor(normalized, definition);
+    if (!matches.length) continue;
+    specialRights.push({
+      label: definition.label,
+      status: "특수권리 문구 확인 — 선순위·소멸·인수 여부 확인 필요",
+      evidence: matches[0].evidence,
+    });
+  }
+  const tenantDefinitions = [
+    { label: "주택임차권", regex: /주택\s*임차\s*권/g },
+    { label: "임차권등기", regex: /임차\s*권\s*등기/g },
+    { label: "전세권", regex: /전세\s*권/g },
+    { label: "보증금", regex: /보증금/g },
+    { label: "전세금", regex: /전세금/g },
+  ];
+  const tenantEvidence = [];
+  const tenantTerms = [];
+  for (const definition of tenantDefinitions) {
+    const matches = registryMatchesFor(normalized, definition);
+    if (!matches.length) continue;
+    tenantTerms.push(definition.label);
+    tenantEvidence.push({ source: "사용자 업로드 등기부등본", text: definition.label + " 관련 문구: " + matches[0].evidence });
+  }
+  const strongTenant = tenantTerms.some((term) => ["주택임차권", "임차권등기", "전세권"].includes(term));
+  const tenantStatus = tenantTerms.length
+    ? "등기부에 임차권 관련 문구 확인 — 임차인별 대항력·배당요구는 별도 확인 필요"
+    : "업로드한 등기부에서 임차권 관련 문구 없음 — 임차인 없음 확정 아님";
+  const tenantAnalysis = {
+    status: tenantStatus,
+    evidence: tenantEvidence,
+    records: [],
+    reference_right_date: reference ? reference.date : null,
+    priority_assessment: reference ? "말소기준권리 후보와 전입·점유 자료를 대조해야 합니다." : "선순위·후순위 산정 불가 — 기준권리 후보 확인 필요",
+    opposability_assessment: strongTenant ? "대항력 가능성 있음 — 전입·점유·확정일자 확인 필요" : "확인 필요 — 등기부만으로 대항력을 확정할 수 없음",
+    distribution_assessment: "배당요구 여부·배당액은 매각물건명세서와 배당요구 자료 확인 필요",
+    takeover_assessment: strongTenant ? "낙찰자 인수 가능성 확인 필요 — 보증금·순위·배당요구 대조" : "등기부만으로 인수금액 산정 불가",
+    estimated_takeover_amount: null,
+    source_note: "등기부등본만으로 임차인의 전입·점유·배당요구를 확정할 수 없습니다.",
+  };
+  const reasons = [];
+  if (!normalized || normalized.length < 30) reasons.push("PDF에서 읽을 수 있는 텍스트가 부족합니다. 스캔본은 OCR 또는 텍스트 붙여넣기가 필요합니다.");
+  if (specialRights.length) reasons.push("특수권리 문구가 자동 감지되어 초보자 주의 단계로 표시했습니다.");
+  if (strongTenant) reasons.push("임차권·전세권 관련 문구가 있어 대항력과 보증금 인수 가능성을 확인해야 합니다.");
+  if (reference) reasons.push("말소기준권리 후보 " + reference.date.replaceAll("-", ".") + " " + reference.label + "을 자동 추출했습니다. 법률상 확정값이 아닙니다.");
+  else reasons.push("말소기준권리 후보를 특정하지 못했습니다. 등기부 원문과 매각물건명세서를 직접 대조해야 합니다.");
+  if (!specialRights.length && !strongTenant) reasons.push("자동 감지된 특수권리·강한 임차권 문구가 없더라도 등기부만으로 안전을 확정할 수 없습니다.");
+  const beginnerRiskLevel = specialRights.length || strongTenant ? "초보자 주의" : "추가 확인 필요";
+  const rightsAnalysis = {
+    timeline,
+    special_rights: specialRights,
+    reference_candidate_date: reference ? reference.date : null,
+    summary: reference
+      ? "업로드한 등기부에서 날짜가 확인되는 권리를 시간순으로 정리했습니다. " + reference.date.replaceAll("-", ".") + " " + reference.label + "은 말소기준권리 후보입니다."
+      : "업로드한 등기부에서 날짜가 확인되는 권리와 말소기준권리 후보를 충분히 특정하지 못했습니다.",
+    acquisition_summary: specialRights.length || strongTenant
+      ? "선순위 또는 특수권리·임차권 문구 확인 — 낙찰자 인수 여부 확인 필요"
+      : "자동 추출된 문구에서 특수권리·강한 임차권은 확인되지 않았지만 인수권리 없음으로 확정할 수 없음",
+    source_note: "사용자 업로드 등기부등본의 텍스트를 자동 추출한 참고 분석입니다. 최신 원문·매각물건명세서·현황조사서와 대조하세요.",
+  };
+  return {
+    file_name: fileName || "등기부등본",
+    uploaded_at: uploadedAt || new Date().toISOString(),
+    parser: "브라우저 PDF 텍스트 추출",
+    text_length: normalized.length,
+    has_extractable_text: normalized.length >= 30,
+    rights_analysis: rightsAnalysis,
+    tenant_analysis: tenantAnalysis,
+    tenant_evidence: tenantTerms,
+    beginner_risk_level: beginnerRiskLevel,
+    beginner_risk_reasons: reasons,
+    analysis_sources: ["사용자 업로드 등기부등본"],
+  };
+}
+async function extractRegistryText(file) {
+  const isText = file.type === "text/plain" || /\.txt$/i.test(file.name || "");
+  if (isText) return registryNormalizeText(await file.text());
+  if (!(file.type === "application/pdf" || /\.pdf$/i.test(file.name || ""))) {
+    throw new Error("PDF 또는 텍스트 파일만 업로드할 수 있습니다.");
+  }
+  if (!pdfjsModulePromise) pdfjsModulePromise = import(PDFJS_MODULE_URL);
+  const pdfjs = await pdfjsModulePromise;
+  pdfjs.GlobalWorkerOptions.workerSrc = PDFJS_WORKER_URL;
+  const document = await pdfjs.getDocument({ data: await file.arrayBuffer() }).promise;
+  const pages = [];
+  for (let pageNumber = 1; pageNumber <= document.numPages; pageNumber += 1) {
+    const page = await document.getPage(pageNumber);
+    const content = await page.getTextContent();
+    pages.push(content.items.map((item) => item.str || "").join(" "));
+  }
+  return registryNormalizeText(pages.join("\n"));
+}
+function registryResultHtml(item) {
+  const stored = item.registry_analysis || loadRegistryAnalysis(item);
+  if (!stored) return '<p class="analysis-empty">아직 업로드하여 저장한 등기부 분석 결과가 없습니다.</p>';
+  const rights = stored.rights_analysis || {};
+  const tenant = stored.tenant_analysis || {};
+  const timelineCount = Array.isArray(rights.timeline) ? rights.timeline.length : 0;
+  const specialCount = Array.isArray(rights.special_rights) ? rights.special_rights.length : 0;
+  const resultReasons = Array.isArray(stored.beginner_risk_reasons) ? stored.beginner_risk_reasons : [];
+  return '<div class="registry-meta"><b>' + esc(stored.file_name || "등기부등본") + '</b> · 업로드 ' + esc(stored.uploaded_at ? stored.uploaded_at.slice(0, 16).replace("T", " ") : "확인 필요") + ' · 분석 결과는 이 브라우저에 저장됨</div>' +
+    '<div class="analysis-grid"><div class="analysis-value"><span>자동 추출 권리</span><strong>' + esc(String(timelineCount)) + '건</strong></div><div class="analysis-value"><span>말소기준권리 후보</span><strong>' + esc(rights.reference_candidate_date ? rights.reference_candidate_date.replaceAll("-", ".") : "특정 불가") + '</strong></div><div class="analysis-value"><span>특수권리 문구</span><strong>' + esc(String(specialCount)) + '건</strong></div><div class="analysis-value"><span>임차권 관련</span><strong>' + esc(tenant.status || "확인 필요") + '</strong></div></div>' +
+    '<p class="analysis-note"><b>자동 분석 단계:</b> ' + esc(stored.beginner_risk_level || "추가 확인 필요") + '<br>' + esc(rights.acquisition_summary || "인수 여부 확인 필요") + '<br>' + esc(rights.source_note || "원문 대조 필요") + '</p>' +
+    (resultReasons.length ? '<ul class="analysis-list">' + resultReasons.map((reason) => '<li>' + esc(reason) + '</li>').join("") + '</ul>' : "") +
+    '<p class="analysis-note">PDF가 스캔 이미지라 글자를 추출하지 못하면 아래 텍스트 입력란에 OCR 결과나 등기부 내용을 붙여넣어 다시 분석하세요.</p>';
+}
+function applyRegistryAnalysisToItem(item, analysis) {
+  if (!analysis) return item;
+  const merged = withSavedRegistryAnalysis(item);
+  if (analysis.rights_analysis) merged.rights_analysis = { ...(item.rights_analysis || {}), ...analysis.rights_analysis };
+  if (analysis.tenant_analysis) merged.tenant_analysis = { ...(item.tenant_analysis || {}), ...analysis.tenant_analysis };
+  merged.registry_analysis = analysis;
+  merged.beginner_risk_level = analysis.beginner_risk_level || merged.beginner_risk_level;
+  merged.beginner_risk_reasons = analysis.beginner_risk_reasons || merged.beginner_risk_reasons;
+  merged.analysis_sources = [...new Set([...(item.analysis_sources || []), ...(analysis.analysis_sources || [])])];
+  merged.tenant_evidence = analysis.tenant_evidence || merged.tenant_evidence;
+  return merged;
+}
+function setRegistryStatus(dialog, message) {
+  const status = dialog.querySelector("[data-registry-status]");
+  if (status) status.textContent = message;
+}
+function rerenderAnalysisPanel(dialog, item) {
+  const panel = dialog.querySelector('[data-detail-panel="analysis"]');
+  if (!panel) return;
+  panel.innerHTML = analysisHtml(item);
+  bindAnalysisPanel(dialog, item);
+  refreshAnalysis(dialog, item);
+}
+function persistRegistryText(dialog, item, text, fileName) {
+  const analysis = buildRegistryAnalysis(text, fileName, new Date().toISOString());
+  if (!saveRegistryAnalysis(item, analysis)) {
+    setRegistryStatus(dialog, "브라우저 저장공간이 부족해 저장하지 못했습니다. 파일 크기를 줄이거나 텍스트 입력으로 다시 시도하세요.");
+    return;
+  }
+  const merged = applyRegistryAnalysisToItem(item, analysis);
+  Object.assign(item, merged);
+  rerenderAnalysisPanel(dialog, item);
+  setRegistryStatus(dialog, "등기부등본을 분석했고 이 물건에 저장했습니다. 아래 결과와 타임라인을 확인하세요.");
+}
+async function handleRegistryUpload(dialog, item, file) {
+  if (!file) return;
+  setRegistryStatus(dialog, "등기부등본을 읽는 중입니다. PDF는 잠시 걸릴 수 있습니다.");
+  try {
+    const text = await extractRegistryText(file);
+    persistRegistryText(dialog, item, text, file.name);
+  } catch (error) {
+    setRegistryStatus(dialog, "업로드 실패: " + (error.message || "파일을 읽지 못했습니다.") + " 인터넷 연결 또는 PDF 형식을 확인하세요.");
+  }
+}
+function bindAnalysisPanel(dialog, item) {
+  hydrateFinanceForm(dialog, item);
+  dialog.querySelectorAll("[data-finance-field]").forEach((field) => field.addEventListener(field.type === "checkbox" ? "change" : "input", () => refreshAnalysis(dialog, item)));
+  const fileInput = dialog.querySelector("[data-registry-file]");
+  if (fileInput) fileInput.addEventListener("change", () => handleRegistryUpload(dialog, item, fileInput.files && fileInput.files[0]));
+  const textButton = dialog.querySelector("[data-registry-text-submit]");
+  if (textButton) textButton.addEventListener("click", () => {
+    const text = dialog.querySelector("[data-registry-text]")?.value || "";
+    if (text.trim().length < 10) {
+      setRegistryStatus(dialog, "분석할 등기부 텍스트를 10자 이상 입력하세요.");
+      return;
+    }
+    persistRegistryText(dialog, item, text, "직접 입력한 등기부 텍스트");
+  });
+  const clearButton = dialog.querySelector("[data-registry-clear]");
+  if (clearButton) clearButton.addEventListener("click", () => {
+    if (!window.confirm("이 물건의 브라우저 저장 등기부 분석 결과를 삭제할까요?")) return;
+    clearRegistryAnalysis(item);
+    const base = auctions.find((row) => row.id === item.id) || item;
+    rerenderAnalysisPanel(dialog, { ...base });
+    setRegistryStatus(dialog, "저장된 등기부 분석 결과를 삭제했습니다.");
+  });
 }
 function loadFinanceProfile() {
   if (financeProfileCache) return financeProfileCache;
@@ -615,12 +999,12 @@ function calculateFinance(item, profile) {
   };
 }
 function beginnerSummaryHtml(item, calc) {
-  const level = item.beginner_risk_level || "노랑";
+  const level = item.beginner_risk_level || "추가 확인 필요";
   const reasons = (item.beginner_risk_reasons || ["공개자료와 최신 원문을 함께 확인하세요."]).slice(0, 5);
   const oneLine = calc.takeover == null
     ? "현재 자료만으로 낙찰자 인수금액을 산정할 수 없습니다. 최신 매각물건명세서와 현황조사서를 확인해야 합니다."
     : "현재 입력값과 공개자료를 기준으로 계산한 참고값입니다. 법률·금융 판단을 대신하지 않습니다.";
-  return `<div class="analysis-summary ${beginnerRiskClass(level)}"><div class="analysis-summary-head"><div><h3>초보자 분석</h3><p>${esc(oneLine)}</p></div><span class="risk-level ${beginnerRiskClass(level)}">${esc(level)} · 초보자 위험도</span></div><ul class="analysis-summary-reasons">${reasons.map((reason) => `<li>${esc(reason)}</li>`).join("")}</ul><div class="analysis-summary-grid"><div class="analysis-stat"><span>보수적 시세</span><strong>${analysisMoney(calc.market)}</strong></div><div class="analysis-stat"><span>현재 최저가</span><strong>${analysisMoney(item.minimum_price, "확인 필요")}</strong></div><div class="analysis-stat"><span>예상 낙찰가 기준</span><strong>${analysisMoney(calc.expectedBid, "확인 필요")}</strong><small>${esc(calc.bidSource)}</small></div><div class="analysis-stat"><span>예상 인수금액</span><strong>${analysisMoney(calc.takeover, "산정 불가")}</strong></div><div class="analysis-stat"><span>예상 총취득원가</span><strong>${analysisMoney(calc.totalCost, "산정 불가")}</strong></div><div class="analysis-stat"><span>시세 대비 할인</span><strong>${calc.actualDiscount == null ? "데이터 부족" : `${calc.actualDiscount.toFixed(1)}%`}</strong></div><div class="analysis-stat"><span>명도 난이도</span><strong>${esc(item.occupancy_analysis?.difficulty || "확인 필요")}</strong></div><div class="analysis-stat"><span>대출 필요 예상액</span><strong>${analysisMoney(calc.requiredLoan, "계산 불가")}</strong></div><div class="analysis-stat"><span>입찰 상한 참고값</span><strong>${analysisMoney(calc.bidCeiling, "계산 불가")}</strong></div></div></div>`;
+  return `<div class="analysis-summary ${beginnerRiskClass(level)}"><div class="analysis-summary-head"><div><h3>초보자 분석</h3><p>${esc(oneLine)}</p></div><span class="risk-level ${beginnerRiskClass(level)}">주의 단계: ${esc(level)}</span></div><ul class="analysis-summary-reasons">${reasons.map((reason) => `<li>${esc(reason)}</li>`).join("")}</ul><div class="analysis-summary-grid"><div class="analysis-stat"><span>보수적 시세</span><strong>${analysisMoney(calc.market)}</strong></div><div class="analysis-stat"><span>현재 최저가</span><strong>${analysisMoney(item.minimum_price, "확인 필요")}</strong></div><div class="analysis-stat"><span>예상 낙찰가 기준</span><strong>${analysisMoney(calc.expectedBid, "확인 필요")}</strong><small>${esc(calc.bidSource)}</small></div><div class="analysis-stat"><span>예상 인수금액</span><strong>${analysisMoney(calc.takeover, "산정 불가")}</strong></div><div class="analysis-stat"><span>예상 총취득원가</span><strong>${analysisMoney(calc.totalCost, "산정 불가")}</strong></div><div class="analysis-stat"><span>시세 대비 할인</span><strong>${calc.actualDiscount == null ? "데이터 부족" : `${calc.actualDiscount.toFixed(1)}%`}</strong></div><div class="analysis-stat"><span>명도 난이도</span><strong>${esc(item.occupancy_analysis?.difficulty || "확인 필요")}</strong></div><div class="analysis-stat"><span>대출 필요 예상액</span><strong>${analysisMoney(calc.requiredLoan, "계산 불가")}</strong></div><div class="analysis-stat"><span>입찰 상한 참고값</span><strong>${analysisMoney(calc.bidCeiling, "계산 불가")}</strong></div></div></div>`;
 }
 function financeResultsHtml(item, calc) {
   const totalFormula = calc.totalCost != null
@@ -671,8 +1055,7 @@ function mountDetailTabs(dialog, item) {
   analysis.innerHTML = analysisHtml(item);
   inner.replaceChildren(head, tabs, basic, analysis);
   tabs.querySelectorAll("[data-detail-tab]").forEach((button) => button.addEventListener("click", () => switchDetailTab(dialog, button.dataset.detailTab, item)));
-  hydrateFinanceForm(dialog, item);
-  dialog.querySelectorAll("[data-finance-field]").forEach((field) => field.addEventListener(field.type === "checkbox" ? "change" : "input", () => refreshAnalysis(dialog, item)));
+  bindAnalysisPanel(dialog, item);
   refreshAnalysis(dialog, item);
 }
 function match(item) {
@@ -701,7 +1084,7 @@ function cardHtml(item) {
   const lastDate = item.last_bid_date ? `<span>직전 회차 ${dateLabel(item.last_bid_date)}</span>` : "";
   const riskFlags = (item.risk_flags || []).slice(0, 2).join(" · ") || "공식 서류 확인 필요";
   const tenantStatus = item.tenant_status || "임차인 정보 확인 필요";
-  const beginnerLevel = item.beginner_risk_level || "노랑";
+  const beginnerLevel = item.beginner_risk_level || "추가 확인 필요";
   return `<li class="auction-card${item.is_interest ? " interest" : ""}${item.is_upcoming ? " upcoming" : ""}">
     <div class="card-head">
       <div>
@@ -717,7 +1100,7 @@ function cardHtml(item) {
       <div class="metric"><span class="metric-label">최저가</span><strong class="metric-value">${money(item.minimum_price)}${ratio}</strong></div>
       ${final}
     </div>
-    <div class="card-flags"><span class="risk-chip ${riskClass(item)}">초보자 ${esc(beginnerLevel)} · ${esc(riskFlags)}</span><span class="tenant-chip">임차인: ${esc(tenantStatus)}</span></div>
+    <div class="card-flags"><span class="risk-chip ${riskClass(item)}">주의 단계: ${esc(beginnerLevel)} · ${esc(riskFlags)}</span><span class="tenant-chip">임차인: ${esc(tenantStatus)}</span></div>
     <div class="card-foot"><span class="case">사건 ${esc(item.case_display || item.case_no)}</span>${tags}${lastDate}<span>${esc(item.area_note || "면적 상세 확인 필요")}</span><span class="card-actions"><button class="text-btn" data-detail-id="${esc(item.id)}">상세 보기</button><a class="text-btn" href="${esc(mapUrl(item))}" target="_blank" rel="noopener">지도 보기</a><a class="text-btn" href="${esc(item.official_url)}" target="_blank" rel="noopener">${item.source_type === "onbid" ? "온비드 원문" : "법원 원문"}</a></span></div>
   </li>`;
 }
@@ -764,8 +1147,9 @@ function detailHtml(item) {
   return `<div class="dialog-inner"><div class="dialog-head"><div><div class="card-kicker"><span class="status-badge ${statusClass(statusLabel(item))}">${esc(statusLabel(item))}</span><span>${esc(item.district)} · ${esc(item.case_display || item.case_no)}</span></div><h2>${esc(item.complex)}</h2><p>${esc(item.address)}</p></div><button class="close-dialog" type="button" aria-label="닫기">×</button></div><div class="detail-grid"><div class="detail-item"><span>${nextDate ? "다음 입찰일" : "최근 입찰일"}</span><strong>${dateLabel(nextDate || item.bid_date)} · ${item.is_upcoming ? "입찰 예정" : "지난 회차"}</strong></div>${item.last_bid_date ? `<div class="detail-item"><span>직전 입찰일</span><strong>${dateLabel(item.last_bid_date)}</strong></div>` : ""}<div class="detail-item"><span>유찰·재매각 추적</span><strong>${esc(tracking)}</strong></div><div class="detail-item"><span>주의 수준</span><strong>${esc(item.risk_level || "확인 필요")}</strong></div><div class="detail-item"><span>임차인 정보</span><strong>${esc(item.tenant_status || "확인 필요")}</strong></div><div class="detail-item"><span>점유 상태</span><strong>${esc(item.occupancy_status || "확인 필요")}</strong></div>${caseInfo ? `<div class="detail-item"><span>사건 유형</span><strong>${esc(caseInfo)}</strong></div>` : ""}<div class="detail-item"><span>공개목록 건물면적</span><strong>${areaHtml(item)}</strong></div><div class="detail-item"><span>감정가</span><strong>${fullWon(item.appraisal)}</strong></div><div class="detail-item"><span>최저가</span><strong>${fullWon(item.minimum_price)}${item.minimum_ratio != null ? ` (${item.minimum_ratio}%)` : ""}</strong></div>${item.claim_amount != null ? `<div class="detail-item"><span>청구금액(참고)</span><strong>${fullWon(item.claim_amount)}</strong></div>` : ""}${item.final_price != null ? `<div class="detail-item"><span>매각가</span><strong>${fullWon(item.final_price)}</strong></div>` : ""}<div class="detail-item"><span>회차</span><strong>${item.auction_round ? `${item.auction_round}회` : "확인 필요"}</strong></div></div><div class="detail-warning"><h3>초보자 주의사항</h3>${bulletHtml(item.beginner_warnings, "warning-list")}</div><div class="detail-section"><h3>임차인·점유 확인</h3><p><b>임차인 상태:</b> ${esc(item.tenant_status || "확인 필요")}</p><p>${esc(item.tenant_note || "공식 서류 확인 필요")}</p><p><b>관련 문구:</b> ${esc(tenantEvidence)}</p><p><b>자동 감지 주의:</b> ${esc((item.risk_flags || []).join(", ") || "특이 문구 자동 감지 없음")}</p><p><b>점유:</b> ${esc(item.occupancy_status || "현황조사서·현장 확인 필요")}</p></div><div class="detail-section"><h3>입찰 전 확인 순서</h3>${bulletHtml(item.bid_checklist, "checklist")}</div><div class="detail-section"><h3>회차 이력</h3><p>${esc(history || "공개된 회차 이력 없음")}</p></div><div class="detail-section"><h3>권리 참고문구</h3><p>${esc(rightsReference)}</p></div><div class="detail-section"><h3>권리·임차인 메모</h3><p>${esc(item.rights_note)}</p></div><div class="detail-section"><h3>공개목록 특이사항</h3><p>${esc(tags)}</p></div><div class="detail-section"><h3>초등학교 접근성</h3><p>${esc(item.school_access)}</p></div><div class="detail-section"><h3>최근 실거래가 대비</h3><p>${esc(item.market_note || "실거래가 확인 필요")}</p></div><div class="detail-section"><h3>면적 주의</h3><p>${esc(item.area_note)}</p></div><div class="dialog-actions"><a href="${esc(mapUrl(item))}" target="_blank" rel="noopener">네이버지도 위치 보기 ↗</a><a href="${esc(item.source_url)}" target="_blank" rel="noopener">공개 검색목록 열기</a><a class="secondary" href="${esc(item.official_url)}" target="_blank" rel="noopener">대한민국 법원경매정보</a></div></div>`;
 }
 function openDetail(id) {
-  const item = auctions.find((row) => row.id === id);
-  if (!item) return;
+  const baseItem = auctions.find((row) => row.id === id);
+  if (!baseItem) return;
+  const item = withSavedRegistryAnalysis(baseItem);
   const dialog = $("#detailDialog");
   $("#detailContent").innerHTML = detailHtml(item);
   mountDetailTabs(dialog, item);

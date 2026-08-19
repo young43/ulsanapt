@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-19 19:13",
+  "generated_at": "2026-08-19 19:31",
   "as_of": "2026-08-19",
   "history_days": 90,
   "count": 73,
@@ -371,7 +371,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -622,7 +622,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "빨강",
+      "beginner_risk_level": "초보자 주의",
       "beginner_risk_reasons": [
         "임차권·대항력 관련 문구가 있어 보증금 인수 가능성을 확인해야 합니다.",
         "임차권 관련 문구는 있으나 전입일·확정일자·배당요구 자료가 구조화되어 있지 않습니다.",
@@ -882,7 +882,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "빨강",
+      "beginner_risk_level": "초보자 주의",
       "beginner_risk_reasons": [
         "임차권·대항력 관련 문구가 있어 보증금 인수 가능성을 확인해야 합니다.",
         "임차권 관련 문구는 있으나 전입일·확정일자·배당요구 자료가 구조화되어 있지 않습니다.",
@@ -1083,7 +1083,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -1317,7 +1317,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "빨강",
+      "beginner_risk_level": "초보자 주의",
       "beginner_risk_reasons": [
         "임차권·대항력 관련 문구가 있어 보증금 인수 가능성을 확인해야 합니다.",
         "임차권 관련 문구는 있으나 전입일·확정일자·배당요구 자료가 구조화되어 있지 않습니다.",
@@ -1487,7 +1487,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -1655,7 +1655,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -1854,7 +1854,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -2134,7 +2134,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "빨강",
+      "beginner_risk_level": "초보자 주의",
       "beginner_risk_reasons": [
         "임차권·대항력 관련 문구가 있어 보증금 인수 가능성을 확인해야 합니다.",
         "임차권 관련 문구는 있으나 전입일·확정일자·배당요구 자료가 구조화되어 있지 않습니다.",
@@ -2390,7 +2390,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "빨강",
+      "beginner_risk_level": "초보자 주의",
       "beginner_risk_reasons": [
         "임차권·대항력 관련 문구가 있어 보증금 인수 가능성을 확인해야 합니다.",
         "임차권 관련 문구는 있으나 전입일·확정일자·배당요구 자료가 구조화되어 있지 않습니다.",
@@ -2598,7 +2598,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -2766,7 +2766,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -2983,7 +2983,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "빨강",
+      "beginner_risk_level": "초보자 주의",
       "beginner_risk_reasons": [
         "특수권리 문구가 있어 선순위·소멸 여부 확인이 필요합니다.",
         "임차권·대항력 관련 문구가 있어 보증금 인수 가능성을 확인해야 합니다.",
@@ -3154,7 +3154,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -3322,7 +3322,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -3492,7 +3492,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -3721,7 +3721,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -3889,7 +3889,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -4150,7 +4150,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "빨강",
+      "beginner_risk_level": "초보자 주의",
       "beginner_risk_reasons": [
         "임차권·대항력 관련 문구가 있어 보증금 인수 가능성을 확인해야 합니다.",
         "임차권 관련 문구는 있으나 전입일·확정일자·배당요구 자료가 구조화되어 있지 않습니다.",
@@ -4320,7 +4320,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -4488,7 +4488,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -4687,7 +4687,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -4893,7 +4893,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -5061,7 +5061,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -5281,7 +5281,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -5549,7 +5549,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "빨강",
+      "beginner_risk_level": "초보자 주의",
       "beginner_risk_reasons": [
         "임차권·대항력 관련 문구가 있어 보증금 인수 가능성을 확인해야 합니다.",
         "임차권 관련 문구는 있으나 전입일·확정일자·배당요구 자료가 구조화되어 있지 않습니다.",
@@ -5771,7 +5771,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -5991,7 +5991,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -6211,7 +6211,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -6384,7 +6384,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -6558,7 +6558,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -6732,7 +6732,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -6906,7 +6906,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -7080,7 +7080,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -7254,7 +7254,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -7428,7 +7428,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -7602,7 +7602,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -7777,7 +7777,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -7951,7 +7951,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -8125,7 +8125,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -8299,7 +8299,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -8482,7 +8482,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "빨강",
+      "beginner_risk_level": "초보자 주의",
       "beginner_risk_reasons": [
         "특수권리 문구가 있어 선순위·소멸 여부 확인이 필요합니다.",
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
@@ -8669,7 +8669,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -8837,7 +8837,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -9005,7 +9005,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -9180,7 +9180,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -9355,7 +9355,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -9530,7 +9530,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -9745,7 +9745,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -9913,7 +9913,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -10087,7 +10087,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -10267,7 +10267,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -10441,7 +10441,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -10615,7 +10615,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -10789,7 +10789,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -10958,7 +10958,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -11137,7 +11137,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -11317,7 +11317,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -11497,7 +11497,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -11674,7 +11674,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차권 관련 문구는 있으나 전입일·확정일자·배당요구 자료가 구조화되어 있지 않습니다.",
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
@@ -11851,7 +11851,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차권 관련 문구는 있으나 전입일·확정일자·배당요구 자료가 구조화되어 있지 않습니다.",
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
@@ -12028,7 +12028,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차권 관련 문구는 있으나 전입일·확정일자·배당요구 자료가 구조화되어 있지 않습니다.",
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
@@ -12205,7 +12205,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차권 관련 문구는 있으나 전입일·확정일자·배당요구 자료가 구조화되어 있지 않습니다.",
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
@@ -12385,7 +12385,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -12565,7 +12565,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -12745,7 +12745,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -12925,7 +12925,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -13105,7 +13105,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -13285,7 +13285,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -13465,7 +13465,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -13645,7 +13645,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -13825,7 +13825,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
@@ -14005,7 +14005,7 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "노랑",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
