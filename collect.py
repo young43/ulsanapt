@@ -35,6 +35,13 @@ SEARCH_URL = "https://www.winnerauction.co.kr/search/search_list.php"
 CALENDAR_URL = "https://www.winnerauction.co.kr/search/calendar_list.php"
 OFFICIAL_URL = "https://www.courtauction.go.kr/"
 MARKET_URL = "https://rt.molit.go.kr/pt/gis/gis.do?mobileAt=&srhThingSecd=C"
+ONBID_SEARCH_URL = "https://www.onbid.co.kr/op/cltrpbancinf/cltr/cltrcdtnsrch/CltrCdtnSrchController/mvmnCltrCdtnSrchClg.do"
+ONBID_LIST_URL = "https://www.onbid.co.kr/op/cltrpbancinf/clbtcltrclg/cltrclbtcltrclg/CltrClbtCltrClgController/inqCltrClbtRlstClg.do"
+ONBID_DETAIL_URL = "https://www.onbid.co.kr/op/cltrpbancinf/cltrdtl/CltrDtlController/mvmnCltrDtl.do"
+ONBID_SOURCE_NAME = "\uc628\ube44\ub4dc \uacf5\uc2dd \uac80\uc0c9\ubaa9\ub85d"
+ONBID_SOURCE_KIND = "\uc628\ube44\ub4dc \uacf5\ub9e4 \uacf5\uac1c\ubaa9\ub85d"
+ONBID_CATEGORY_ID = "10200"  # \uc628\ube44\ub4dc \ubd80\ub3d9\uc0b0 > \uc8fc\uac70\uc6a9\uac74\ubb3c
+ONBID_DISTRICT_PREFIX = "\uc6b8\uc0b0\uad11\uc5ed\uc2dc"
 SOURCE_NAME = "위너옥션 공개 검색목록"
 SOURCE_KIND = "보조 공개목록"
 
@@ -107,6 +114,221 @@ def extract_complex(address: str) -> str:
 
     # 최후의 fallback은 주소 앞부분이다.
     return address.split(",")[-1].strip()[:40] or "단지명 확인 필요"
+
+
+def parse_float(value: Any) -> float | None:
+    if value in (None, ""):
+        return None
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def extract_onbid_complex(address: str, category: str) -> str:
+    """온비드 물건명에서 단지명 또는 화면용 식별명을 만든다."""
+    match = re.search(r"\s\d+(?:-\d+)?\s+(.+?)(?:\s+제?\d+층|\s+\d+층)", address)
+    if match:
+        candidate = clean(match.group(1)).strip(" ,")
+        if candidate and candidate != APT:
+            return candidate
+
+    parts = address.split()
+    district = extract_district(address)
+    emd = next((part for part in parts if part.endswith(("동", "읍", "면"))), "")
+    if district and emd:
+        return f"{district} {emd} {category or APT}"
+    return category or extract_complex(address)
+
+
+def onbid_detail_url(item: dict[str, Any]) -> str:
+    params = {
+        "cltrScrnGrpCd": str(item.get("cltrScrnGrpCd") or "0001"),
+        "cltrPrptDivCd": str(item.get("cltrPrptDivCd") or ""),
+        "onbidCltrno": str(item.get("onbidCltrno") or ""),
+        "onbidPbancNo": str(item.get("onbidPbancNo") or ""),
+        "pbctNo": str(item.get("pbctNo") or ""),
+        "pbctCdtnNo": str(item.get("pbctCdtnNo") or ""),
+        "rtnListUrl": "/op/cltrpbancinf/cltr/cltrcdtnsrch/CltrCdtnSrchController/mvmnCltrCdtnSrchClg.do",
+    }
+    return f"{ONBID_DETAIL_URL}?{urlencode(params)}"
+
+
+def normalize_onbid_status(value: str) -> str:
+    value = clean(value)
+    if "진행" in value or "입찰중" in value:
+        return "입찰중"
+    if "준비" in value:
+        return "입찰 예정"
+    if "마감" in value:
+        return "입찰 마감"
+    if "유찰" in value:
+        return "유찰"
+    if "낙찰" in value or "매각" in value:
+        return "매각"
+    return value or "입찰 예정"
+
+
+def onbid_row_to_auction(row: dict[str, Any], today: date) -> dict[str, Any] | None:
+    category = clean(row.get("ctgrNm"))
+    residential_categories = {APT, "\uae30\ud0c0\uc8fc\uac70\uc6a9\uac74\ubb3c"}
+    if category not in residential_categories:
+        return None
+
+    address = clean(row.get("onbidCltrNm"))
+    if not address or not is_in_scope(address):
+        return None
+
+    management_no = clean(row.get("scrnIndctCltrMngNo"))
+    if not management_no:
+        return None
+
+    bid_date = parse_date(
+        clean(row.get("pbctLastDdlnDt") or row.get("pbctDdlnDt") or row.get("pbctBegnDtm"))
+    )
+    status = normalize_onbid_status(row.get("pbancPbctCltrStatNm") or "")
+    appraisal = row.get("cltrApslEvlAvgAmt")
+    minimum = row.get("lowstBidPrc")
+    try:
+        appraisal = int(appraisal) if appraisal not in (None, "") else None
+    except (TypeError, ValueError):
+        appraisal = None
+    try:
+        minimum = int(minimum) if minimum not in (None, "") else None
+    except (TypeError, ValueError):
+        minimum = None
+
+    building_m2 = parse_float(row.get("bldSqms"))
+    building_pyeong = round(building_m2 / 3.305785, 2) if building_m2 is not None else None
+    land_m2 = parse_float(row.get("landSqms"))
+    land_pyeong = round(land_m2 / 3.305785, 2) if land_m2 is not None else None
+    is_interest = building_pyeong is not None and 24 <= building_pyeong <= 40
+    upcoming = bool(
+        bid_date
+        and date.fromisoformat(bid_date) >= today
+        and status not in ("입찰 마감", "유찰", "매각")
+    )
+    discount = round((1 - minimum / appraisal) * 100, 1) if appraisal and minimum else None
+    minimum_ratio = round(minimum / appraisal * 100) if appraisal and minimum else None
+    try:
+        auction_round = int(str(row.get("pbctNsq") or "").lstrip("0") or "0") or None
+    except ValueError:
+        auction_round = None
+
+    tags: list[str] = []
+    for value in (row.get("scrnPrptDvsnNm"), row.get("dspsMthodNm")):
+        tag = clean(value)
+        if tag and tag not in tags:
+            tags.append(tag)
+
+    official_url = onbid_detail_url(row)
+    district = extract_district(address)
+    rights_note = (
+        f"온비드 재산구분: {clean(row.get('scrnPrptDvsnNm')) or '확인 필요'}, "
+        f"처분방식: {clean(row.get('dspsMthodNm')) or '확인 필요'}, "
+        f"기관: {clean(row.get('regOrgNm')) or '확인 필요'}. "
+        "공고문·감정평가서·현황을 온비드 원문에서 확인하세요."
+    )
+
+    return {
+        "id": f"onbid:{management_no}:{row.get('pbctCdtnNo') or row.get('pbctNo') or ''}",
+        "source_type": "onbid",
+        "auction_kind": "온비드 공매",
+        "case_no": management_no,
+        "case_display": management_no,
+        "court": clean(row.get("regOrgNm")) or "한국자산관리공사",
+        "category": category,
+        "district": district,
+        "complex": extract_onbid_complex(address, category),
+        "address": address,
+        "bid_date": bid_date,
+        "status": status,
+        "status_raw": clean(row.get("pbancPbctCltrStatNm")),
+        "auction_round": auction_round,
+        "appraisal": appraisal,
+        "minimum_price": minimum,
+        "final_price": None,
+        "minimum_ratio": minimum_ratio,
+        "final_ratio": None,
+        "discount_vs_appraisal": discount,
+        "market_price": None,
+        "market_discount": None,
+        "market_note": "국토교통부 실거래가 자동 매칭 전 — 단지명·면적 확인 후 별도 연동",
+        "land_pyeong": land_pyeong,
+        "building_pyeong": building_pyeong,
+        "building_m2": building_m2,
+        "supply_pyeong": None,
+        "is_interest": is_interest,
+        "is_upcoming": upcoming,
+        "risk_tags": tags,
+        "school_access": "미확인 — 현장·지도 확인 필요",
+        "rights_note": rights_note,
+        "area_note": "온비드 건물면적 기준 — 전용면적·공급면적은 온비드 공고 원문에서 최종 확인",
+        "source_name": ONBID_SOURCE_NAME,
+        "source_kind": ONBID_SOURCE_KIND,
+        "source_url": official_url,
+        "official_url": official_url,
+        "onbid_cltrno": row.get("onbidCltrno"),
+        "onbid_pbanc_no": row.get("onbidPbancNo"),
+        "pbct_no": row.get("pbctNo"),
+        "pbct_cdtn_no": row.get("pbctCdtnNo"),
+    }
+
+
+def collect_onbid(
+    session: requests.Session,
+    today: date,
+    future_days: int,
+    page_unit: int = 100,
+) -> tuple[list[dict[str, Any]], list[str], list[str]]:
+    """온비드 공식 조건검색의 울산 주거용 건물을 조회한다."""
+    region = ",".join(f"{ONBID_DISTRICT_PREFIX}>{district}" for district in ALLOWED_DISTRICTS)
+    params: dict[str, Any] = {
+        "pageIndex": "1",
+        "pageUnit": str(page_unit),
+        "searchCltrMnmtNoYn": "N",
+        "srchCltrType": "0001",
+        "srchPrptType": "",
+        "srchDspsMthod": "",
+        "srchBidPerdBgngDt": today.isoformat(),
+        "srchBidPerdEndDt": (today + timedelta(days=max(30, future_days))).isoformat(),
+        "srchBidPerdType": "0004",
+        "srchArrayCtgrId": ONBID_CATEGORY_ID,
+        "srchArrayRgn": region,
+        "srchSortType": "DESC",
+        "srchWordType": "",
+        "srchPvctYn": "N",
+        "srchBidMthod": "",
+        "srchApslEvlAmtType": "",
+        "srchLowstBidBgng": "",
+        "rtnListUrl": ONBID_SEARCH_URL,
+        "srchPbancStatSrchPvctYn": "N",
+    }
+    headers = {
+        "X-Requested-With": "XMLHttpRequest",
+        "Referer": ONBID_SEARCH_URL,
+    }
+    response = session.post(ONBID_LIST_URL, data=params, headers=headers, timeout=30)
+    response.raise_for_status()
+    payload = response.json()
+    if not payload.get("success"):
+        raise RuntimeError("온비드 공식 검색 응답이 성공 상태가 아닙니다.")
+
+    rows = payload.get("cltrInfVOList") or []
+    pagination = payload.get("paginationInfo") or {}
+    total_pages = min(int(pagination.get("totalPageCount") or 1), 20)
+    source_urls = [ONBID_SEARCH_URL, response.url]
+
+    for page in range(2, total_pages + 1):
+        params["pageIndex"] = str(page)
+        page_response = session.post(ONBID_LIST_URL, data=params, headers=headers, timeout=30)
+        page_response.raise_for_status()
+        page_payload = page_response.json()
+        rows.extend(page_payload.get("cltrInfVOList") or [])
+        source_urls.append(page_response.url)
+
+    records = [item for row in rows if (item := onbid_row_to_auction(row, today))]
+    return records, source_urls, []
 
 
 def extract_district(address: str) -> str:
@@ -188,6 +410,8 @@ def row_to_auction(tr: Any, source_url: str, today: date) -> dict[str, Any] | No
 
     return {
         "id": f"winner:{case_no}:{bid_date}:{address}",
+        "source_type": "court",
+        "auction_kind": "법원경매",
         "case_no": case_no,
         "case_display": case_no.replace("-", "타경", 1),
         "court": first_text(tr, "ul.list_sell01 li:nth-of-type(3)") or "울산지방법원",
@@ -334,6 +558,20 @@ def main() -> None:
     errors.extend(history_errors)
     print(f"  최근 일정목록: {len(history)}건 ({args.history_days}일 확인)")
 
+    try:
+        onbid_items, onbid_urls, onbid_errors = collect_onbid(
+            session,
+            today,
+            future_days=max(90, args.history_days),
+        )
+        items.extend(onbid_items)
+        search_urls.extend(onbid_urls)
+        errors.extend(onbid_errors)
+        print(f"  \uc628\ube44\ub4dc \uacf5\ub9e4 \ubaa9\ub85d: {len(onbid_items)}\uac74")
+    except Exception as exc:
+        errors.append(f"\uc628\ube44\ub4dc \uacf5\ub9e4 \ubaa9\ub85d: {exc}")
+        print(f"  \uc628\ube44\ub4dc \uacf5\ub9e4 \ubaa9\ub85d \uc2e4\ud328: {exc}")
+
     auctions = deduplicate(items)
     payload = {
         "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M"),
@@ -349,6 +587,7 @@ def main() -> None:
             "large_complex_units": 500,
         },
         "sources": {
+            "onbid": {"name": ONBID_SOURCE_NAME, "kind": ONBID_SOURCE_KIND, "url": ONBID_SEARCH_URL},
             "official": {"name": "대한민국 법원경매정보", "url": OFFICIAL_URL},
             "public_list": {"name": SOURCE_NAME, "kind": SOURCE_KIND, "url": SEARCH_URL},
             "market": {"name": "국토교통부 실거래가 공개시스템", "url": MARKET_URL},
