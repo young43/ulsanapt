@@ -20,7 +20,7 @@ import time
 from datetime import date, datetime, timedelta
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlencode
+from urllib.parse import quote, urlencode
 
 import requests
 from bs4 import BeautifulSoup
@@ -40,6 +40,7 @@ MARKET_URL = "https://rt.molit.go.kr/pt/gis/gis.do?mobileAt=&srhThingSecd=C"
 ONBID_SEARCH_URL = "https://www.onbid.co.kr/op/cltrpbancinf/cltr/cltrcdtnsrch/CltrCdtnSrchController/mvmnCltrCdtnSrchClg.do"
 ONBID_LIST_URL = "https://www.onbid.co.kr/op/cltrpbancinf/clbtcltrclg/cltrclbtcltrclg/CltrClbtCltrClgController/inqCltrClbtRlstClg.do"
 ONBID_DETAIL_URL = "https://www.onbid.co.kr/op/cltrpbancinf/cltrdtl/CltrDtlController/mvmnCltrDtl.do"
+NAVER_MAP_URL = "https://map.naver.com/p/search/"
 ONBID_SOURCE_NAME = "\uc628\ube44\ub4dc \uacf5\uc2dd \uac80\uc0c9\ubaa9\ub85d"
 ONBID_SOURCE_KIND = "\uc628\ube44\ub4dc \uacf5\ub9e4 \uacf5\uac1c\ubaa9\ub85d"
 ONBID_CATEGORY_ID = "10200"  # \uc628\ube44\ub4dc \ubd80\ub3d9\uc0b0 > \uc8fc\uac70\uc6a9\uac74\ubb3c
@@ -160,6 +161,13 @@ def auction_event(item: dict[str, Any]) -> dict[str, Any] | None:
     }
 
 
+def make_naver_map_url(item: dict[str, Any]) -> str:
+    query = clean(item.get("address") or item.get("complex") or "")
+    if not query:
+        return "https://map.naver.com/"
+    return f"{NAVER_MAP_URL}{quote(query, safe='')}"
+
+
 def annotate_risk_profile(item: dict[str, Any]) -> dict[str, Any]:
     """초보자가 확인할 권리·임차인·점유 체크 항목을 보수적으로 붙인다."""
     for key, default in (
@@ -171,6 +179,8 @@ def annotate_risk_profile(item: dict[str, Any]) -> dict[str, Any]:
         ("special_notes", ""),
     ):
         item.setdefault(key, default)
+    item["map_query"] = clean(item.get("address") or item.get("complex") or "")
+    item["map_url"] = make_naver_map_url(item)
     text = " ".join(
         str(item.get(key) or "")
         for key in (
@@ -1483,6 +1493,7 @@ def main() -> None:
                 "kind": "공식 상세 응답",
                 "url": OFFICIAL_DETAIL_URL,
             },
+            "naver_map": {"name": "네이버지도 주소검색", "url": NAVER_MAP_URL},
             "public_list": {"name": SOURCE_NAME, "kind": SOURCE_KIND, "url": SEARCH_URL},
             "market": {"name": "국토교통부 실거래가 공개시스템", "url": MARKET_URL},
         },
