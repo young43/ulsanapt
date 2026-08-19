@@ -2,7 +2,8 @@ name: 울산 아파트 경매정보 자동 업데이트
 
 on:
   schedule:
-    - cron: "0 */6 * * *"
+    # GitHub Actions cron은 UTC 기준이다. 한국시간 00·06·12·18시에 실행한다.
+    - cron: "0 3,9,15,21 * * *"
   workflow_dispatch:
 
 permissions:

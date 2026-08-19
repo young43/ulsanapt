@@ -58,6 +58,7 @@ OFFICIAL_WINDOW_DAYS = 14  # 공식 상세검색이 허용하는 미래 매각�
 ALLOWED_DISTRICTS = ("중구", "남구", "북구")
 EXCLUDED_DISTRICTS = ("동구", "울주군")
 STATUS_WORDS = ("매각", "유찰", "변경", "취하", "진행", "신건")
+TERMINAL_AUCTION_STATUSES = frozenset({"매각", "낙찰", "매각 완료", "취하", "입찰 마감"})
 MONEY_RE = re.compile(r"\d[\d,]*")
 DATE_RE = re.compile(r"(20\d{2})[./-](\d{1,2})[./-](\d{1,2})")
 COMPACT_DATE_RE = re.compile(r"(20\d{2})(\d{2})(\d{2})")
@@ -1745,6 +1746,27 @@ def deduplicate(items: list[dict[str, Any]], today: date | None = None) -> list[
     )
 
 
+def is_currently_listable(item: dict[str, Any], today: date) -> bool:
+    """오늘 이후에 확인할 의미가 있는 물건만 공개 목록에 남긴다.
+
+    일정 이력 수집은 유찰·재매각 추적에 필요하지만, 매각·취하처럼 종결된
+    회차를 현재 입찰 목록에 계속 노출하면 날짜가 바뀐 뒤에도 오래된 물건이
+    남는다. 오늘 진행 중인 회차는 당일 자료가 갱신되기 전까지 허용한다.
+    """
+    today_text = today.isoformat()
+    next_bid_date = clean(str(item.get("next_bid_date") or ""))
+    bid_date = clean(str(item.get("bid_date") or ""))
+    status = clean(str(item.get("status") or ""))
+
+    if next_bid_date and next_bid_date < today_text:
+        return False
+    if status in TERMINAL_AUCTION_STATUSES and not next_bid_date:
+        return False
+    if not next_bid_date and bid_date < today_text and status in {"입찰 예정", "입찰중"}:
+        return False
+    return True
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="울산 아파트 경매 공개목록 수집")
     parser.add_argument("--history-days", type=int, default=90, help="최근 일정목록을 훑을 날짜 수")
@@ -1817,7 +1839,7 @@ def main() -> None:
         errors.append(f"\uc628\ube44\ub4dc \uacf5\ub9e4 \ubaa9\ub85d: {exc}")
         print(f"  \uc628\ube44\ub4dc \uacf5\ub9e4 \ubaa9\ub85d \uc2e4\ud328: {exc}")
 
-    auctions = deduplicate(items, today)
+    auctions = [item for item in deduplicate(items, today) if is_currently_listable(item, today)]
     payload = {
         "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M"),
         "as_of": today.isoformat(),
