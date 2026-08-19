@@ -228,6 +228,7 @@ dialog::backdrop { background: rgba(24, 40, 44, .45); backdrop-filter: blur(3px)
   .metric:nth-child(3) { border-left: 0; padding-left: 0; }
   .metric:nth-child(3), .metric:nth-child(4) { padding-top: 8px; border-top: 1px solid var(--line); }
   .lower-grid { grid-template-columns: 1fr; }
+  .filters-wrap { position: static; top: auto; z-index: auto; backdrop-filter: none; }
 }
 @media (max-width: 620px) {
   .shell { padding-right: 14px; padding-left: 14px; }
