@@ -1,0 +1,427 @@
+<title>울산 아파트 경매 모아보기</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+
+:root {
+  --bg: #f7f3ed;
+  --paper: #fffdf9;
+  --paper-2: #f2ece3;
+  --ink: #1c2b35;
+  --muted: #68757b;
+  --faint: #98a09e;
+  --line: #e5ddd2;
+  --line-strong: #d5cabb;
+  --navy: #274750;
+  --navy-deep: #19333c;
+  --terracotta: #b86b35;
+  --terracotta-deep: #954d22;
+  --amber: #d99a3e;
+  --green: #2d7967;
+  --green-bg: #e0f0eb;
+  --blue: #4c6e91;
+  --blue-bg: #e3ebf4;
+  --red: #b34d42;
+  --red-bg: #f6e5e1;
+  --violet: #756493;
+  --violet-bg: #eee9f6;
+  --shadow: 0 12px 32px rgba(65, 45, 27, .07), 0 2px 4px rgba(65, 45, 27, .04);
+  --radius: 16px;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at 8% -10%, rgba(216, 164, 99, .15), transparent 31rem),
+    var(--bg);
+  color: var(--ink);
+  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
+    "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+button, input, select { font: inherit; }
+button, select { cursor: pointer; }
+a { color: inherit; }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible,
+summary:focus-visible { outline: 3px solid rgba(184, 107, 53, .42); outline-offset: 3px; }
+
+.shell { max-width: 1200px; margin: 0 auto; padding: 0 22px 80px; }
+.topbar {
+  min-height: 78px; display: flex; align-items: center; justify-content: space-between;
+  gap: 18px; border-bottom: 1px solid var(--line);
+}
+.brand { display: inline-flex; align-items: center; gap: 11px; text-decoration: none; }
+.brand-mark {
+  width: 34px; height: 34px; display: grid; place-items: center; border-radius: 11px;
+  background: var(--navy); color: #f9ede0; font-size: 18px; font-weight: 800;
+  box-shadow: 0 5px 13px rgba(39, 71, 80, .17);
+}
+.brand-name { font-size: 15px; font-weight: 800; letter-spacing: -.02em; }
+.brand-sub { color: var(--muted); font-size: 12px; margin-left: 2px; }
+.top-link {
+  color: var(--muted); font-size: 12px; text-decoration: none; border-bottom: 1px solid transparent;
+}
+.top-link:hover { color: var(--terracotta-deep); border-color: currentColor; }
+
+.hero { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(310px, .65fr); gap: 20px; padding: 42px 0 24px; }
+.hero-copy { padding: 10px 0; }
+.eyebrow {
+  margin: 0 0 13px; color: var(--terracotta-deep); font-size: 11px; font-weight: 800;
+  letter-spacing: .17em; text-transform: uppercase;
+}
+h1 { margin: 0; max-width: 760px; font-size: clamp(31px, 4vw, 52px); letter-spacing: -.055em; line-height: 1.12; text-wrap: balance; }
+.hero-lede { max-width: 650px; margin: 18px 0 0; color: var(--muted); font-size: 16px; line-height: 1.75; }
+.hero-lede strong { color: var(--ink); font-weight: 700; }
+.hero-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+.meta-pill {
+  border: 1px solid var(--line-strong); background: rgba(255,253,249,.68); border-radius: 999px;
+  padding: 5px 11px; color: var(--muted); font-size: 12px;
+}
+.meta-pill b { color: var(--navy); }
+.criteria-card {
+  position: relative; overflow: hidden; border-radius: var(--radius); padding: 25px 25px 22px;
+  background: var(--navy); color: #f8f0e6; box-shadow: 0 16px 30px rgba(39, 71, 80, .17);
+}
+.criteria-card::after {
+  content: ""; position: absolute; width: 190px; height: 190px; right: -72px; bottom: -88px;
+  border: 1px solid rgba(255,255,255,.15); border-radius: 50%; box-shadow: 0 0 0 18px rgba(255,255,255,.04), 0 0 0 36px rgba(255,255,255,.025);
+}
+.criteria-label { margin: 0 0 8px; color: #e2ad76; font-size: 11px; font-weight: 800; letter-spacing: .13em; }
+.criteria-card h2 { margin: 0; font-size: 21px; letter-spacing: -.04em; }
+.criteria-list { position: relative; z-index: 1; display: grid; gap: 11px; margin: 20px 0 0; padding: 0; list-style: none; color: #d9e3e2; font-size: 13px; }
+.criteria-list li { display: flex; gap: 9px; align-items: flex-start; }
+.criteria-list li::before { content: "✓"; color: #e2ad76; font-weight: 800; }
+.criteria-foot { position: relative; z-index: 1; margin: 19px 0 0; padding-top: 15px; border-top: 1px solid rgba(255,255,255,.14); color: #afc0c0; font-size: 11.5px; }
+
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 12px 0 26px; }
+.stat { min-height: 112px; padding: 18px 18px 16px; background: rgba(255,253,249,.86); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); }
+.stat-label { display: block; color: var(--muted); font-size: 12px; }
+.stat-value { display: block; margin-top: 8px; color: var(--navy); font-size: 28px; font-weight: 800; letter-spacing: -.06em; line-height: 1; font-variant-numeric: tabular-nums; }
+.stat-value.accent { color: var(--terracotta-deep); }
+.stat-value.green { color: var(--green); }
+.stat-note { display: block; margin-top: 8px; color: var(--faint); font-size: 11px; }
+
+.notice {
+  display: flex; gap: 12px; align-items: flex-start; margin: 0 0 18px; padding: 13px 15px;
+  border: 1px solid #ead3b8; border-radius: 12px; background: #fff7ec; color: #76553b; font-size: 12.5px;
+}
+.notice-icon { flex: 0 0 auto; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: #edc28e; color: #70441d; font-weight: 800; }
+.notice p { margin: 0; }
+
+.filters-wrap { position: sticky; top: 0; z-index: 20; margin: 0 -22px; padding: 11px 22px 13px; background: rgba(247,243,237,.94); border-bottom: 1px solid var(--line); backdrop-filter: blur(12px); }
+.filters { display: grid; gap: 10px; }
+.search-row { display: flex; gap: 9px; align-items: center; }
+.search-box { position: relative; flex: 1 1 420px; }
+.search-box::before { content: "⌕"; position: absolute; left: 13px; top: 6px; color: var(--faint); font-size: 22px; line-height: 1; }
+.search-box input { width: 100%; padding-left: 37px; }
+input[type="search"], select {
+  min-height: 42px; border: 1px solid var(--line-strong); border-radius: 10px; color: var(--ink); background: var(--paper); padding: 8px 12px; font-size: 13px;
+}
+input[type="search"]::placeholder { color: #a5aaa6; }
+select { min-width: 142px; }
+.filter-row { display: flex; flex-wrap: wrap; gap: 7px; align-items: center; }
+.filter-label { margin-right: 2px; color: var(--faint); font-size: 11px; font-weight: 800; letter-spacing: .04em; }
+.pill {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 31px; border: 1px solid var(--line-strong); border-radius: 999px; padding: 4px 11px;
+  color: var(--muted); background: var(--paper); font-size: 12px; transition: .15s ease;
+}
+.pill:hover { border-color: var(--terracotta); color: var(--terracotta-deep); }
+.pill[aria-pressed="true"] { border-color: var(--navy); background: var(--navy); color: #fffaf4; }
+.pill .count { opacity: .72; font-size: 11px; font-variant-numeric: tabular-nums; }
+.filter-divider { width: 1px; height: 20px; margin: 0 4px; background: var(--line-strong); }
+.reset-btn { margin-left: auto; border: 0; padding: 5px 4px; color: var(--muted); background: transparent; font-size: 12px; text-decoration: underline; text-underline-offset: 3px; }
+.reset-btn:hover { color: var(--terracotta-deep); }
+.results-bar { display: flex; align-items: baseline; gap: 8px; margin: 20px 0 10px; }
+.results-bar h2 { margin: 0; font-size: 18px; letter-spacing: -.03em; }
+.results-bar .result-count { color: var(--muted); font-size: 12px; }
+.results-bar .sorter { margin-left: auto; }
+.sorter select { min-height: 34px; padding: 5px 9px; font-size: 12px; }
+
+.auction-list { display: grid; gap: 11px; margin: 0; padding: 0; list-style: none; }
+.auction-card { position: relative; overflow: hidden; padding: 20px 21px 16px; background: var(--paper); border: 1px solid var(--line); border-radius: 15px; box-shadow: 0 4px 18px rgba(65,45,27,.04); transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease; }
+.auction-card::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 4px; background: var(--line-strong); }
+.auction-card.interest::before { background: var(--terracotta); }
+.auction-card.upcoming::before { background: var(--green); }
+.auction-card:hover { transform: translateY(-1px); border-color: #d5c0a7; box-shadow: var(--shadow); }
+.card-head { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 16px; align-items: start; }
+.card-kicker { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; color: var(--muted); font-size: 11.5px; }
+.status-badge { display: inline-flex; align-items: center; min-height: 24px; padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: 800; }
+.status-badge.status-sale { color: var(--blue); background: var(--blue-bg); }
+.status-badge.status-fail { color: var(--red); background: var(--red-bg); }
+.status-badge.status-change { color: var(--violet); background: var(--violet-bg); }
+.status-badge.status-withdraw { color: #727979; background: #eceeed; }
+.status-badge.status-open { color: var(--green); background: var(--green-bg); }
+.interest-label { color: var(--terracotta-deep); font-weight: 800; }
+.card-title { margin: 8px 0 4px; font-size: 18px; line-height: 1.35; letter-spacing: -.035em; }
+.card-title a { text-decoration: none; }
+.card-title a:hover { color: var(--terracotta-deep); text-decoration: underline; text-underline-offset: 4px; }
+.card-address { margin: 0; color: var(--muted); font-size: 12.5px; }
+.bid-date { min-width: 115px; text-align: right; color: var(--muted); font-size: 11px; }
+.bid-date strong { display: block; margin-top: 2px; color: var(--ink); font-size: 15px; font-variant-numeric: tabular-nums; }
+.dday { display: inline-block; margin-top: 3px; color: var(--green); font-size: 11px; font-weight: 800; }
+.dday.past { color: var(--faint); font-weight: 600; }
+.dday.soon { color: var(--terracotta-deep); }
+
+.metrics { display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr; gap: 8px; margin-top: 17px; padding: 12px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.metric { min-width: 0; padding: 0 10px; border-left: 1px solid var(--line); }
+.metric:first-child { padding-left: 0; border-left: 0; }
+.metric-label { display: block; color: var(--faint); font-size: 11px; }
+.metric-value { display: block; margin-top: 3px; color: var(--ink); font-size: 14px; font-weight: 800; letter-spacing: -.02em; white-space: nowrap; }
+.metric-value small { color: var(--muted); font-size: 11px; font-weight: 500; }
+.metric-value em { margin-left: 5px; color: var(--terracotta-deep); font-size: 11px; font-style: normal; font-weight: 800; }
+.card-foot { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; padding-top: 12px; color: var(--muted); font-size: 11.5px; }
+.card-foot span { display: inline-flex; gap: 4px; align-items: center; }
+.card-foot .case { color: var(--navy); font-weight: 700; }
+.tag { padding: 2px 7px; border-radius: 5px; background: var(--paper-2); color: #785d43; }
+.card-actions { margin-left: auto; display: inline-flex; gap: 8px; }
+.text-btn { border: 0; padding: 0; color: var(--terracotta-deep); background: transparent; font-size: 11.5px; font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
+.text-btn:hover { color: var(--navy); }
+.empty { padding: 56px 20px; text-align: center; border: 1px dashed var(--line-strong); border-radius: 14px; color: var(--muted); background: rgba(255,253,249,.5); }
+.empty strong { display: block; margin-bottom: 5px; color: var(--ink); font-size: 16px; }
+.more { display: flex; justify-content: center; margin-top: 16px; }
+.more button { border: 1px solid var(--line-strong); border-radius: 9px; padding: 9px 18px; color: var(--ink); background: var(--paper); font-size: 13px; }
+.more button:hover { border-color: var(--terracotta); color: var(--terracotta-deep); }
+
+.lower-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 50px; }
+.info-panel { padding: 21px; border: 1px solid var(--line); border-radius: 15px; background: rgba(255,253,249,.64); }
+.info-panel h2 { margin: 0; font-size: 17px; letter-spacing: -.03em; }
+.info-panel > p { margin: 7px 0 16px; color: var(--muted); font-size: 12.5px; }
+.info-list { display: grid; gap: 9px; margin: 0; padding: 0; list-style: none; }
+.info-list li { display: flex; justify-content: space-between; gap: 14px; padding: 9px 0; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+.info-list li:last-child { border-bottom: 0; }
+.info-list b { color: var(--ink); text-align: right; font-weight: 700; }
+.source-link { color: var(--terracotta-deep); font-weight: 700; text-decoration: none; }
+.source-link:hover { text-decoration: underline; text-underline-offset: 3px; }
+.footer { margin-top: 28px; color: var(--faint); font-size: 11.5px; line-height: 1.8; }
+.footer a { color: var(--muted); }
+.footer code { color: var(--muted); }
+
+dialog { width: min(680px, calc(100vw - 28px)); max-height: min(760px, calc(100vh - 28px)); padding: 0; border: 0; border-radius: 17px; color: var(--ink); background: var(--paper); box-shadow: 0 30px 80px rgba(20,35,38,.25); }
+dialog::backdrop { background: rgba(24, 40, 44, .45); backdrop-filter: blur(3px); }
+.dialog-inner { padding: 24px; }
+.dialog-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding-bottom: 17px; border-bottom: 1px solid var(--line); }
+.dialog-head h2 { margin: 7px 0 4px; font-size: 22px; letter-spacing: -.04em; line-height: 1.3; }
+.dialog-head p { margin: 0; color: var(--muted); font-size: 12.5px; }
+.close-dialog { width: 30px; height: 30px; border: 1px solid var(--line-strong); border-radius: 50%; color: var(--muted); background: transparent; font-size: 18px; line-height: 1; }
+.detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 18px; }
+.detail-item { padding: 11px 12px; border-radius: 10px; background: var(--paper-2); }
+.detail-item span { display: block; color: var(--muted); font-size: 11px; }
+.detail-item strong { display: block; margin-top: 3px; font-size: 14px; }
+.detail-section { margin-top: 18px; }
+.detail-section h3 { margin: 0 0 6px; font-size: 13px; }
+.detail-section p { margin: 0; color: var(--muted); font-size: 12.5px; }
+.dialog-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--line); }
+.dialog-actions a { display: inline-flex; align-items: center; min-height: 36px; padding: 7px 12px; border-radius: 8px; color: #fffaf4; background: var(--navy); font-size: 12px; font-weight: 700; text-decoration: none; }
+.dialog-actions a.secondary { color: var(--navy); background: var(--paper-2); }
+
+@media (max-width: 820px) {
+  .hero { grid-template-columns: 1fr; }
+  .criteria-card { max-width: none; }
+  .stats { grid-template-columns: repeat(2, 1fr); }
+  .metrics { grid-template-columns: repeat(2, 1fr); gap: 12px 0; }
+  .metric:nth-child(3) { border-left: 0; padding-left: 0; }
+  .metric:nth-child(3), .metric:nth-child(4) { padding-top: 8px; border-top: 1px solid var(--line); }
+  .lower-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 620px) {
+  .shell { padding-right: 14px; padding-left: 14px; }
+  .topbar { min-height: 66px; }
+  .brand-sub, .top-link { display: none; }
+  .hero { padding-top: 28px; }
+  h1 { font-size: 34px; }
+  .hero-lede { font-size: 14px; }
+  .filters-wrap { margin-right: -14px; margin-left: -14px; padding-right: 14px; padding-left: 14px; }
+  .search-row { align-items: stretch; flex-wrap: wrap; }
+  .search-box { flex-basis: 100%; }
+  .search-row select { flex: 1 1 140px; }
+  .results-bar { align-items: flex-start; flex-wrap: wrap; }
+  .results-bar .sorter { width: 100%; margin-left: 0; }
+  .sorter select { width: 100%; }
+  .card-head { grid-template-columns: 1fr; gap: 8px; }
+  .bid-date { text-align: left; }
+  .bid-date strong { display: inline; margin-right: 7px; }
+  .card-title { font-size: 17px; }
+  .card-actions { width: 100%; margin-left: 0; }
+  .detail-grid { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; } }
+</style>
+<div class="shell">
+  <header class="topbar">
+    <a class="brand" href="#top"><span class="brand-mark">落</span><span><span class="brand-name">울산 아파트 경매</span><span class="brand-sub">공개목록 큐레이션</span></span></a>
+    <a class="top-link" href="https://www.courtauction.go.kr/" target="_blank" rel="noopener">대한민국 법원경매정보 ↗</a>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">ULSAN APARTMENT AUCTION WATCH</p>
+        <h1>울산에서 찾는<br>24~40평 아파트 경매</h1>
+        <p class="hero-lede">흩어진 경매 공개목록을 한 곳에 모아 <strong>입찰일·최저가·가격 메리트</strong>를 먼저 살펴봅니다. 제목을 누르면 공개 출처로 이동하고, 최종 입찰 전에는 반드시 법원 원문을 확인하세요.</p>
+        <div class="hero-meta"><span class="meta-pill">범위 <b>중구·남구·북구</b></span><span class="meta-pill">제외 <b>동구·울주군</b></span><span class="meta-pill">기준일 <b>2026-08-19</b></span></div>
+      </div>
+      <aside class="criteria-card">
+        <p class="criteria-label">MY WATCH CRITERIA</p>
+        <h2>이번 감시 조건</h2>
+        <ul class="criteria-list"><li>중구·남구·북구 중심, 동구·울주군 제외</li><li>공급 32평 이상을 우선 검토</li><li>공개목록 건물 24~40평 근접</li><li>초등학교 실제 도보 10분 이내 우선</li><li>500세대 이상 대단지 우선</li></ul>
+        <p class="criteria-foot">학교·세대수·권리·임차인 정보는 자동 확정하지 않습니다. 원문 상세와 현장 확인이 필요한 항목입니다.</p>
+      </aside>
+    </section>
+
+    <section class="stats" aria-label="요약 통계">
+      <div class="stat"><span class="stat-label">범위 내 아파트</span><strong class="stat-value">4</strong><span class="stat-note">공개목록에서 확인된 건</span></div>
+      <div class="stat"><span class="stat-label">24~40평 관심</span><strong class="stat-value accent">2</strong><span class="stat-note">건물면적 기준</span></div>
+      <div class="stat"><span class="stat-label">입찰 예정</span><strong class="stat-value green">0</strong><span class="stat-note">오늘 이후·매각/취하 제외</span></div>
+      <div class="stat"><span class="stat-label">관심 면적 최대 할인</span><strong class="stat-value accent">30.0%</strong><span class="stat-note">감정가 대비, 참고용</span></div>
+    </section>
+
+    <div class="notice"><span class="notice-icon">!</span><p>현재 공개 예정목록에서 지역 조건에 맞는 입찰 예정 물건은 확인되지 않았습니다. 최근 90일 일정목록의 사례를 함께 표시합니다.<br><b>중요:</b> 공개목록의 ‘건물면적’은 전용면적과 다를 수 있어 관심 면적 충족 여부를 최종 확정하지 않습니다.</p></div>
+
+    <section class="filters-wrap" aria-label="경매 검색 및 필터">
+      <div class="filters">
+        <div class="search-row"><div class="search-box"><input type="search" id="q" placeholder="단지명, 주소, 사건번호, 특이사항 검색" aria-label="경매 검색"></div><select id="sort" aria-label="정렬"><option value="bid_date">입찰일 최신순</option><option value="minimum">최저가율 낮은순</option><option value="discount">감정가 할인 큰순</option></select></div>
+        <div class="filter-row"><span class="filter-label">지역</span><button class="pill" type="button" data-district="중구" data-value="중구" aria-pressed="false">중구<span class="count">1</span></button><button class="pill" type="button" data-district="남구" data-value="남구" aria-pressed="false">남구<span class="count">3</span></button><button class="pill" type="button" data-district="북구" data-value="북구" aria-pressed="false">북구<span class="count">0</span></button><span class="filter-divider"></span><span class="filter-label">상태</span><button class="pill" type="button" data-status="매각" data-value="매각" aria-pressed="false">매각<span class="count">4</span></button><button class="reset-btn" id="reset" type="button">필터 초기화</button></div>
+        <div class="filter-row"><button class="pill" id="interestOnly" type="button" aria-pressed="false">24~40평만</button><button class="pill" id="upcomingOnly" type="button" aria-pressed="false">입찰 예정만</button><span class="result-count" id="resultCount"></span></div>
+      </div>
+    </section>
+
+    <div class="results-bar"><h2>울산 아파트 경매 목록</h2><span class="result-count" id="resultCountMirror"></span><span class="sorter"><span class="result-count">총 <span id="resultCountLabel"></span></span></span></div>
+    <ul class="auction-list" id="auctionList"></ul>
+    <div class="more" id="more"></div>
+
+    <section class="lower-grid">
+      <div class="info-panel"><h2>선별 기준</h2><p>공개목록에서 자동으로 표시하는 범위입니다.</p><ul class="info-list"><li><span>포함 지역</span><b>중구·남구·북구</b></li><li><span>제외 지역</span><b>동구·울주군</b></li><li><span>면적 기준</span><b>건물 24~40평 근접</b></li><li><span>공급면적</span><b>32평 이상 우선 · 원문 확인</b></li><li><span>학교·대단지</span><b>도보 10분 · 500세대 우선</b></li></ul></div>
+      <div class="info-panel"><h2>데이터 출처</h2><p>목록은 참고용 큐레이션입니다. 권리분석이나 입찰 판단의 근거로 단독 사용하지 마세요.</p><ul class="info-list"><li><span>최종 확인</span><b><a class="source-link" href="https://www.courtauction.go.kr/" target="_blank" rel="noopener">대한민국 법원경매정보 ↗</a></b></li><li><span>공개 목록</span><b><a class="source-link" href="https://www.winnerauction.co.kr/search/search_list.php" target="_blank" rel="noopener">위너옥션 공개 검색목록 ↗</a></b></li><li><span>실거래가</span><b><a class="source-link" href="https://rt.molit.go.kr/pt/gis/gis.do?mobileAt=&srhThingSecd=C" target="_blank" rel="noopener">국토교통부 실거래가 공개시스템 ↗</a></b></li><li><span>최근 갱신</span><b>2026-08-19 14:58</b></li><li><span>확인 범위</span><b>예정 목록 + 최근 90일</b></li></ul></div>
+    </section>
+
+    <p class="footer">데이터 갱신: <code>python collect.py</code> 실행 후 <code>python build_site.py</code>를 실행하세요. 공개 검색목록의 주소·면적·가격·상태와 법원 원문이 다를 수 있습니다. 입찰 전 사건 상세, 매각물건명세서, 현황조사서, 등기사항증명서 및 현장을 직접 확인하세요. <a href="https://www.courtauction.go.kr/" target="_blank" rel="noopener">공식 원문 확인 ↗</a></p>
+  </main>
+</div>
+<dialog id="detailDialog"><div id="detailContent"></div></dialog>
+<script>window.__AUCTIONS__ = {"auctions":[{"id":"winner:2025-1359:2026-08-06:울산광역시 중구 유곡동 264 에일린의뜰1차아파트 102동 9층902호","case_no":"2025-1359","case_display":"2025타경1359","court":"울산지방법원","category":"아파트","district":"중구","complex":"에일린의뜰1차아파트","address":"울산광역시 중구 유곡동 264 에일린의뜰1차아파트 102동 9층902호","bid_date":"2026-08-06","status":"매각","auction_round":null,"appraisal":534000000,"minimum_price":373800000,"final_price":508394190,"minimum_ratio":70,"final_ratio":95,"discount_vs_appraisal":30.0,"market_price":null,"market_discount":null,"market_note":"국토교통부 실거래가 자동 매칭 전 — 단지명·면적 확인 후 별도 연동","land_pyeong":18.31,"building_pyeong":25.7,"building_m2":84.96,"supply_pyeong":null,"is_interest":true,"is_upcoming":false,"risk_tags":[],"school_access":"미확인 — 현장·지도 확인 필요","rights_note":"공개목록만으로 권리·임차인 현황을 확정할 수 없습니다. 원문과 등기·현황조사서를 확인하세요.","area_note":"건물면적(공개목록) 기준 — 전용면적·공급면적은 원문에서 최종 확인","source_name":"위너옥션 공개 검색목록","source_kind":"보조 공개목록","source_url":"https://www.winnerauction.co.kr/search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-06","official_url":"https://www.courtauction.go.kr/"},{"id":"winner:2024-106558:2026-08-06:울산광역시 남구 번영로 29, 103동 4층 404호 (야음동,울산번영로두산위브)","case_no":"2024-106558","case_display":"2024타경106558","court":"울산지방법원","category":"아파트","district":"남구","complex":"울산번영로두산위브","address":"울산광역시 남구 번영로 29, 103동 4층 404호 (야음동,울산번영로두산위브)","bid_date":"2026-08-06","status":"매각","auction_round":null,"appraisal":653000000,"minimum_price":653000000,"final_price":672990000,"minimum_ratio":100,"final_ratio":103,"discount_vs_appraisal":0.0,"market_price":null,"market_discount":null,"market_note":"국토교통부 실거래가 자동 매칭 전 — 단지명·면적 확인 후 별도 연동","land_pyeong":12.7,"building_pyeong":25.69,"building_m2":84.93,"supply_pyeong":null,"is_interest":true,"is_upcoming":false,"risk_tags":[],"school_access":"미확인 — 현장·지도 확인 필요","rights_note":"공개목록만으로 권리·임차인 현황을 확정할 수 없습니다. 원문과 등기·현황조사서를 확인하세요.","area_note":"건물면적(공개목록) 기준 — 전용면적·공급면적은 원문에서 최종 확인","source_name":"위너옥션 공개 검색목록","source_kind":"보조 공개목록","source_url":"https://www.winnerauction.co.kr/search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-06","official_url":"https://www.courtauction.go.kr/"},{"id":"winner:2025-941:2026-05-28:울산광역시 남구 삼산동 182-1 아데라움아파트 107동 5층506호","case_no":"2025-941","case_display":"2025타경941","court":"울산지방법원","category":"아파트","district":"남구","complex":"아데라움아파트","address":"울산광역시 남구 삼산동 182-1 아데라움아파트 107동 5층506호","bid_date":"2026-05-28","status":"매각","auction_round":null,"appraisal":627000000,"minimum_price":438900000,"final_price":561000000,"minimum_ratio":70,"final_ratio":89,"discount_vs_appraisal":30.0,"market_price":null,"market_discount":null,"market_note":"국토교통부 실거래가 자동 매칭 전 — 단지명·면적 확인 후 별도 연동","land_pyeong":19.01,"building_pyeong":41.23,"building_m2":136.3,"supply_pyeong":null,"is_interest":false,"is_upcoming":false,"risk_tags":[],"school_access":"미확인 — 현장·지도 확인 필요","rights_note":"공개목록만으로 권리·임차인 현황을 확정할 수 없습니다. 원문과 등기·현황조사서를 확인하세요.","area_note":"건물면적(공개목록) 기준 — 전용면적·공급면적은 원문에서 최종 확인","source_name":"위너옥션 공개 검색목록","source_kind":"보조 공개목록","source_url":"https://www.winnerauction.co.kr/search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-05-28","official_url":"https://www.courtauction.go.kr/"},{"id":"winner:2025-11705:2026-05-28:울산광역시 남구 신정동 195-11 홍일아파트 비동 3층301호","case_no":"2025-11705","case_display":"2025타경11705","court":"울산지방법원","category":"아파트","district":"남구","complex":"홍일아파트","address":"울산광역시 남구 신정동 195-11 홍일아파트 비동 3층301호","bid_date":"2026-05-28","status":"매각","auction_round":null,"appraisal":140000000,"minimum_price":68600000,"final_price":76190000,"minimum_ratio":49,"final_ratio":54,"discount_vs_appraisal":51.0,"market_price":null,"market_discount":null,"market_note":"국토교통부 실거래가 자동 매칭 전 — 단지명·면적 확인 후 별도 연동","land_pyeong":13.39,"building_pyeong":17.8,"building_m2":58.84,"supply_pyeong":null,"is_interest":false,"is_upcoming":false,"risk_tags":[],"school_access":"미확인 — 현장·지도 확인 필요","rights_note":"공개목록만으로 권리·임차인 현황을 확정할 수 없습니다. 원문과 등기·현황조사서를 확인하세요.","area_note":"건물면적(공개목록) 기준 — 전용면적·공급면적은 원문에서 최종 확인","source_name":"위너옥션 공개 검색목록","source_kind":"보조 공개목록","source_url":"https://www.winnerauction.co.kr/search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-05-28","official_url":"https://www.courtauction.go.kr/"}]};</script>
+<script>
+const RAW = window.__AUCTIONS__ || { auctions: [] };
+const auctions = Array.isArray(RAW.auctions) ? RAW.auctions : [];
+const today = new Date(); today.setHours(0, 0, 0, 0);
+const state = { q: "", district: "", status: "", interest: false, upcoming: false, sort: "bid_date", limit: 30 };
+const $ = (selector) => document.querySelector(selector);
+const listEl = $("#auctionList");
+
+function esc(value) {
+  return String(value == null ? "" : value).replace(/[&<>"']/g, (c) => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+}
+function money(value) {
+  if (value == null || value === "") return "확인 필요";
+  const n = Number(value);
+  if (n >= 100000000) {
+    const eok = Math.floor(n / 100000000);
+    const man = Math.floor((n % 100000000) / 10000);
+    return man ? `${eok}억 ${man.toLocaleString("ko-KR")}만` : `${eok}억`;
+  }
+  return `${Math.round(n / 10000).toLocaleString("ko-KR")}만`;
+}
+function fullWon(value) { return value == null ? "확인 필요" : `${Number(value).toLocaleString("ko-KR")}원`; }
+function dateLabel(value) { return value ? value.replaceAll("-", ".") : "미정"; }
+function dayDiff(value) {
+  if (!value) return null;
+  const d = new Date(`${value}T00:00:00`);
+  return Number.isNaN(d.getTime()) ? null : Math.round((d - today) / 86400000);
+}
+function statusClass(status) {
+  return ({ "매각":"status-sale", "유찰":"status-fail", "변경":"status-change", "취하":"status-withdraw", "진행":"status-open", "신건":"status-open" }[status] || "status-change");
+}
+function ddayHtml(item) {
+  const diff = dayDiff(item.bid_date);
+  if (item.is_upcoming && diff != null) {
+    if (diff === 0) return '<span class="dday soon">오늘 입찰</span>';
+    return `<span class="dday${diff <= 7 ? " soon" : ""}">D-${diff}</span>`;
+  }
+  if (item.status === "매각") return '<span class="dday past">매각 완료</span>';
+  if (item.status === "취하") return '<span class="dday past">취하</span>';
+  return '<span class="dday past">지난 회차</span>';
+}
+function areaHtml(item) {
+  if (item.building_pyeong == null) return "확인 필요";
+  const m2 = item.building_m2 ? ` <small>(${Number(item.building_m2).toFixed(2)}㎡)</small>` : "";
+  return `${Number(item.building_pyeong).toFixed(2)}평${m2}`;
+}
+function match(item) {
+  if (state.district && item.district !== state.district) return false;
+  if (state.status && item.status !== state.status) return false;
+  if (state.interest && !item.is_interest) return false;
+  if (state.upcoming && !item.is_upcoming) return false;
+  if (state.q) {
+    const hay = [item.complex, item.address, item.case_no, item.district, item.status, ...(item.risk_tags || [])].join(" ").toLowerCase();
+    if (!state.q.split(/\s+/).filter(Boolean).every((word) => hay.includes(word))) return false;
+  }
+  return true;
+}
+function cardHtml(item) {
+  const tags = (item.risk_tags || []).map((tag) => `<span class="tag">${esc(tag)}</span>`).join("");
+  const interest = item.is_interest ? '<span class="interest-label">관심 면적</span>' : "";
+  const ratio = item.minimum_ratio != null ? `<em>${esc(item.minimum_ratio)}%</em>` : "";
+  const final = item.final_price != null ? `<div class="metric"><span class="metric-label">매각가</span><strong class="metric-value">${money(item.final_price)}</strong></div>` : `<div class="metric"><span class="metric-label">최저가 할인</span><strong class="metric-value">${item.discount_vs_appraisal != null ? `${Number(item.discount_vs_appraisal).toFixed(1)}%` : "확인 필요"}</strong></div>`;
+  return `<li class="auction-card${item.is_interest ? " interest" : ""}${item.is_upcoming ? " upcoming" : ""}">
+    <div class="card-head">
+      <div>
+        <div class="card-kicker"><span class="status-badge ${statusClass(item.status)}">${esc(item.status)}</span><span>${esc(item.district || "울산")}</span>${item.auction_round ? `<span>${esc(item.auction_round)}회차</span>` : ""}${interest}</div>
+        <h3 class="card-title"><a href="${esc(item.source_url)}" target="_blank" rel="noopener">${esc(item.complex)}</a></h3>
+        <p class="card-address">${esc(item.address)}</p>
+      </div>
+      <div class="bid-date"><span>입찰일</span><strong>${dateLabel(item.bid_date)}</strong>${ddayHtml(item)}</div>
+    </div>
+    <div class="metrics">
+      <div class="metric"><span class="metric-label">공개목록 건물면적</span><strong class="metric-value">${areaHtml(item)}</strong></div>
+      <div class="metric"><span class="metric-label">감정가</span><strong class="metric-value">${money(item.appraisal)}</strong></div>
+      <div class="metric"><span class="metric-label">최저가</span><strong class="metric-value">${money(item.minimum_price)}${ratio}</strong></div>
+      ${final}
+    </div>
+    <div class="card-foot"><span class="case">사건 ${esc(item.case_display || item.case_no)}</span>${tags}<span>${esc(item.area_note || "면적 상세 확인 필요")}</span><span class="card-actions"><button class="text-btn" data-detail-id="${esc(item.id)}">상세 보기</button><a class="text-btn" href="${esc(item.official_url)}" target="_blank" rel="noopener">법원 원문</a></span></div>
+  </li>`;
+}
+function sortRows(rows) {
+  return rows.slice().sort((a, b) => {
+    if (state.sort === "minimum") return (a.minimum_ratio ?? 999) - (b.minimum_ratio ?? 999);
+    if (state.sort === "discount") return (b.discount_vs_appraisal ?? -1) - (a.discount_vs_appraisal ?? -1);
+    return `${b.bid_date || ""}${b.case_no || ""}`.localeCompare(`${a.bid_date || ""}${a.case_no || ""}`);
+  });
+}
+function render() {
+  const rows = sortRows(auctions.filter(match));
+  const countHtml = `<b>${rows.length}</b>건`;
+  $("#resultCount").innerHTML = countHtml;
+  $("#resultCountMirror").innerHTML = countHtml;
+  $("#resultCountLabel").innerHTML = countHtml;
+  const shown = rows.slice(0, state.limit);
+  listEl.innerHTML = shown.length ? shown.map(cardHtml).join("") : '<li class="empty"><strong>조건에 맞는 경매 물건이 없습니다.</strong>지역·면적 필터를 줄이거나 “입찰 예정만”을 해제해 보세요.</li>';
+  $("#more").innerHTML = rows.length > state.limit ? `<button type="button" id="moreBtn">${rows.length - state.limit}건 더 보기</button>` : "";
+  document.querySelectorAll("[data-detail-id]").forEach((button) => button.addEventListener("click", () => openDetail(button.dataset.detailId)));
+  const more = $("#moreBtn");
+  if (more) more.addEventListener("click", () => { state.limit += 30; render(); });
+}
+function detailHtml(item) {
+  const tags = (item.risk_tags || []).length ? item.risk_tags.join(", ") : "표시된 특이사항 없음";
+  return `<div class="dialog-inner"><div class="dialog-head"><div><div class="card-kicker"><span class="status-badge ${statusClass(item.status)}">${esc(item.status)}</span><span>${esc(item.district)} · ${esc(item.case_display || item.case_no)}</span></div><h2>${esc(item.complex)}</h2><p>${esc(item.address)}</p></div><button class="close-dialog" type="button" aria-label="닫기">×</button></div><div class="detail-grid"><div class="detail-item"><span>입찰일</span><strong>${dateLabel(item.bid_date)} · ${item.is_upcoming ? "입찰 예정" : "지난 회차"}</strong></div><div class="detail-item"><span>공개목록 건물면적</span><strong>${areaHtml(item)}</strong></div><div class="detail-item"><span>감정가</span><strong>${fullWon(item.appraisal)}</strong></div><div class="detail-item"><span>최저가</span><strong>${fullWon(item.minimum_price)}${item.minimum_ratio != null ? ` (${item.minimum_ratio}%)` : ""}</strong></div>${item.final_price != null ? `<div class="detail-item"><span>매각가</span><strong>${fullWon(item.final_price)}</strong></div>` : ""}<div class="detail-item"><span>회차</span><strong>${item.auction_round ? `${item.auction_round}회` : "확인 필요"}</strong></div></div><div class="detail-section"><h3>초등학교 접근성</h3><p>${esc(item.school_access)}</p></div><div class="detail-section"><h3>권리·임차인 메모</h3><p>${esc(item.rights_note)}</p></div><div class="detail-section"><h3>공개목록 특이사항</h3><p>${esc(tags)}</p></div><div class="detail-section"><h3>최근 실거래가 대비</h3><p>${esc(item.market_note || "실거래가 확인 필요")}</p></div><div class="detail-section"><h3>면적 주의</h3><p>${esc(item.area_note)}</p></div><div class="dialog-actions"><a href="${esc(item.source_url)}" target="_blank" rel="noopener">공개 검색목록 열기</a><a class="secondary" href="${esc(item.official_url)}" target="_blank" rel="noopener">대한민국 법원경매정보</a></div></div>`;
+}
+function openDetail(id) {
+  const item = auctions.find((row) => row.id === id);
+  if (!item) return;
+  const dialog = $("#detailDialog");
+  $("#detailContent").innerHTML = detailHtml(item);
+  dialog.querySelector(".close-dialog").addEventListener("click", () => dialog.close());
+  dialog.addEventListener("click", (event) => { if (event.target === dialog) dialog.close(); }, { once: true });
+  if (typeof dialog.showModal === "function") dialog.showModal();
+}
+function setPressed(selector, value) { document.querySelectorAll(selector).forEach((el) => el.setAttribute("aria-pressed", String(el.dataset.value === value))); }
+document.querySelectorAll("[data-district]").forEach((button) => button.addEventListener("click", () => { state.district = state.district === button.dataset.district ? "" : button.dataset.district; setPressed("[data-district]", state.district); state.limit = 30; render(); }));
+document.querySelectorAll("[data-status]").forEach((button) => button.addEventListener("click", () => { state.status = state.status === button.dataset.status ? "" : button.dataset.status; setPressed("[data-status]", state.status); state.limit = 30; render(); }));
+$("#q").addEventListener("input", (event) => { state.q = event.target.value.trim().toLowerCase(); state.limit = 30; render(); });
+$("#interestOnly").addEventListener("click", (event) => { state.interest = !state.interest; event.currentTarget.setAttribute("aria-pressed", String(state.interest)); state.limit = 30; render(); });
+$("#upcomingOnly").addEventListener("click", (event) => { state.upcoming = !state.upcoming; event.currentTarget.setAttribute("aria-pressed", String(state.upcoming)); state.limit = 30; render(); });
+$("#sort").addEventListener("change", (event) => { state.sort = event.target.value; render(); });
+$("#reset").addEventListener("click", () => { state.q = ""; state.district = ""; state.status = ""; state.interest = false; state.upcoming = false; state.sort = "bid_date"; state.limit = 30; $("#q").value = ""; $("#sort").value = "bid_date"; document.querySelectorAll("[data-district], [data-status]").forEach((el) => el.setAttribute("aria-pressed", "false")); $("#interestOnly").setAttribute("aria-pressed", "false"); $("#upcomingOnly").setAttribute("aria-pressed", "false"); render(); });
+$("#detailDialog").addEventListener("cancel", (event) => event.stopPropagation());
+render();
+</script>
