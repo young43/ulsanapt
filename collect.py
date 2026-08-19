@@ -34,6 +34,8 @@ DATA_PATH = HERE / "data" / "auctions.json"
 SEARCH_URL = "https://www.winnerauction.co.kr/search/search_list.php"
 CALENDAR_URL = "https://www.winnerauction.co.kr/search/calendar_list.php"
 OFFICIAL_URL = "https://www.courtauction.go.kr/"
+OFFICIAL_SEARCH_URL = "https://www.courtauction.go.kr/pgj/pgjsearch/searchControllerMain.on"
+OFFICIAL_DETAIL_URL = "https://www.courtauction.go.kr/pgj/pgj15B/selectAuctnCsSrchRslt.on"
 MARKET_URL = "https://rt.molit.go.kr/pt/gis/gis.do?mobileAt=&srhThingSecd=C"
 ONBID_SEARCH_URL = "https://www.onbid.co.kr/op/cltrpbancinf/cltr/cltrcdtnsrch/CltrCdtnSrchController/mvmnCltrCdtnSrchClg.do"
 ONBID_LIST_URL = "https://www.onbid.co.kr/op/cltrpbancinf/clbtcltrclg/cltrclbtcltrclg/CltrClbtCltrClgController/inqCltrClbtRlstClg.do"
@@ -47,11 +49,33 @@ SOURCE_KIND = "보조 공개목록"
 
 APT = "아파트"
 COURT = "411"  # 울산지방법원
+OFFICIAL_COURT = "B000411"  # 대한민국 법원경매정보의 울산지방법원 코드
+OFFICIAL_APT_LCL = "20000"
+OFFICIAL_APT_MCL = "20100"
+OFFICIAL_APT_SCL = "20104"
+OFFICIAL_WINDOW_DAYS = 14  # 공식 상세검색이 허용하는 미래 매각기일 범위
 ALLOWED_DISTRICTS = ("중구", "남구", "북구")
 EXCLUDED_DISTRICTS = ("동구", "울주군")
 STATUS_WORDS = ("매각", "유찰", "변경", "취하", "진행", "신건")
 MONEY_RE = re.compile(r"\d[\d,]*")
 DATE_RE = re.compile(r"(20\d{2})[./-](\d{1,2})[./-](\d{1,2})")
+COMPACT_DATE_RE = re.compile(r"(20\d{2})(\d{2})(\d{2})")
+AREA_M2_RE = re.compile(r"(?<![\d.])(\d+(?:\.\d+)?)\s*(?:㎡|m²|m2)", re.IGNORECASE)
+
+OFFICIAL_SEARCH_INFO_KEYS = (
+    "rletDspslSpcCondCd", "rprsAdongSdCd", "rprsAdongSggCd", "rprsAdongEmdCd",
+    "rdnmSdCd", "rdnmSggCd", "rdnmNo", "mvprpDspslPlcAdongSdCd",
+    "mvprpDspslPlcAdongSggCd", "mvprpDspslPlcAdongEmdCd", "rdDspslPlcAdongSdCd",
+    "rdDspslPlcAdongSggCd", "rdDspslPlcAdongEmdCd", "jdbnCd", "execrOfcDvsCd",
+    "lclDspslGdsLstUsgCd", "mclDspslGdsLstUsgCd", "sclDspslGdsLstUsgCd",
+    "cortAuctnMbrsId", "aeeEvlAmtMin", "aeeEvlAmtMax", "lwsDspslPrcRateMin",
+    "lwsDspslPrcRateMax", "flbdNcntMin", "flbdNcntMax", "objctArDtsMin",
+    "objctArDtsMax", "mvprpArtclKndCd", "mvprpArtclNm", "mvprpAtchmPlcTypCd",
+    "lafjOrderBy", "csNo", "dspslDxdyYmd", "fstDspslHm", "scndDspslHm",
+    "thrdDspslHm", "fothDspslHm", "dspslPlcNm", "lwsDspslPrcMin",
+    "lwsDspslPrcMax", "grbxTypCd", "gdsVendNm", "fuelKndCd", "carMdyrMax",
+    "carMdyrMin", "carMdlNm", "sideDvsCd",
+)
 
 
 def clean(value: str | None) -> str:
@@ -68,6 +92,8 @@ def first_text(node: Any, selector: str) -> str:
 def parse_date(value: str) -> str:
     match = DATE_RE.search(value or "")
     if not match:
+        match = COMPACT_DATE_RE.search(value or "")
+    if not match:
         return ""
     year, month, day = (int(x) for x in match.groups())
     try:
@@ -80,6 +106,58 @@ def parse_money(value: str) -> int | None:
     value = clean(value)
     match = MONEY_RE.search(value)
     return int(match.group(0).replace(",", "")) if match else None
+
+
+def parse_int(value: Any) -> int | None:
+    if value in (None, ""):
+        return None
+    try:
+        return int(str(value).replace(",", "").strip())
+    except (TypeError, ValueError):
+        return None
+
+
+def parse_area_m2(value: Any) -> float | None:
+    matches = AREA_M2_RE.findall(clean(str(value or "")))
+    if not matches:
+        return None
+    try:
+        return float(matches[0])
+    except ValueError:
+        return None
+
+
+def normalize_case_no(value: Any) -> str:
+    """법원 사이트별 사건번호 표기를 하나의 키로 맞춘다."""
+    text = clean(str(value or ""))
+    match = re.search(r"(20\d{2})\s*(?:타경|타|타기|타채)\s*(\d+)", text)
+    if match:
+        return f"{match.group(1)}-{int(match.group(2))}"
+    match = re.search(r"(20\d{2})\s*[- ]\s*(\d+)", text)
+    if match:
+        return f"{match.group(1)}-{int(match.group(2))}"
+    return text
+
+
+def address_key(value: str) -> str:
+    return re.sub(r"[^0-9A-Za-z가-힣]", "", clean(value)).lower()
+
+
+def court_tracking_key(case_no: str, address: str) -> str:
+    return f"court:{normalize_case_no(case_no)}:{address_key(address)}"
+
+
+def auction_event(item: dict[str, Any]) -> dict[str, Any] | None:
+    bid_date = item.get("bid_date")
+    if not bid_date:
+        return None
+    return {
+        "bid_date": bid_date,
+        "status": item.get("status") or "확인 필요",
+        "minimum_price": item.get("minimum_price"),
+        "minimum_ratio": item.get("minimum_ratio"),
+        "auction_round": item.get("auction_round"),
+    }
 
 
 def parse_pyeong(value: str, label: str) -> float | None:
@@ -232,6 +310,7 @@ def onbid_row_to_auction(row: dict[str, Any], today: date) -> dict[str, Any] | N
 
     return {
         "id": f"onbid:{management_no}:{row.get('pbctCdtnNo') or row.get('pbctNo') or ''}",
+        "tracking_key": f"onbid:{management_no}:{row.get('pbctCdtnNo') or row.get('pbctNo') or ''}",
         "source_type": "onbid",
         "auction_kind": "온비드 공매",
         "case_no": management_no,
@@ -242,9 +321,15 @@ def onbid_row_to_auction(row: dict[str, Any], today: date) -> dict[str, Any] | N
         "complex": extract_onbid_complex(address, category),
         "address": address,
         "bid_date": bid_date,
+        "next_bid_date": bid_date if upcoming else "",
+        "last_bid_date": "",
         "status": status,
         "status_raw": clean(row.get("pbancPbctCltrStatNm")),
         "auction_round": auction_round,
+        "failed_count": 0,
+        "is_failed": False,
+        "is_reauction": False,
+        "previous_status": "",
         "appraisal": appraisal,
         "minimum_price": minimum,
         "final_price": None,
@@ -268,6 +353,15 @@ def onbid_row_to_auction(row: dict[str, Any], today: date) -> dict[str, Any] | N
         "source_kind": ONBID_SOURCE_KIND,
         "source_url": official_url,
         "official_url": official_url,
+        "auction_history": [
+            event for event in [{
+                "bid_date": bid_date,
+                "status": status,
+                "minimum_price": minimum,
+                "minimum_ratio": minimum_ratio,
+                "auction_round": auction_round,
+            }] if bid_date
+        ],
         "onbid_cltrno": row.get("onbidCltrno"),
         "onbid_pbanc_no": row.get("onbidPbancNo"),
         "pbct_no": row.get("pbctNo"),
@@ -331,6 +425,502 @@ def collect_onbid(
     return records, source_urls, []
 
 
+def official_search_headers() -> dict[str, str]:
+    return {
+        "Accept": "application/json",
+        "Content-Type": "application/json;charset=UTF-8",
+        "Origin": "https://www.courtauction.go.kr",
+        "Referer": "https://www.courtauction.go.kr/pgj/index.on?w2xPath=/pgj/ui/pgj100/PGJ151F00.xml",
+        "sc-userid": "SYSTEM",
+        "submissionid": "mf_wfm_mainFrame_sbm_selectGdsDtlSrch",
+    }
+
+
+def official_search_payload(
+    start: date,
+    end: date,
+    page_no: int,
+    page_size: int,
+    total_yn: str,
+    total_count: str = "",
+) -> dict[str, Any]:
+    page_info: dict[str, Any] = {
+        "pageNo": page_no,
+        "pageSize": page_size,
+        "bfPageNo": page_no - 1 if page_no > 1 else "",
+        "startRowNo": "",
+        "totalCnt": total_count,
+        "totalYn": total_yn,
+        "groupTotalCount": "",
+    }
+    search_info = {key: "" for key in OFFICIAL_SEARCH_INFO_KEYS}
+    search_info.update(
+        {
+            "bidDvsCd": "000331",  # 부동산
+            "mvprpRletDvsCd": "00031R",  # 부동산 상세검색
+            "cortAuctnSrchCondCd": "0004601",  # 매각기일 검색
+            "cortOfcCd": OFFICIAL_COURT,
+            "lclDspslGdsLstUsgCd": OFFICIAL_APT_LCL,
+            "mclDspslGdsLstUsgCd": OFFICIAL_APT_MCL,
+            "sclDspslGdsLstUsgCd": OFFICIAL_APT_SCL,
+            "notifyLoc": "off",
+            "pgmId": "PGJ151F01",
+            "cortStDvs": "1",
+            "statNum": 1,
+            "bidBgngYmd": start.strftime("%Y%m%d"),
+            "bidEndYmd": end.strftime("%Y%m%d"),
+        }
+    )
+    return {"dma_pageInfo": page_info, "dma_srchGdsDtlSrchInfo": search_info}
+
+
+def official_detail_headers() -> dict[str, str]:
+    return {
+        "Accept": "application/json",
+        "Content-Type": "application/json;charset=UTF-8",
+        "Origin": "https://www.courtauction.go.kr",
+        "Referer": "https://www.courtauction.go.kr/pgj/index.on?w2xPath=/pgj/ui/pgj100/PGJ151F00.xml",
+        "sc-userid": "NONUSER",
+        "sc-pgmid": "PGJ15BM01",
+        "submissionid": "mf_wfm_mainFrame_sbm_selectGdsDtlSrchDtlInfo",
+    }
+
+
+def official_detail_payload(item: dict[str, Any], today: date) -> dict[str, Any]:
+    search_info = official_search_payload(
+        today,
+        today + timedelta(days=OFFICIAL_WINDOW_DAYS),
+        1,
+        40,
+        "Y",
+    )["dma_srchGdsDtlSrchInfo"]
+    search_info.update(
+        {
+            "sideDvsCd": "2",
+            "srchRowIndex": 0,
+            "menuNm": "물건상세검색",
+        }
+    )
+    object_seq = clean(
+        str(
+            item.get("court_object_seq")
+            or item.get("court_object_no")
+            or "1"
+        )
+    )
+    return {
+        "dma_srchGdsDtlSrch": {
+            "csNo": item.get("case_display") or item.get("case_no") or "",
+            "cortOfcCd": OFFICIAL_COURT,
+            "dspslGdsSeq": object_seq,
+            "pgmId": "PGJ151M01",
+            "srchInfo": search_info,
+        }
+    }
+
+
+def official_detail_status(event: dict[str, Any], event_date: str, today: date) -> str:
+    result_code = clean(
+        str(
+            event.get("auctnDxdyRsltCd")
+            or event.get("dxdyRsltCd")
+            or ""
+        )
+    )
+    result_name = clean(
+        str(
+            event.get("auctnDxdyRsltNm")
+            or event.get("dxdyRsltNm")
+            or event.get("auctnDxdyRslt")
+            or ""
+        )
+    )
+    if "유찰" in result_name or result_code == "003":
+        return "유찰"
+    if event_date and event_date >= today.isoformat():
+        return "입찰 예정"
+    if result_name:
+        return result_name
+    return "매각기일 경과"
+
+
+def official_detail_event_price(event: dict[str, Any]) -> int | None:
+    for key in (
+        "tsLwsDspslPrc",
+        "lwsDspslPrc",
+        "dspslAmt",
+        "fstPbancLwsDspslPrc",
+    ):
+        value = parse_int(event.get(key))
+        if value is not None and value > 0:
+            return value
+    return None
+
+
+def apply_official_detail(item: dict[str, Any], result: dict[str, Any], today: date) -> bool:
+    dxdy_info = result.get("dspslGdsDxdyInfo") or {}
+    raw_events = result.get("gdsDspslDxdyLst") or []
+    if isinstance(raw_events, dict):
+        raw_events = [raw_events]
+    if not isinstance(raw_events, list):
+        raw_events = []
+
+    events: list[dict[str, Any]] = []
+    for raw_event in raw_events:
+        if not isinstance(raw_event, dict):
+            continue
+        event_date = parse_date(str(raw_event.get("dxdyYmd") or raw_event.get("maeGiil") or ""))
+        if not event_date:
+            continue
+        price = official_detail_event_price(raw_event)
+        ratio = parse_int(
+            raw_event.get("lwsDspslPrcRate")
+            or raw_event.get("dspslPrcRate")
+            or raw_event.get("notifyMinmaePriceRate1")
+        )
+        appraisal = parse_int(dxdy_info.get("aeeEvlAmt")) or parse_int(item.get("appraisal"))
+        if ratio is None and appraisal and price:
+            ratio = round(price / appraisal * 100)
+        round_value = parse_int(raw_event.get("auctnDxdyKndCd"))
+        events.append(
+            {
+                "bid_date": event_date,
+                "status": official_detail_status(raw_event, event_date, today),
+                "minimum_price": price,
+                "minimum_ratio": ratio,
+                "auction_round": round_value,
+            }
+        )
+
+    if not events:
+        next_date = parse_date(
+            str(
+                dxdy_info.get("dspslDxdyYmd")
+                or dxdy_info.get("dspslDcsnDxdyYmd")
+                or ""
+            )
+        )
+        if next_date:
+            price = parse_int(dxdy_info.get("fstPbancLwsDspslPrc"))
+            appraisal = parse_int(dxdy_info.get("aeeEvlAmt"))
+            events.append(
+                {
+                    "bid_date": next_date,
+                    "status": official_detail_status({}, next_date, today),
+                    "minimum_price": price,
+                    "minimum_ratio": round(price / appraisal * 100) if price and appraisal else None,
+                    "auction_round": None,
+                }
+            )
+    if not events:
+        return False
+
+    events.sort(key=lambda event: (event.get("bid_date") or "", event.get("auction_round") or 0))
+    today_text = today.isoformat()
+    future_events = [event for event in events if event.get("bid_date", "") >= today_text]
+    auction_dates = {
+        parse_date(str(raw_event.get("dxdyYmd") or raw_event.get("maeGiil") or ""))
+        for raw_event in raw_events
+        if clean(str(raw_event.get("auctnDxdyKndCd") or "")) == "01"
+    }
+    auction_events = [event for event in events if event.get("bid_date") in auction_dates]
+    future_auction_events = [event for event in auction_events if event.get("bid_date", "") >= today_text]
+    next_event = min(
+        future_auction_events or future_events,
+        key=lambda event: event.get("bid_date") or "9999-99-99",
+    ) if (future_auction_events or future_events) else None
+
+    explicit_failed = sum(1 for event in events if event.get("status") == "유찰")
+    failed_count = max(
+        parse_int(item.get("failed_count")) or 0,
+        explicit_failed,
+        (parse_int(item.get("auction_round")) or 1) - 1,
+        parse_int(dxdy_info.get("flbdNcnt")) or 0,
+    )
+    appraisal = parse_int(dxdy_info.get("aeeEvlAmt")) or item.get("appraisal")
+    if appraisal:
+        item["appraisal"] = appraisal
+
+    if next_event:
+        next_date = next_event.get("bid_date") or ""
+        minimum = next_event.get("minimum_price")
+        if minimum is None:
+            minimum = parse_int(dxdy_info.get("fstPbancLwsDspslPrc")) or item.get("minimum_price")
+        item["bid_date"] = next_date
+        item["next_bid_date"] = next_date
+        item["last_bid_date"] = max(
+            (event.get("bid_date") for event in events if event.get("bid_date", "") < next_date),
+            default="",
+        )
+        item["is_upcoming"] = True
+        item["status"] = "입찰 예정"
+        item["minimum_price"] = minimum
+        item["minimum_ratio"] = (
+            round(minimum / appraisal * 100) if minimum and appraisal else item.get("minimum_ratio")
+        )
+        item["discount_vs_appraisal"] = (
+            round((1 - minimum / appraisal) * 100, 1) if minimum and appraisal else item.get("discount_vs_appraisal")
+        )
+        item["auction_round"] = max(failed_count + 1, parse_int(item.get("auction_round")) or 0) or None
+    else:
+        latest = events[-1]
+        item["bid_date"] = latest.get("bid_date") or item.get("bid_date")
+        item["next_bid_date"] = ""
+        item["last_bid_date"] = latest.get("bid_date") or item.get("last_bid_date")
+        item["is_upcoming"] = False
+        item["status"] = latest.get("status") or item.get("status")
+
+    item["failed_count"] = failed_count
+    item["is_failed"] = failed_count > 0
+    item["is_reauction"] = failed_count > 0
+    item["previous_status"] = "유찰" if failed_count else item.get("previous_status") or ""
+    item["source_origin"] = "official_detail"
+    item["source_name"] = "대한민국 법원경매정보 공식 상세조회"
+    item["source_kind"] = "공식 사건 상세 응답"
+    item["source_url"] = OFFICIAL_URL
+    item["official_url"] = OFFICIAL_URL
+    item["official_detail_url"] = OFFICIAL_DETAIL_URL
+    item["auction_history"] = events
+    return True
+
+
+def enrich_official_details(
+    session: requests.Session,
+    items: list[dict[str, Any]],
+    today: date,
+    delay: float,
+    max_details: int = 20,
+) -> tuple[int, list[str], list[str]]:
+    """과거 유찰 법원물건의 공식 상세조회에서 다음 회차와 이력을 보강한다."""
+    candidates: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for item in items:
+        if item.get("source_type") != "court":
+            continue
+        if item.get("source_origin") == "official_detail":
+            continue
+        if not (
+            item.get("status") == "유찰"
+            or (parse_int(item.get("failed_count")) or 0) > 0
+            or (parse_int(item.get("auction_round")) or 1) > 1
+            or item.get("is_reauction")
+        ):
+            continue
+        key = item.get("tracking_key") or item.get("case_no") or item.get("id")
+        if not key or key in seen:
+            continue
+        seen.add(key)
+        candidates.append(item)
+
+    candidates.sort(
+        key=lambda item: (
+            0 if "재매각" in str(item.get("rights_note") or "") else 1,
+            0 if item.get("source_origin") != "official_court" else 1,
+            item.get("next_bid_date") or item.get("bid_date") or "9999-99-99",
+        )
+    )
+    candidates = candidates[:max_details]
+
+    if not candidates:
+        return 0, [], []
+
+    updated = 0
+    source_urls = [OFFICIAL_URL, OFFICIAL_DETAIL_URL]
+    errors: list[str] = []
+    headers = official_detail_headers()
+    for item in candidates:
+        case_display = item.get("case_display") or item.get("case_no") or item.get("id")
+        try:
+            response = session.post(
+                OFFICIAL_DETAIL_URL,
+                json=official_detail_payload(item, today),
+                headers=headers,
+                timeout=30,
+            )
+            response.raise_for_status()
+            body = response.json()
+            if body.get("errors"):
+                raise RuntimeError(str(body["errors"]))
+            result = ((body.get("data") or {}).get("dma_result") or {})
+            if not result or not apply_official_detail(item, result, today):
+                raise RuntimeError("상세조회 결과에 매각기일 이력이 없습니다.")
+            updated += 1
+        except Exception as exc:
+            errors.append(f"{case_display}: {exc}")
+        if delay:
+            time.sleep(delay)
+    return updated, source_urls, errors
+
+
+def official_row_to_auction(row: dict[str, Any], today: date) -> dict[str, Any] | None:
+    category = clean(row.get("dspslUsgNm"))
+    if category != APT:
+        return None
+
+    address = clean(row.get("printSt") or row.get("convAddr"))
+    if address.startswith("[") and address.endswith("]"):
+        address = address[1:-1].strip()
+    if not address or not is_in_scope(address):
+        return None
+
+    case_no = normalize_case_no(row.get("srnSaNo") or row.get("saNo"))
+    bid_date = parse_date(str(row.get("maeGiil") or ""))
+    if not case_no or not bid_date:
+        return None
+
+    failed_count = parse_int(row.get("yuchalCnt")) or 0
+    auction_round = failed_count + 1
+    upcoming = date.fromisoformat(bid_date) >= today
+    appraisal = parse_int(row.get("gamevalAmt"))
+    minimum = parse_int(row.get("notifyMinmaePrice1")) or parse_int(row.get("minmaePrice"))
+    minimum_ratio = parse_int(row.get("notifyMinmaePriceRate1"))
+    if minimum_ratio is None and appraisal and minimum:
+        minimum_ratio = round(minimum / appraisal * 100)
+    discount = round((1 - minimum / appraisal) * 100, 1) if appraisal and minimum else None
+
+    building_m2 = parse_area_m2(row.get("pjbBuldList"))
+    if building_m2 is None:
+        building_m2 = parse_float(row.get("minArea"))
+    building_pyeong = round(building_m2 / 3.305785, 2) if building_m2 is not None else None
+    is_interest = building_pyeong is not None and 24 <= building_pyeong <= 40
+
+    notes = clean(row.get("mulBigo"))
+    risk_tags = [f"유찰 {failed_count}회"] if failed_count else []
+    reauction_note = "재매각" in notes
+    if reauction_note:
+        risk_tags.insert(0, "재매각")
+    if notes:
+        first_note = clean(re.split(r"[\r\n]+", notes)[0])
+        if first_note and first_note not in risk_tags:
+            risk_tags.append(first_note[:80])
+    complex_name = clean(row.get("buldNm")) or extract_complex(address)
+    status = "입찰 예정" if upcoming else "입찰 마감"
+    tracking_key = court_tracking_key(case_no, address)
+
+    return {
+        "id": f"court:{tracking_key}",
+        "tracking_key": tracking_key,
+        "source_origin": "official_court",
+        "source_type": "court",
+        "auction_kind": "법원경매",
+        "case_no": case_no,
+        "case_display": case_no.replace("-", "타경", 1),
+        "court": clean(row.get("jiwonNm")) or "울산지방법원",
+        "category": category,
+        "district": extract_district(address),
+        "complex": complex_name,
+        "address": address,
+        "bid_date": bid_date,
+        "next_bid_date": bid_date if upcoming else "",
+        "last_bid_date": "",
+        "status": status,
+        "status_raw": f"유찰 {failed_count}회 후 다음 매각" if failed_count else status,
+        "auction_round": auction_round,
+        "failed_count": failed_count,
+        "is_failed": failed_count > 0,
+        "is_reauction": failed_count > 0 or reauction_note,
+        "previous_status": "유찰" if failed_count else ("재매각" if reauction_note else ""),
+        "appraisal": appraisal,
+        "minimum_price": minimum,
+        "final_price": None,
+        "minimum_ratio": minimum_ratio,
+        "final_ratio": None,
+        "discount_vs_appraisal": discount,
+        "market_price": None,
+        "market_discount": None,
+        "market_note": "국토교통부 실거래가 자동 매칭 전 — 단지명·면적 확인 후 별도 연동",
+        "land_pyeong": None,
+        "building_pyeong": building_pyeong,
+        "building_m2": building_m2,
+        "supply_pyeong": None,
+        "is_interest": is_interest,
+        "is_upcoming": upcoming,
+        "risk_tags": risk_tags,
+        "school_access": "미확인 — 현장·지도 확인 필요",
+        "rights_note": (
+            f"법원 공식목록 비고: {notes}. " if notes else ""
+        ) + "공식 사건 상세·매각물건명세서·현황조사서·등기사항증명서를 확인하세요.",
+        "area_note": "법원 공식목록 건물면적 기준 — 전용면적·공급면적은 원문에서 최종 확인",
+        "source_name": "대한민국 법원경매정보 공식 검색목록",
+        "source_kind": "공식 검색 응답",
+        "source_url": OFFICIAL_URL,
+        "official_url": OFFICIAL_URL,
+        "court_docid": clean(row.get("docid")),
+        "court_object_no": clean(row.get("maemulSer")),
+        "court_object_seq": clean(row.get("mokmulSer")),
+        "auction_history": [
+            {
+                "bid_date": bid_date,
+                "status": status,
+                "minimum_price": minimum,
+                "minimum_ratio": minimum_ratio,
+                "auction_round": auction_round,
+            }
+        ],
+    }
+
+
+def collect_official_court(
+    session: requests.Session,
+    today: date,
+    future_days: int,
+    delay: float,
+) -> tuple[list[dict[str, Any]], list[str], list[str]]:
+    """대한민국 법원경매정보 공식목록에서 울산 아파트의 다음 매각기일을 조회한다."""
+    # 공식 화면과 서버가 허용하는 미래 검색 범위가 14일이므로, 매 실행 때
+    # '지금부터 14일'을 조회하고 유찰 횟수와 현재 회차를 함께 저장한다.
+    end = today + timedelta(days=min(OFFICIAL_WINDOW_DAYS, max(1, future_days)))
+    page_size = 40  # 공식 화면에서 제공하는 최대 페이지 크기
+    headers = official_search_headers()
+    records: list[dict[str, Any]] = []
+    source_urls = [OFFICIAL_URL, OFFICIAL_SEARCH_URL]
+    errors: list[str] = []
+
+    try:
+        session.get(
+            OFFICIAL_URL,
+            headers={"Referer": OFFICIAL_URL},
+            timeout=30,
+        ).raise_for_status()
+        total_count = ""
+        total_pages = 1
+        for page_no in range(1, 21):
+            payload = official_search_payload(
+                today,
+                end,
+                page_no,
+                page_size,
+                "Y" if page_no == 1 else "N",
+                total_count,
+            )
+            response = session.post(
+                OFFICIAL_SEARCH_URL,
+                json=payload,
+                headers=headers,
+                timeout=30,
+            )
+            response.raise_for_status()
+            body = response.json()
+            if body.get("errors"):
+                raise RuntimeError(str(body["errors"]))
+            data = body.get("data") or {}
+            page_info = data.get("dma_pageInfo") or {}
+            rows = data.get("dlt_srchResult") or []
+            total_count = str(page_info.get("totalCnt") or total_count or "0")
+            total_pages = min(20, max(1, (int(total_count) + page_size - 1) // page_size))
+            records.extend(
+                item for row in rows if (item := official_row_to_auction(row, today))
+            )
+            if page_no >= total_pages:
+                break
+            if delay:
+                time.sleep(delay)
+    except Exception as exc:
+        errors.append(f"법원 공식목록: {exc}")
+
+    return records, source_urls, errors
+
+
 def extract_district(address: str) -> str:
     match = re.search(r"울산광역시\s+(중구|남구|북구|동구|울주군)", address or "")
     return match.group(1) if match else ""
@@ -383,6 +973,7 @@ def row_to_auction(tr: Any, source_url: str, today: date) -> dict[str, Any] | No
                 break
     if not case_no:
         return None
+    case_no = normalize_case_no(case_no)
 
     area_text = first_text(tr, "ul.list_sell02 li.lest_test02")
     land_pyeong = parse_pyeong(area_text, "토지")
@@ -407,9 +998,13 @@ def row_to_auction(tr: Any, source_url: str, today: date) -> dict[str, Any] | No
     is_interest = building_pyeong is not None and 24 <= building_pyeong <= 40
     upcoming = bool(bid_date and date.fromisoformat(bid_date) >= today and status not in ("매각", "취하"))
     discount = round((1 - minimum / appraisal) * 100, 1) if appraisal and minimum else None
+    failed_count = max((auction_round or 1) - 1, 1 if status == "유찰" else 0)
+    tracking_key = court_tracking_key(case_no, address)
 
     return {
-        "id": f"winner:{case_no}:{bid_date}:{address}",
+        "id": f"court:{tracking_key}",
+        "tracking_key": tracking_key,
+        "source_origin": "winner_public_list",
         "source_type": "court",
         "auction_kind": "법원경매",
         "case_no": case_no,
@@ -420,8 +1015,14 @@ def row_to_auction(tr: Any, source_url: str, today: date) -> dict[str, Any] | No
         "complex": extract_complex(address),
         "address": address,
         "bid_date": bid_date,
+        "next_bid_date": bid_date if upcoming else "",
+        "last_bid_date": bid_date if not upcoming else "",
         "status": status,
         "auction_round": auction_round,
+        "failed_count": failed_count,
+        "is_failed": status == "유찰" or failed_count > 0,
+        "is_reauction": status == "유찰" or failed_count > 0,
+        "previous_status": "유찰" if failed_count else "",
         "appraisal": appraisal,
         "minimum_price": minimum,
         "final_price": final_price if status == "매각" else None,
@@ -449,6 +1050,15 @@ def row_to_auction(tr: Any, source_url: str, today: date) -> dict[str, Any] | No
         "source_kind": SOURCE_KIND,
         "source_url": source_url,
         "official_url": OFFICIAL_URL,
+        "auction_history": [
+            {
+                "bid_date": bid_date,
+                "status": status,
+                "minimum_price": minimum,
+                "minimum_ratio": minimum_ratio,
+                "auction_round": auction_round,
+            }
+        ] if bid_date else [],
     }
 
 
@@ -507,22 +1117,140 @@ def collect_history(
     return records, source_urls, errors
 
 
-def deduplicate(items: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    merged: dict[str, dict[str, Any]] = {}
-    for item in items:
-        key = item["id"]
-        # 동일 사건이 검색목록과 일정목록에 함께 있으면 일정목록의 주소/상태가 더 자세하다.
-        if key not in merged:
-            merged[key] = item
-            continue
-        current = merged[key]
+def merge_auction_group(group: list[dict[str, Any]], today: date) -> dict[str, Any]:
+    def source_rank(item: dict[str, Any]) -> int:
+        return 1 if item.get("source_origin") in {"official_court", "official_detail"} else 0
+
+    upcoming_items = [
+        item for item in group
+        if item.get("is_upcoming") and (item.get("next_bid_date") or item.get("bid_date"))
+    ]
+    if upcoming_items:
+        primary = min(
+            upcoming_items,
+            key=lambda item: (
+                item.get("next_bid_date") or item.get("bid_date") or "9999-99-99",
+                -source_rank(item),
+            ),
+        )
+    else:
+        primary = max(
+            group,
+            key=lambda item: (
+                item.get("bid_date") or "",
+                source_rank(item),
+            ),
+        )
+
+    merged = dict(primary)
+    for item in group:
         for field, value in item.items():
-            if value not in (None, "", []):
-                current[field] = value
+            if field in {"auction_history", "risk_tags"}:
+                continue
+            if merged.get(field) in (None, "", []):
+                merged[field] = value
+
+    history: list[dict[str, Any]] = []
+    for item in group:
+        events = item.get("auction_history") or []
+        if not events:
+            event = auction_event(item)
+            events = [event] if event else []
+        for event in events:
+            if not event or not event.get("bid_date"):
+                continue
+            normalized = {
+                "bid_date": event.get("bid_date"),
+                "status": event.get("status") or "확인 필요",
+                "minimum_price": event.get("minimum_price"),
+                "minimum_ratio": event.get("minimum_ratio"),
+                "auction_round": event.get("auction_round"),
+            }
+            if normalized not in history:
+                history.append(normalized)
+    history.sort(key=lambda event: (event.get("bid_date") or "", event.get("auction_round") or 0))
+
+    future_dates = sorted(
+        {
+            value
+            for item in group
+            for value in (item.get("next_bid_date"),)
+            if value and value >= today.isoformat()
+        }
+    )
+    next_bid_date = future_dates[0] if future_dates else ""
+    history_dates = [event["bid_date"] for event in history if event.get("bid_date")]
+    past_dates = [value for value in history_dates if not next_bid_date or value < next_bid_date]
+    latest_date = max(history_dates) if history_dates else (merged.get("bid_date") or "")
+    last_bid_date = max(past_dates) if past_dates else (latest_date if not next_bid_date else "")
+
+    explicit_failed = sum(1 for event in history if event.get("status") == "유찰")
+    failed_count = max(
+        [
+            parse_int(item.get("failed_count")) or 0
+            for item in group
+        ]
+        + [
+            max((parse_int(item.get("auction_round")) or 1) - 1, 0)
+            for item in group
+        ]
+        + [explicit_failed],
+    )
+    current_item = primary
+    has_reauction_marker = any(
+        item.get("is_reauction")
+        or "재매각" in str(item.get("rights_note") or "")
+        for item in group
+    )
+    merged["id"] = merged.get("tracking_key") or primary.get("id")
+    merged["bid_date"] = next_bid_date or latest_date
+    merged["next_bid_date"] = next_bid_date
+    merged["last_bid_date"] = last_bid_date
+    merged["auction_history"] = history
+    merged["failed_count"] = failed_count
+    merged["is_failed"] = failed_count > 0 or explicit_failed > 0
+    merged["is_reauction"] = merged["is_failed"] or has_reauction_marker
+    merged["previous_status"] = (
+        "유찰" if merged["is_failed"] else ("재매각" if has_reauction_marker else "")
+    )
+    merged["is_upcoming"] = bool(
+        next_bid_date
+        and next_bid_date >= today.isoformat()
+        and current_item.get("status") not in ("매각", "취하", "입찰 마감")
+    )
+    if merged["is_upcoming"]:
+        merged["status"] = current_item.get("status") or "입찰 예정"
+        merged["auction_round"] = failed_count + 1 if failed_count else current_item.get("auction_round")
+    elif history:
+        merged["status"] = history[-1].get("status") or current_item.get("status") or "확인 필요"
+        merged["auction_round"] = history[-1].get("auction_round") or current_item.get("auction_round")
+    merged["is_interest"] = any(bool(item.get("is_interest")) for item in group)
+    merged["risk_tags"] = list(
+        dict.fromkeys(
+            tag
+            for item in group
+            for tag in (item.get("risk_tags") or [])
+            if tag
+        )
+    )
+    if failed_count > 0 and f"유찰 {failed_count}회" not in merged["risk_tags"]:
+        merged["risk_tags"].insert(0, f"유찰 {failed_count}회")
+    return merged
+
+
+def deduplicate(items: list[dict[str, Any]], today: date | None = None) -> list[dict[str, Any]]:
+    groups: dict[str, list[dict[str, Any]]] = {}
+    for item in items:
+        key = item.get("tracking_key") or item["id"]
+        groups.setdefault(key, []).append(item)
+    merged = [merge_auction_group(group, today or date.today()) for group in groups.values()]
     return sorted(
-        merged.values(),
-        key=lambda x: (x.get("is_upcoming", False), x.get("bid_date", ""), x.get("case_no", "")),
-        reverse=True,
+        merged,
+        key=lambda item: (
+            0 if item.get("next_bid_date") else 1,
+            item.get("next_bid_date") or item.get("bid_date") or "9999-99-99",
+            item.get("case_no") or "",
+        ),
     )
 
 
@@ -545,6 +1273,21 @@ def main() -> None:
     errors: list[str] = []
     items: list[dict[str, Any]] = []
     search_urls: list[str] = []
+    official_urls: list[str] = []
+    try:
+        official_items, official_urls, official_errors = collect_official_court(
+            session,
+            today,
+            future_days=max(1, args.history_days),
+            delay=args.delay,
+        )
+        items.extend(official_items)
+        errors.extend(official_errors)
+        print(f"  법원 공식 아파트 목록: {len(official_items)}건")
+    except Exception as exc:
+        errors.append(f"법원 공식 아파트 목록: {exc}")
+        print(f"  법원 공식 아파트 목록 실패: {exc}")
+
     try:
         current, search_urls = collect_search(session, today)
         items.extend(current)
@@ -557,6 +1300,17 @@ def main() -> None:
     items.extend(history)
     errors.extend(history_errors)
     print(f"  최근 일정목록: {len(history)}건 ({args.history_days}일 확인)")
+
+    detail_count, detail_urls, detail_errors = enrich_official_details(
+        session,
+        items,
+        today,
+        delay=args.delay,
+    )
+    official_urls.extend(detail_urls)
+    errors.extend(detail_errors)
+    if detail_count or detail_errors:
+        print(f"  법원 공식 상세조회 보강: {detail_count}건")
 
     try:
         onbid_items, onbid_urls, onbid_errors = collect_onbid(
@@ -572,7 +1326,7 @@ def main() -> None:
         errors.append(f"\uc628\ube44\ub4dc \uacf5\ub9e4 \ubaa9\ub85d: {exc}")
         print(f"  \uc628\ube44\ub4dc \uacf5\ub9e4 \ubaa9\ub85d \uc2e4\ud328: {exc}")
 
-    auctions = deduplicate(items)
+    auctions = deduplicate(items, today)
     payload = {
         "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M"),
         "as_of": today.isoformat(),
@@ -585,14 +1339,25 @@ def main() -> None:
             "supply_pyeong_focus": 32,
             "school_walk_minutes": 10,
             "large_complex_units": 500,
+            "official_future_window_days": OFFICIAL_WINDOW_DAYS,
         },
         "sources": {
             "onbid": {"name": ONBID_SOURCE_NAME, "kind": ONBID_SOURCE_KIND, "url": ONBID_SEARCH_URL},
             "official": {"name": "대한민국 법원경매정보", "url": OFFICIAL_URL},
+            "official_search": {
+                "name": "대한민국 법원경매정보 공식 검색목록",
+                "kind": "공식 검색 응답",
+                "url": OFFICIAL_SEARCH_URL,
+            },
+            "official_detail": {
+                "name": "대한민국 법원경매정보 공식 사건 상세조회",
+                "kind": "공식 상세 응답",
+                "url": OFFICIAL_DETAIL_URL,
+            },
             "public_list": {"name": SOURCE_NAME, "kind": SOURCE_KIND, "url": SEARCH_URL},
             "market": {"name": "국토교통부 실거래가 공개시스템", "url": MARKET_URL},
         },
-        "source_urls": list(dict.fromkeys(search_urls + history_urls))[:200],
+        "source_urls": list(dict.fromkeys(official_urls + search_urls + history_urls))[:200],
         "errors": errors[:30],
         "auctions": auctions,
     }

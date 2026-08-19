@@ -114,7 +114,7 @@ h1 { margin: 0; max-width: 760px; font-size: clamp(31px, 4vw, 52px); letter-spac
 .criteria-list li::before { content: "✓"; color: #e2ad76; font-weight: 800; }
 .criteria-foot { position: relative; z-index: 1; margin: 19px 0 0; padding-top: 15px; border-top: 1px solid rgba(255,255,255,.14); color: #afc0c0; font-size: 11.5px; }
 
-.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 12px 0 26px; }
+.stats { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; margin: 12px 0 26px; }
 .stat { min-height: 112px; padding: 18px 18px 16px; background: rgba(255,253,249,.86); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); }
 .stat-label { display: block; color: var(--muted); font-size: 12px; }
 .stat-value { display: block; margin-top: 8px; color: var(--navy); font-size: 28px; font-weight: 800; letter-spacing: -.06em; line-height: 1; font-variant-numeric: tabular-nums; }
@@ -277,7 +277,7 @@ JS = r"""
 const RAW = window.__AUCTIONS__ || { auctions: [] };
 const auctions = Array.isArray(RAW.auctions) ? RAW.auctions : [];
 const today = new Date(); today.setHours(0, 0, 0, 0);
-const state = { q: "", district: "", status: "", source: "", interest: false, upcoming: false, sort: "bid_date", limit: 30 };
+const state = { q: "", district: "", status: "", source: "", interest: false, upcoming: false, failedOnly: false, sort: "next_bid_date", limit: 30 };
 const $ = (selector) => document.querySelector(selector);
 const listEl = $("#auctionList");
 
@@ -302,7 +302,10 @@ function dayDiff(value) {
   return Number.isNaN(d.getTime()) ? null : Math.round((d - today) / 86400000);
 }
 function statusClass(status) {
-  return ({ "매각":"status-sale", "유찰":"status-fail", "변경":"status-change", "취하":"status-withdraw", "진행":"status-open", "신건":"status-open" }[status] || "status-change");
+  return ({ "매각":"status-sale", "유찰":"status-fail", "유찰 후 재매각":"status-fail", "변경":"status-change", "취하":"status-withdraw", "진행":"status-open", "신건":"status-open", "입찰 예정":"status-open", "입찰중":"status-open", "입찰 마감":"status-change" }[status] || "status-change");
+}
+function statusLabel(item) {
+  return item.is_reauction ? "유찰 후 재매각" : (item.status || "확인 필요");
 }
 function sourceLabel(item) {
   return item.source_type === "onbid" ? "\uc628\ube44\ub4dc \uacf5\ub9e4" : "\ubc95\uc6d0\uacbd\ub9e4";
@@ -314,13 +317,15 @@ function originalLabel(item) {
   return item.source_type === "onbid" ? "\uc628\ube44\ub4dc \uc6d0\ubb38" : "\ubc95\uc6d0 \uc6d0\ubb38";
 }
 function ddayHtml(item) {
-  const diff = dayDiff(item.bid_date);
+  const date = item.next_bid_date || item.bid_date;
+  const diff = dayDiff(date);
   if (item.is_upcoming && diff != null) {
     if (diff === 0) return '<span class="dday soon">오늘 입찰</span>';
     return `<span class="dday${diff <= 7 ? " soon" : ""}">D-${diff}</span>`;
   }
   if (item.status === "매각") return '<span class="dday past">매각 완료</span>';
   if (item.status === "취하") return '<span class="dday past">취하</span>';
+  if (item.is_reauction) return '<span class="dday past">다음 일정 확인 필요</span>';
   return '<span class="dday past">지난 회차</span>';
 }
 function areaHtml(item) {
@@ -339,8 +344,9 @@ function match(item) {
   if (state.source && item.source_type !== state.source) return false;
   if (state.interest && !item.is_interest) return false;
   if (state.upcoming && !item.is_upcoming) return false;
+  if (state.failedOnly && !item.is_reauction) return false;
   if (state.q) {
-    const hay = [item.complex, item.address, item.case_no, item.district, item.status, item.auction_kind, ...(item.risk_tags || [])].join(" ").toLowerCase();
+    const hay = [item.complex, item.address, item.case_no, item.district, item.status, statusLabel(item), item.auction_kind, item.next_bid_date, item.last_bid_date, ...(item.risk_tags || [])].join(" ").toLowerCase();
     if (!state.q.split(/\s+/).filter(Boolean).every((word) => hay.includes(word))) return false;
   }
   return true;
@@ -353,14 +359,17 @@ function cardHtml(item) {
   const interest = item.is_interest ? '<span class="interest-label">관심 면적</span>' : "";
   const ratio = item.minimum_ratio != null ? `<em>${esc(item.minimum_ratio)}%</em>` : "";
   const final = item.final_price != null ? `<div class="metric"><span class="metric-label">매각가</span><strong class="metric-value">${money(item.final_price)}</strong></div>` : `<div class="metric"><span class="metric-label">감정가 대비</span><strong class="metric-value">${appraisalGap(item)}</strong></div>`;
+  const nextDate = item.next_bid_date || item.bid_date;
+  const dateTitle = item.next_bid_date ? "다음 입찰일" : "최근 입찰일";
+  const lastDate = item.last_bid_date ? `<span>직전 회차 ${dateLabel(item.last_bid_date)}</span>` : "";
   return `<li class="auction-card${item.is_interest ? " interest" : ""}${item.is_upcoming ? " upcoming" : ""}">
     <div class="card-head">
       <div>
-        <div class="card-kicker"><span class="status-badge ${statusClass(item.status)}">${esc(item.status)}</span><span>${esc(item.district || "울산")}</span>${item.auction_round ? `<span>${esc(item.auction_round)}회차</span>` : ""}${interest}</div>
+        <div class="card-kicker"><span class="status-badge ${statusClass(statusLabel(item))}">${esc(statusLabel(item))}</span><span>${esc(item.district || "울산")}</span>${item.auction_round ? `<span>${esc(item.auction_round)}회차</span>` : ""}${interest}</div>
         <h3 class="card-title"><a href="${esc(item.source_url)}" target="_blank" rel="noopener">${esc(item.complex)}</a></h3>
         <p class="card-address">${esc(item.address)}</p>
       </div>
-      <div class="bid-date"><span>입찰일</span><strong>${dateLabel(item.bid_date)}</strong>${ddayHtml(item)}</div>
+      <div class="bid-date"><span>${dateTitle}</span><strong>${dateLabel(nextDate)}</strong>${ddayHtml(item)}</div>
     </div>
     <div class="metrics">
       <div class="metric"><span class="metric-label">공개목록 건물면적</span><strong class="metric-value">${areaHtml(item)}</strong></div>
@@ -368,13 +377,18 @@ function cardHtml(item) {
       <div class="metric"><span class="metric-label">최저가</span><strong class="metric-value">${money(item.minimum_price)}${ratio}</strong></div>
       ${final}
     </div>
-    <div class="card-foot"><span class="case">사건 ${esc(item.case_display || item.case_no)}</span>${tags}<span>${esc(item.area_note || "면적 상세 확인 필요")}</span><span class="card-actions"><button class="text-btn" data-detail-id="${esc(item.id)}">상세 보기</button><a class="text-btn" href="${esc(item.official_url)}" target="_blank" rel="noopener">${item.source_type === "onbid" ? "온비드 원문" : "법원 원문"}</a></span></div>
+    <div class="card-foot"><span class="case">사건 ${esc(item.case_display || item.case_no)}</span>${tags}${lastDate}<span>${esc(item.area_note || "면적 상세 확인 필요")}</span><span class="card-actions"><button class="text-btn" data-detail-id="${esc(item.id)}">상세 보기</button><a class="text-btn" href="${esc(item.official_url)}" target="_blank" rel="noopener">${item.source_type === "onbid" ? "온비드 원문" : "법원 원문"}</a></span></div>
   </li>`;
 }
 function sortRows(rows) {
   return rows.slice().sort((a, b) => {
     if (state.sort === "minimum") return (a.minimum_ratio ?? 999) - (b.minimum_ratio ?? 999);
     if (state.sort === "discount") return (b.discount_vs_appraisal ?? -1) - (a.discount_vs_appraisal ?? -1);
+    if (state.sort === "next_bid_date") {
+      const ad = a.next_bid_date || "9999-99-99";
+      const bd = b.next_bid_date || "9999-99-99";
+      return `${ad}${a.case_no || ""}`.localeCompare(`${bd}${b.case_no || ""}`);
+    }
     return `${b.bid_date || ""}${b.case_no || ""}`.localeCompare(`${a.bid_date || ""}${a.case_no || ""}`);
   });
 }
@@ -385,7 +399,7 @@ function render() {
   $("#resultCountMirror").innerHTML = countHtml;
   $("#resultCountLabel").innerHTML = countHtml;
   const shown = rows.slice(0, state.limit);
-  listEl.innerHTML = shown.length ? shown.map(cardHtml).join("") : '<li class="empty"><strong>조건에 맞는 경매 물건이 없습니다.</strong>지역·면적 필터를 줄이거나 “입찰 예정만”을 해제해 보세요.</li>';
+  listEl.innerHTML = shown.length ? shown.map(cardHtml).join("") : '<li class="empty"><strong>조건에 맞는 경매 물건이 없습니다.</strong>지역·면적 필터를 줄이거나 “유찰 후 재매각만”·“입찰 예정만”을 해제해 보세요.</li>';
   $("#more").innerHTML = rows.length > state.limit ? `<button type="button" id="moreBtn">${rows.length - state.limit}건 더 보기</button>` : "";
   document.querySelectorAll("#auctionList .auction-card").forEach((card, index) => {
     const badge = document.createElement("span");
@@ -399,7 +413,10 @@ function render() {
 }
 function detailHtml(item) {
   const tags = (item.risk_tags || []).length ? item.risk_tags.join(", ") : "표시된 특이사항 없음";
-  return `<div class="dialog-inner"><div class="dialog-head"><div><div class="card-kicker"><span class="status-badge ${statusClass(item.status)}">${esc(item.status)}</span><span>${esc(item.district)} · ${esc(item.case_display || item.case_no)}</span></div><h2>${esc(item.complex)}</h2><p>${esc(item.address)}</p></div><button class="close-dialog" type="button" aria-label="닫기">×</button></div><div class="detail-grid"><div class="detail-item"><span>입찰일</span><strong>${dateLabel(item.bid_date)} · ${item.is_upcoming ? "입찰 예정" : "지난 회차"}</strong></div><div class="detail-item"><span>공개목록 건물면적</span><strong>${areaHtml(item)}</strong></div><div class="detail-item"><span>감정가</span><strong>${fullWon(item.appraisal)}</strong></div><div class="detail-item"><span>최저가</span><strong>${fullWon(item.minimum_price)}${item.minimum_ratio != null ? ` (${item.minimum_ratio}%)` : ""}</strong></div>${item.final_price != null ? `<div class="detail-item"><span>매각가</span><strong>${fullWon(item.final_price)}</strong></div>` : ""}<div class="detail-item"><span>회차</span><strong>${item.auction_round ? `${item.auction_round}회` : "확인 필요"}</strong></div></div><div class="detail-section"><h3>초등학교 접근성</h3><p>${esc(item.school_access)}</p></div><div class="detail-section"><h3>권리·임차인 메모</h3><p>${esc(item.rights_note)}</p></div><div class="detail-section"><h3>공개목록 특이사항</h3><p>${esc(tags)}</p></div><div class="detail-section"><h3>최근 실거래가 대비</h3><p>${esc(item.market_note || "실거래가 확인 필요")}</p></div><div class="detail-section"><h3>면적 주의</h3><p>${esc(item.area_note)}</p></div><div class="dialog-actions"><a href="${esc(item.source_url)}" target="_blank" rel="noopener">공개 검색목록 열기</a><a class="secondary" href="${esc(item.official_url)}" target="_blank" rel="noopener">대한민국 법원경매정보</a></div></div>`;
+  const nextDate = item.next_bid_date || "";
+  const history = (item.auction_history || []).map((event) => `${dateLabel(event.bid_date)} ${event.status || ""}${event.auction_round ? ` · ${event.auction_round}회` : ""}`).join(" → ");
+  const tracking = item.is_reauction ? `유찰 ${item.failed_count || 0}회 후 ${item.is_upcoming ? "재매각 예정" : "재매각 일정 확인 필요"}` : "신건 또는 유찰 이력 없음";
+  return `<div class="dialog-inner"><div class="dialog-head"><div><div class="card-kicker"><span class="status-badge ${statusClass(statusLabel(item))}">${esc(statusLabel(item))}</span><span>${esc(item.district)} · ${esc(item.case_display || item.case_no)}</span></div><h2>${esc(item.complex)}</h2><p>${esc(item.address)}</p></div><button class="close-dialog" type="button" aria-label="닫기">×</button></div><div class="detail-grid"><div class="detail-item"><span>${nextDate ? "다음 입찰일" : "최근 입찰일"}</span><strong>${dateLabel(nextDate || item.bid_date)} · ${item.is_upcoming ? "입찰 예정" : "지난 회차"}</strong></div>${item.last_bid_date ? `<div class="detail-item"><span>직전 입찰일</span><strong>${dateLabel(item.last_bid_date)}</strong></div>` : ""}<div class="detail-item"><span>유찰·재매각 추적</span><strong>${esc(tracking)}</strong></div><div class="detail-item"><span>공개목록 건물면적</span><strong>${areaHtml(item)}</strong></div><div class="detail-item"><span>감정가</span><strong>${fullWon(item.appraisal)}</strong></div><div class="detail-item"><span>최저가</span><strong>${fullWon(item.minimum_price)}${item.minimum_ratio != null ? ` (${item.minimum_ratio}%)` : ""}</strong></div>${item.final_price != null ? `<div class="detail-item"><span>매각가</span><strong>${fullWon(item.final_price)}</strong></div>` : ""}<div class="detail-item"><span>회차</span><strong>${item.auction_round ? `${item.auction_round}회` : "확인 필요"}</strong></div></div><div class="detail-section"><h3>회차 이력</h3><p>${esc(history || "공개된 회차 이력 없음")}</p></div><div class="detail-section"><h3>초등학교 접근성</h3><p>${esc(item.school_access)}</p></div><div class="detail-section"><h3>권리·임차인 메모</h3><p>${esc(item.rights_note)}</p></div><div class="detail-section"><h3>공개목록 특이사항</h3><p>${esc(tags)}</p></div><div class="detail-section"><h3>최근 실거래가 대비</h3><p>${esc(item.market_note || "실거래가 확인 필요")}</p></div><div class="detail-section"><h3>면적 주의</h3><p>${esc(item.area_note)}</p></div><div class="dialog-actions"><a href="${esc(item.source_url)}" target="_blank" rel="noopener">공개 검색목록 열기</a><a class="secondary" href="${esc(item.official_url)}" target="_blank" rel="noopener">대한민국 법원경매정보</a></div></div>`;
 }
 function openDetail(id) {
   const item = auctions.find((row) => row.id === id);
@@ -420,8 +437,9 @@ document.querySelectorAll("[data-source]").forEach((button) => button.addEventLi
 $("#q").addEventListener("input", (event) => { state.q = event.target.value.trim().toLowerCase(); state.limit = 30; render(); });
 $("#interestOnly").addEventListener("click", (event) => { state.interest = !state.interest; event.currentTarget.setAttribute("aria-pressed", String(state.interest)); state.limit = 30; render(); });
 $("#upcomingOnly").addEventListener("click", (event) => { state.upcoming = !state.upcoming; event.currentTarget.setAttribute("aria-pressed", String(state.upcoming)); state.limit = 30; render(); });
+$("#failedOnly").addEventListener("click", (event) => { state.failedOnly = !state.failedOnly; event.currentTarget.setAttribute("aria-pressed", String(state.failedOnly)); state.limit = 30; render(); });
 $("#sort").addEventListener("change", (event) => { state.sort = event.target.value; render(); });
-$("#reset").addEventListener("click", () => { state.q = ""; state.district = ""; state.status = ""; state.source = ""; state.interest = false; state.upcoming = false; state.sort = "bid_date"; state.limit = 30; $("#q").value = ""; $("#sort").value = "bid_date"; document.querySelectorAll("[data-district], [data-status], [data-source]").forEach((el) => el.setAttribute("aria-pressed", "false")); $("#interestOnly").setAttribute("aria-pressed", "false"); $("#upcomingOnly").setAttribute("aria-pressed", "false"); render(); });
+$("#reset").addEventListener("click", () => { state.q = ""; state.district = ""; state.status = ""; state.source = ""; state.interest = false; state.upcoming = false; state.failedOnly = false; state.sort = "next_bid_date"; state.limit = 30; $("#q").value = ""; $("#sort").value = "next_bid_date"; document.querySelectorAll("[data-district], [data-status], [data-source]").forEach((el) => el.setAttribute("aria-pressed", "false")); $("#interestOnly").setAttribute("aria-pressed", "false"); $("#upcomingOnly").setAttribute("aria-pressed", "false"); $("#failedOnly").setAttribute("aria-pressed", "false"); render(); });
 $("#detailDialog").addEventListener("cancel", (event) => event.stopPropagation());
 render();
 """
@@ -447,6 +465,7 @@ def build() -> None:
     district_counts = Counter(item.get("district", "기타") for item in auctions)
     status_counts = Counter(item.get("status", "확인 필요") for item in auctions)
     upcoming = sum(1 for item in auctions if item.get("is_upcoming"))
+    reauction = sum(1 for item in auctions if item.get("is_reauction"))
     interest = sum(1 for item in auctions if item.get("is_interest"))
     discounts = [
         item["discount_vs_appraisal"]
@@ -461,6 +480,7 @@ def build() -> None:
     sources = data.get("sources", {})
     onbid = sources.get("onbid", {})
     official = sources.get("official", {})
+    official_search = sources.get("official_search", {})
     public_list = sources.get("public_list", {})
     market = sources.get("market", {})
 
@@ -469,7 +489,6 @@ def build() -> None:
         f'<button class="pill" type="button" data-district="{district}" data-value="{district}" aria-pressed="false">{district}<span class="count">{district_counts.get(district, 0)}</span></button>'
         for district in district_order
     )
-    status_order = ["유찰", "변경", "매각", "진행", "신건", "취하"]
     source_chips = "".join(
         f'<button class="pill" type="button" data-source="{source_type}" data-value="{source_type}" aria-pressed="false">{label}<span class="count">{source_type_counts.get(source_type, 0)}</span></button>'
         for source_type, label in source_order
@@ -482,13 +501,15 @@ def build() -> None:
     )
     payload = json.dumps({"auctions": auctions}, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
     official_url = official.get("url", "https://www.courtauction.go.kr/")
+    official_search_url = official_search.get("url", "https://www.courtauction.go.kr/pgj/pgjsearch/searchControllerMain.on")
     onbid_url = onbid.get("url", "https://www.onbid.co.kr/")
     public_url = public_list.get("url", "https://www.winnerauction.co.kr/search/search_list.php?acourt=411&acharge=10&usage_codes=101")
     market_url = market.get("url", "https://rt.molit.go.kr/pt/gis/gis.do?mobileAt=&srhThingSecd=C")
+    official_window = filters.get("official_future_window_days", 14)
     notice = (
-        f"현재 수집된 입찰 예정 물건은 {upcoming}건입니다. 최근 {history_days}일 일정목록도 함께 보여주므로, 지난 회차의 가격 흐름을 참고할 수 있습니다."
+        f"공식 법원목록에서 다음 {official_window}일의 입찰 예정 {upcoming}건을 확인했습니다. 이 중 유찰 후 재매각 추적 대상은 {reauction}건이며, 최근 {history_days}일 일정목록도 함께 보여줍니다."
         if upcoming
-        else f"현재 공개 예정목록에서 지역 조건에 맞는 입찰 예정 물건은 확인되지 않았습니다. 최근 {history_days}일 일정목록의 사례를 함께 표시합니다."
+        else f"현재 공식 법원목록의 다음 {official_window}일 예정목록에서 지역 조건에 맞는 물건은 확인되지 않았습니다. 최근 {history_days}일 일정목록의 사례를 함께 표시합니다."
     )
     scope_text = "·".join(filters.get("included_districts", ["중구", "남구", "북구"]))
     excluded_text = "·".join(filters.get("excluded_districts", ["동구", "울주군"]))
@@ -524,6 +545,7 @@ def build() -> None:
       <div class="stat"><span class="stat-label">범위 내 아파트</span><strong class="stat-value">{len(auctions)}</strong><span class="stat-note">공개목록에서 확인된 건</span></div>
       <div class="stat"><span class="stat-label">{building_range[0]}~{building_range[1]}평 관심</span><strong class="stat-value accent">{interest}</strong><span class="stat-note">건물면적 기준</span></div>
       <div class="stat"><span class="stat-label">입찰 예정</span><strong class="stat-value green">{upcoming}</strong><span class="stat-note">오늘 이후·매각/취하 제외</span></div>
+      <div class="stat"><span class="stat-label">유찰 후 재매각</span><strong class="stat-value accent">{reauction}</strong><span class="stat-note">유찰 횟수 확인 건</span></div>
       <div class="stat"><span class="stat-label">관심 면적 최대 할인</span><strong class="stat-value accent">{f"{max_discount:.1f}%" if max_discount is not None else "—"}</strong><span class="stat-note">감정가 대비, 참고용</span></div>
     </section>
 
@@ -532,9 +554,9 @@ def build() -> None:
     <section class="filters-wrap" aria-label="경매 검색 및 필터">
       <div class="filters">
         <div class="filter-row"><span class="filter-label">\ucd9c\ucc98</span>{source_chips}</div>
-        <div class="search-row"><div class="search-box"><input type="search" id="q" placeholder="단지명, 주소, 사건번호, 특이사항 검색" aria-label="경매 검색"></div><select id="sort" aria-label="정렬"><option value="bid_date">입찰일 최신순</option><option value="minimum">최저가율 낮은순</option><option value="discount">감정가 할인 큰순</option></select></div>
+        <div class="search-row"><div class="search-box"><input type="search" id="q" placeholder="단지명, 주소, 사건번호, 특이사항 검색" aria-label="경매 검색"></div><select id="sort" aria-label="정렬"><option value="next_bid_date">다음 입찰일 빠른순</option><option value="bid_date">입찰일 최신순</option><option value="minimum">최저가율 낮은순</option><option value="discount">감정가 할인 큰순</option></select></div>
         <div class="filter-row"><span class="filter-label">지역</span>{district_chips}<span class="filter-divider"></span><span class="filter-label">상태</span>{status_chips}<button class="reset-btn" id="reset" type="button">필터 초기화</button></div>
-        <div class="filter-row"><button class="pill" id="interestOnly" type="button" aria-pressed="false">{building_range[0]}~{building_range[1]}평만</button><button class="pill" id="upcomingOnly" type="button" aria-pressed="false">입찰 예정만</button><span class="result-count" id="resultCount"></span></div>
+        <div class="filter-row"><button class="pill" id="interestOnly" type="button" aria-pressed="false">{building_range[0]}~{building_range[1]}평만</button><button class="pill" id="upcomingOnly" type="button" aria-pressed="false">입찰 예정만</button><button class="pill" id="failedOnly" type="button" aria-pressed="false">유찰 후 재매각만<span class="count">{reauction}</span></button><span class="result-count" id="resultCount"></span></div>
       </div>
     </section>
 
@@ -544,10 +566,10 @@ def build() -> None:
 
     <section class="lower-grid">
       <div class="info-panel"><h2>선별 기준</h2><p>공개목록에서 자동으로 표시하는 범위입니다.</p><ul class="info-list"><li><span>포함 지역</span><b>{scope_text}</b></li><li><span>제외 지역</span><b>{excluded_text}</b></li><li><span>면적 기준</span><b>건물 {building_range[0]}~{building_range[1]}평 근접</b></li><li><span>공급면적</span><b>{supply_focus}평 이상 우선 · 원문 확인</b></li><li><span>학교·대단지</span><b>도보 {school_minutes}분 · {complex_units}세대 우선</b></li></ul></div>
-      <div class="info-panel"><h2>데이터 출처</h2><p>목록은 참고용 큐레이션입니다. 권리분석이나 입찰 판단의 근거로 단독 사용하지 마세요.</p><ul class="info-list"><li><span>법원 원문</span><b><a class="source-link" href="{official_url}" target="_blank" rel="noopener">{official.get("name", "대한민국 법원경매정보")} ↗</a></b></li><li><span>온비드 공매</span><b><a class="source-link" href="{onbid_url}" target="_blank" rel="noopener">{onbid.get("name", "온비드 공식 검색목록")} ↗</a></b></li><li><span>공개 목록</span><b><a class="source-link" href="{public_url}" target="_blank" rel="noopener">{public_list.get("name", "공개 검색목록")} ↗</a></b></li><li><span>실거래가</span><b><a class="source-link" href="{market_url}" target="_blank" rel="noopener">{market.get("name", "국토교통부 실거래가")} ↗</a></b></li><li><span>최근 갱신</span><b>{generated}</b></li><li><span>확인 범위</span><b>예정 목록 + 최근 {history_days}일</b></li></ul></div>
+      <div class="info-panel"><h2>데이터 출처</h2><p>목록은 참고용 큐레이션입니다. 권리분석이나 입찰 판단의 근거로 단독 사용하지 마세요.</p><ul class="info-list"><li><span>법원 원문</span><b><a class="source-link" href="{official_url}" target="_blank" rel="noopener">{official.get("name", "대한민국 법원경매정보")} ↗</a></b></li><li><span>법원 공식 검색</span><b><a class="source-link" href="{official_search_url}" target="_blank" rel="noopener">다음 매각기일·유찰횟수 ↗</a></b></li><li><span>온비드 공매</span><b><a class="source-link" href="{onbid_url}" target="_blank" rel="noopener">{onbid.get("name", "온비드 공식 검색목록")} ↗</a></b></li><li><span>공개 목록</span><b><a class="source-link" href="{public_url}" target="_blank" rel="noopener">{public_list.get("name", "공개 검색목록")} ↗</a></b></li><li><span>실거래가</span><b><a class="source-link" href="{market_url}" target="_blank" rel="noopener">{market.get("name", "국토교통부 실거래가")} ↗</a></b></li><li><span>최근 갱신</span><b>{generated}</b></li><li><span>확인 범위</span><b>공식 다음 {official_window}일 + 최근 {history_days}일</b></li></ul></div>
     </section>
 
-    <p class="footer">데이터 갱신: <code>python collect.py</code> 실행 후 <code>python build_site.py</code>를 실행하세요. 법원·온비드 공개목록의 주소·면적·가격·상태와 공식 원문이 다를 수 있습니다. 입찰 전 사건 상세, 공고문, 감정평가서, 현황조사서, 등기사항증명서 및 현장을 직접 확인하세요. <a href="{official_url}" target="_blank" rel="noopener">법원 원문 확인 ↗</a> · <a href="{onbid_url}" target="_blank" rel="noopener">온비드 원문 확인 ↗</a></p>
+    <p class="footer">데이터 갱신: <code>python collect.py</code> 실행 후 <code>python build_site.py</code>를 실행하세요. 유찰·재매각 일정은 공개목록에서 확인되는 범위만 추적하며, 법원·온비드 공개목록의 주소·면적·가격·상태와 공식 원문이 다를 수 있습니다. 입찰 전 사건 상세, 공고문, 감정평가서, 현황조사서, 등기사항증명서 및 현장을 직접 확인하세요. <a href="{official_url}" target="_blank" rel="noopener">법원 원문 확인 ↗</a> · <a href="{onbid_url}" target="_blank" rel="noopener">온비드 원문 확인 ↗</a></p>
   </main>
 </div>
 <dialog id="detailDialog"><div id="detailContent"></div></dialog>
