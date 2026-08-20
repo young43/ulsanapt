@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-20 10:09",
+  "generated_at": "2026-08-20 16:10",
   "as_of": "2026-08-20",
   "history_days": 90,
   "count": 59,
@@ -64,42 +64,42 @@
     "https://www.onbid.co.kr/op/cltrpbancinf/clbtcltrclg/cltrclbtcltrclg/CltrClbtCltrClgController/inqCltrClbtRlstClg.do"
   ],
   "errors": [
-    "예정 검색목록: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/search_list.php?acourt=411&acharge=10&usage_codes=101&rows=20 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7f3fc29f1070>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
-    "2026-08-20: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-20 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7f3fc29f11f0>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
-    "2026-08-19: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-19 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7f3fc29f0860>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
-    "2026-08-18: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-18 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7f3fc29f16d0>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
-    "2026-08-17: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-17 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7f3fc29f1a60>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
-    "2026-08-16: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-16 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7f3fc29f1fa0>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
-    "2026-08-15: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-15 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7f3fc29f2540>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
-    "2026-08-14: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-14 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7f3fc29f29c0>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
-    "2026-08-13: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-13 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7f3fc29f29c0>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
-    "2026-08-12: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-12 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7f3fc29f3170>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
-    "2026-08-11: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-11 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7f3fc29f2000>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
-    "2026-08-10: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-10 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7f3fc29f1af0>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
-    "2026-08-09: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-09 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7f3fc29f1580>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
-    "2026-08-08: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-08 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7f3fc29f1130>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
-    "2026-08-07: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-07 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7f3fc29f0e60>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
-    "2026-08-06: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-06 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7f3fc29f30e0>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
-    "2026-08-05: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-05 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7f3fc29f3680>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
-    "2026-08-04: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-04 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7f3fc29f3b60>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
-    "2026-08-03: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-03 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7f3fc29f3fe0>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
-    "2026-08-02: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-02 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7f3fc29f38c0>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
-    "2026-08-01: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-01 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7f3fc29f3080>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
-    "2026-07-31: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-07-31 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7f3fc29f08c0>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
-    "2026-07-30: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-07-30 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7f3fc29f1130>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
-    "2026-07-29: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-07-29 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7f3fc29f0a70>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
-    "2026-07-28: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-07-28 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7f3fc29f1910>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
-    "2026-07-27: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-07-27 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7f3fc29f2240>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
-    "2026-07-26: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-07-26 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7f3fc29f2180>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
-    "2026-07-25: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-07-25 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7f3fc29f2c30>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
-    "2026-07-24: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-07-24 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7f3fc29f04a0>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
-    "2026-07-23: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-07-23 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7f3fc29e4cb0>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))"
+    "예정 검색목록: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/search_list.php?acourt=411&acharge=10&usage_codes=101&rows=20 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7fe6e8cf1100>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
+    "2026-08-20: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-20 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7fe6e8cf0500>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
+    "2026-08-19: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-19 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7fe6e8cf1850>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
+    "2026-08-18: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-18 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7fe6e8cf0f80>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
+    "2026-08-17: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-17 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7fe6e8cf1400>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
+    "2026-08-16: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-16 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7fe6e8cf27b0>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
+    "2026-08-15: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-15 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7fe6e8cf1eb0>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
+    "2026-08-14: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-14 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7fe6e8cf2390>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
+    "2026-08-13: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-13 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7fe6e8cf1b80>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
+    "2026-08-12: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-12 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7fe6e8cf1bb0>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
+    "2026-08-11: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-11 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7fe6e8cf1af0>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
+    "2026-08-10: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-10 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7fe6e8cf1370>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
+    "2026-08-09: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-09 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7fe6e8cf1850>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
+    "2026-08-08: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-08 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7fe6e8cf0470>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
+    "2026-08-07: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-07 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7fe6e8cf01a0>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
+    "2026-08-06: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-06 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7fe6e8cf29c0>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
+    "2026-08-05: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-05 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7fe6e8cf2e40>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
+    "2026-08-04: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-04 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7fe6e8cf32f0>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
+    "2026-08-03: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-03 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7fe6e8cf3890>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
+    "2026-08-02: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-02 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7fe6e8cf2e40>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
+    "2026-08-01: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-01 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7fe6e8cf2720>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
+    "2026-07-31: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-07-31 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7fe6e8cf1160>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
+    "2026-07-30: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-07-30 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7fe6e8cf18b0>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
+    "2026-07-29: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-07-29 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7fe6e8cf0e60>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
+    "2026-07-28: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-07-28 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7fe6e8cf1340>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
+    "2026-07-27: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-07-27 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7fe6e8cf1940>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
+    "2026-07-26: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-07-26 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7fe6e8cf1cd0>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
+    "2026-07-25: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-07-25 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7fe6e8cf2ea0>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
+    "2026-07-24: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-07-24 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7fe6e8cf3c50>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))",
+    "2026-07-23: HTTPSConnectionPool(host='www.winnerauction.co.kr', port=443): Max retries exceeded with url: /search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-07-23 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.winnerauction.co.kr', port=443) at 0x7fe6e8cf3ec0>, 'Connection to www.winnerauction.co.kr timed out. (connect timeout=30)'))"
   ],
   "auctions": [
     {
       "id": "court:2023-8831:울산광역시중구성안6길364층401호성안동노블레스빌",
       "tracking_key": "court:2023-8831:울산광역시중구성안6길364층401호성안동노블레스빌",
-      "source_origin": "official_detail",
+      "source_origin": "official_court",
       "source_type": "court",
       "auction_kind": "법원경매",
       "case_no": "2023-8831",
@@ -111,7 +111,7 @@
       "address": "울산광역시 중구 성안6길 36 4층401호 (성안동,노블레스빌)",
       "bid_date": "2026-08-20",
       "next_bid_date": "2026-08-20",
-      "last_bid_date": "2024-07-17",
+      "last_bid_date": "",
       "status": "입찰 예정",
       "status_raw": "유찰 1회 후 다음 매각",
       "auction_round": 2,
@@ -140,8 +140,8 @@
       "school_access": "미확인 — 현장·지도 확인 필요",
       "rights_note": "공식 사건 상세·매각물건명세서·현황조사서·등기사항증명서를 확인하세요.",
       "area_note": "법원 공식목록 건물면적 기준 — 전용면적·공급면적은 원문에서 최종 확인",
-      "source_name": "대한민국 법원경매정보 공식 상세조회",
-      "source_kind": "공식 사건 상세 응답",
+      "source_name": "대한민국 법원경매정보 공식 검색목록",
+      "source_kind": "공식 검색 응답",
       "source_url": "https://www.courtauction.go.kr/",
       "official_url": "https://www.courtauction.go.kr/",
       "court_docid": "B0004112023013000883111",
@@ -149,34 +149,19 @@
       "court_object_seq": "1",
       "auction_history": [
         {
-          "bid_date": "2024-07-17",
-          "status": "매각기일 경과",
-          "minimum_price": 240000000,
-          "minimum_ratio": 100,
-          "auction_round": 1
-        },
-        {
           "bid_date": "2026-08-20",
           "status": "입찰 예정",
           "minimum_price": 168000000,
           "minimum_ratio": 70,
-          "auction_round": 1
-        },
-        {
-          "bid_date": "2026-08-27",
-          "status": "입찰 예정",
-          "minimum_price": null,
-          "minimum_ratio": null,
           "auction_round": 2
         }
       ],
-      "case_type": "부동산임의경매",
-      "claim_amount": 420904793,
-      "case_received_date": "2023-09-14",
-      "case_command_date": "2023-09-18",
-      "rights_reference": "2017.07.10. 근저당권",
+      "case_type": "",
+      "claim_amount": null,
+      "case_received_date": "",
+      "case_command_date": "",
+      "rights_reference": "",
       "special_notes": "",
-      "official_detail_url": "https://www.courtauction.go.kr/pgj/pgj15B/selectAuctnCsSrchRslt.on",
       "map_query": "울산광역시 중구 성안6길 36 4층401호 (성안동,노블레스빌)",
       "map_url": "https://map.naver.com/p/search/%EC%9A%B8%EC%82%B0%EA%B4%91%EC%97%AD%EC%8B%9C%20%EC%A4%91%EA%B5%AC%20%EC%84%B1%EC%95%886%EA%B8%B8%2036%204%EC%B8%B5401%ED%98%B8%20%28%EC%84%B1%EC%95%88%EB%8F%99%2C%EB%85%B8%EB%B8%94%EB%A0%88%EC%8A%A4%EB%B9%8C%29",
       "tenant_evidence": [],
@@ -184,8 +169,7 @@
       "tenant_note": "임차인이 없다는 뜻이 아닙니다. 매각물건명세서·현황조사서에서 반드시 확인하세요.",
       "occupancy_status": "실제 점유·공실 여부 확인 필요",
       "risk_flags": [
-        "유찰·재매각 이력",
-        "권리 관련 문구"
+        "유찰·재매각 이력"
       ],
       "risk_level": "주의 필요",
       "beginner_warnings": [
@@ -229,20 +213,10 @@
         "source_note": "시세는 자동 확정하지 않으며, 국토교통부·KB·현장 매물 자료를 대조해야 합니다."
       },
       "rights_analysis": {
-        "timeline": [
-          {
-            "date": "2017-07-10",
-            "date_display": "2017.07.10",
-            "label": "근저당권",
-            "source": "공식 권리 참고문구",
-            "evidence": "2017.07.10. 근저당권",
-            "is_reference_candidate": true,
-            "status": "말소기준권리 후보 — 공식 참고문구 기준"
-          }
-        ],
+        "timeline": [],
         "special_rights": [],
-        "reference_candidate_date": "2017-07-10",
-        "summary": "말소기준권리 후보 2017.07.10 — 등기사항증명서로 최종 확인 필요",
+        "reference_candidate_date": "",
+        "summary": "등기 날짜 자료 없음 — 등기사항증명서 확인 필요",
         "acquisition_summary": "현재 수집 문구만으로 낙찰자 인수권리를 확정할 수 없음 — 최신 서류 확인 필요",
         "source_note": "권리 순위·소멸은 자동 확정하지 않습니다. 최신 등기사항증명서와 매각물건명세서를 대조하세요."
       },
@@ -265,7 +239,7 @@
         "estimated_unpaid_deposit": null,
         "estimated_takeover_amount": null,
         "takeover_assessment": "산정 불가 — 임차보증금·배당요구·권리순위 원문 확인 필요",
-        "reference_right_date": "2017-07-10"
+        "reference_right_date": null
       },
       "occupancy_analysis": {
         "type": "점유자 불명",
@@ -287,6 +261,7 @@
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
         "KB 시세·실거래가·호가 자료가 없어 보수적 시세를 계산할 수 없습니다.",
+        "등기 날짜 자료가 없어 권리 순위 판단은 등기사항증명서 확인이 필요합니다.",
         "유찰·재매각 이력이 있어 이번 회차 조건을 다시 확인해야 합니다."
       ],
       "analysis_sources": [
@@ -298,7 +273,7 @@
     {
       "id": "court:2024-118735:울산광역시남구팔등로41번길95층502호신정동지움포유",
       "tracking_key": "court:2024-118735:울산광역시남구팔등로41번길95층502호신정동지움포유",
-      "source_origin": "official_detail",
+      "source_origin": "official_court",
       "source_type": "court",
       "auction_kind": "법원경매",
       "case_no": "2024-118735",
@@ -310,7 +285,7 @@
       "address": "울산광역시 남구 팔등로41번길 9 5층502호 (신정동,지움포유)",
       "bid_date": "2026-08-20",
       "next_bid_date": "2026-08-20",
-      "last_bid_date": "2026-07-16",
+      "last_bid_date": "",
       "status": "입찰 예정",
       "status_raw": "유찰 7회 후 다음 매각",
       "auction_round": 8,
@@ -337,10 +312,10 @@
         "유찰 7회"
       ],
       "school_access": "미확인 — 현장·지도 확인 필요",
-      "rights_note": "공식 사건 상세·매각물건명세서·현황조사서·등기사항증명서를 확인하세요. 공식 상세 비고: 매수인에게 대항할 수 있는 을구 순위 3번 임차권등기(2023.11.06. 등기) 있음(임대차보증금 270,000,000원, 전입일 2021.10.08., 확정일자 2021.10.08.). 배당에서 보증금이 전액 변제되지 아니하면 잔액을 매수인이 인수함.",
+      "rights_note": "공식 사건 상세·매각물건명세서·현황조사서·등기사항증명서를 확인하세요.",
       "area_note": "법원 공식목록 건물면적 기준 — 전용면적·공급면적은 원문에서 최종 확인",
-      "source_name": "대한민국 법원경매정보 공식 상세조회",
-      "source_kind": "공식 사건 상세 응답",
+      "source_name": "대한민국 법원경매정보 공식 검색목록",
+      "source_kind": "공식 검색 응답",
       "source_url": "https://www.courtauction.go.kr/",
       "official_url": "https://www.courtauction.go.kr/",
       "court_docid": "B0004112024013011873511",
@@ -348,95 +323,30 @@
       "court_object_seq": "1",
       "auction_history": [
         {
-          "bid_date": "2025-11-26",
-          "status": "매각기일 경과",
-          "minimum_price": 239000000,
-          "minimum_ratio": 100,
-          "auction_round": 1
-        },
-        {
-          "bid_date": "2026-01-07",
-          "status": "매각기일 경과",
-          "minimum_price": 167300000,
-          "minimum_ratio": 70,
-          "auction_round": 1
-        },
-        {
-          "bid_date": "2026-02-25",
-          "status": "매각기일 경과",
-          "minimum_price": 117110000,
-          "minimum_ratio": 49,
-          "auction_round": 1
-        },
-        {
-          "bid_date": "2026-04-01",
-          "status": "매각기일 경과",
-          "minimum_price": 81977000,
-          "minimum_ratio": 34,
-          "auction_round": 1
-        },
-        {
-          "bid_date": "2026-05-07",
-          "status": "매각기일 경과",
-          "minimum_price": 57384000,
-          "minimum_ratio": 24,
-          "auction_round": 1
-        },
-        {
-          "bid_date": "2026-06-11",
-          "status": "매각기일 경과",
-          "minimum_price": 40169000,
-          "minimum_ratio": 17,
-          "auction_round": 1
-        },
-        {
-          "bid_date": "2026-07-16",
-          "status": "매각기일 경과",
-          "minimum_price": 28118000,
-          "minimum_ratio": 12,
-          "auction_round": 1
-        },
-        {
           "bid_date": "2026-08-20",
           "status": "입찰 예정",
           "minimum_price": 19683000,
           "minimum_ratio": 8,
-          "auction_round": 1
-        },
-        {
-          "bid_date": "2026-08-27",
-          "status": "입찰 예정",
-          "minimum_price": null,
-          "minimum_ratio": null,
-          "auction_round": 2
+          "auction_round": 8
         }
       ],
-      "case_type": "부동산강제경매",
-      "claim_amount": 289055341,
-      "case_received_date": "2024-11-12",
-      "case_command_date": "2024-11-13",
-      "rights_reference": "2024.11.13.경매개시결정",
-      "special_notes": "매수인에게 대항할 수 있는 을구 순위 3번 임차권등기(2023.11.06. 등기) 있음(임대차보증금 270,000,000원, 전입일 2021.10.08., 확정일자 2021.10.08.). 배당에서 보증금이 전액 변제되지 아니하면 잔액을 매수인이 인수함.",
-      "official_detail_url": "https://www.courtauction.go.kr/pgj/pgj15B/selectAuctnCsSrchRslt.on",
+      "case_type": "",
+      "claim_amount": null,
+      "case_received_date": "",
+      "case_command_date": "",
+      "rights_reference": "",
+      "special_notes": "",
       "map_query": "울산광역시 남구 팔등로41번길 9 5층502호 (신정동,지움포유)",
       "map_url": "https://map.naver.com/p/search/%EC%9A%B8%EC%82%B0%EA%B4%91%EC%97%AD%EC%8B%9C%20%EB%82%A8%EA%B5%AC%20%ED%8C%94%EB%93%B1%EB%A1%9C41%EB%B2%88%EA%B8%B8%209%205%EC%B8%B5502%ED%98%B8%20%28%EC%8B%A0%EC%A0%95%EB%8F%99%2C%EC%A7%80%EC%9B%80%ED%8F%AC%EC%9C%A0%29",
-      "tenant_evidence": [
-        "임대차",
-        "임차권등기",
-        "보증금",
-        "확정일자"
-      ],
-      "tenant_status": "임차권 관련 문구 있음",
-      "tenant_note": "임차인 존재·보증금 인수 여부가 확정된다는 뜻은 아니며, 공식 서류 대조가 필요합니다.",
+      "tenant_evidence": [],
+      "tenant_status": "공개자료에서 임차인 정보 미확인",
+      "tenant_note": "임차인이 없다는 뜻이 아닙니다. 매각물건명세서·현황조사서에서 반드시 확인하세요.",
       "occupancy_status": "실제 점유·공실 여부 확인 필요",
       "risk_flags": [
-        "유찰·재매각 이력",
-        "임차권·보증금 문구",
-        "권리 관련 문구"
+        "유찰·재매각 이력"
       ],
       "risk_level": "주의 필요",
       "beginner_warnings": [
-        "임차권 관련 문구가 있습니다. 보증금 인수 여부·전입일·확정일자·배당요구 여부를 확인하기 전에는 입찰하지 마세요.",
         "임차인 없음으로 단정하지 말고, 매각물건명세서·현황조사서에서 임차인·보증금·전입일·확정일자·배당요구를 확인하세요.",
         "낙찰가 외에 취득세·법무사비·명도비·수리비·체납관리비 등 추가 비용을 예산에 넣으세요.",
         "등기사항증명서에서 말소기준권리와 매각으로 소멸하지 않을 수 있는 권리를 확인하세요.",
@@ -477,61 +387,19 @@
         "source_note": "시세는 자동 확정하지 않으며, 국토교통부·KB·현장 매물 자료를 대조해야 합니다."
       },
       "rights_analysis": {
-        "timeline": [
-          {
-            "date": "2021-10-08",
-            "date_display": "2021.10.08",
-            "label": "임차권등기",
-            "source": "공식 상세 비고 / 공개목록·권리 메모",
-            "evidence": "등기사항증명서를 확인하세요. 공식 상세 비고: 매수인에게 대항할 수 있는 을구 순위 3번 임차권등기(2023.11.06. 등기) 있음(임대차보증금 270,000,000원, 전입일 2021.10.08., 확정일자 2021.10.08.). 배당에서 보증금이 전액 변제되지 아니하면 잔액을 매수인이 인수함.",
-            "is_reference_candidate": false,
-            "status": "순위 확인 필요"
-          },
-          {
-            "date": "2023-11-06",
-            "date_display": "2023.11.06",
-            "label": "임차권등기",
-            "source": "공식 상세 비고 / 공개목록·권리 메모",
-            "evidence": "공식 사건 상세·매각물건명세서·현황조사서·등기사항증명서를 확인하세요. 공식 상세 비고: 매수인에게 대항할 수 있는 을구 순위 3번 임차권등기(2023.11.06. 등기) 있음(임대차보증금 270,000,000원, 전입일 2021.10.08., 확정일자 2021.10.08.). 배당에서 보증금이 전액 변제되지 아니하면 잔액을 매수인이 인수",
-            "is_reference_candidate": false,
-            "status": "순위 확인 필요"
-          },
-          {
-            "date": "2024-11-13",
-            "date_display": "2024.11.13",
-            "label": "경매개시",
-            "source": "공식 권리 참고문구",
-            "evidence": "2024.11.13.경매개시결정",
-            "is_reference_candidate": false,
-            "status": "순위 확인 필요"
-          }
-        ],
+        "timeline": [],
         "special_rights": [],
         "reference_candidate_date": "",
-        "summary": "등기 관련 날짜는 일부 확인되지만 말소기준권리 후보를 특정할 수 없습니다.",
+        "summary": "등기 날짜 자료 없음 — 등기사항증명서 확인 필요",
         "acquisition_summary": "현재 수집 문구만으로 낙찰자 인수권리를 확정할 수 없음 — 최신 서류 확인 필요",
         "source_note": "권리 순위·소멸은 자동 확정하지 않습니다. 최신 등기사항증명서와 매각물건명세서를 대조하세요."
       },
       "tenant_analysis": {
         "structured_data_available": false,
         "records": [],
-        "status": "구조화된 임차인 정보 없음 — 관련 문구만 확인",
-        "evidence_terms": [
-          "임대차",
-          "임차권등기",
-          "보증금",
-          "확정일자"
-        ],
-        "evidence": [
-          {
-            "source": "공식 상세 비고",
-            "text": "매수인에게 대항할 수 있는 을구 순위 3번 임차권등기(2023.11.06. 등기) 있음(임대차보증금 270,000,000원, 전입일 2021.10.08., 확정일자 2021.10.08.). 배당에서 보증금이 전액 변제되지 아니하면 잔액을 매수인이 인수함."
-          },
-          {
-            "source": "권리·임차인 메모",
-            "text": "공식 사건 상세·매각물건명세서·현황조사서·등기사항증명서를 확인하세요. 공식 상세 비고: 매수인에게 대항할 수 있는 을구 순위 3번 임차권등기(2023.11.06. 등기) 있음(임대차보증금 270,000,000원, 전입일 2021.10.08., 확정일자 2021.10.08.). 배당에서 보증금이 전액 변제되지 아니하면 잔액을 매수인이 인수함."
-          }
-        ],
+        "status": "공개자료에서 임차인별 정보 미확인",
+        "evidence_terms": [],
+        "evidence": [],
         "move_in_date": null,
         "fixed_date": null,
         "occupancy": "확인 필요",
@@ -540,7 +408,7 @@
         "distribution_requested": null,
         "distribution_date": null,
         "priority_assessment": "선순위·후순위 산정 불가 — 전입일·말소기준권리·점유 자료 필요",
-        "opposability_assessment": "대항력 가능성 — 점유·전입·확정일자·배당요구 확인 필요",
+        "opposability_assessment": "확인 필요 — 공개자료에서 전입·점유·확정일자 미확인",
         "expected_distribution": null,
         "estimated_unpaid_deposit": null,
         "estimated_takeover_amount": null,
@@ -549,8 +417,8 @@
       },
       "occupancy_analysis": {
         "type": "점유자 불명",
-        "difficulty": "높음",
-        "reason": "임차권 관련 문구는 있으나 실제 점유 여부가 확인되지 않았습니다.",
+        "difficulty": "확인 필요",
+        "reason": "소유자·임차인·공실을 특정할 공개문구가 없습니다.",
         "source_note": "현황조사서·현장·관리사무소 확인 필요"
       },
       "management_analysis": {
@@ -562,13 +430,12 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "초보자 주의",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
-        "임차권·대항력 관련 문구가 있어 보증금 인수 가능성을 확인해야 합니다.",
-        "임차권 관련 문구는 있으나 전입일·확정일자·배당요구 자료가 구조화되어 있지 않습니다.",
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
         "KB 시세·실거래가·호가 자료가 없어 보수적 시세를 계산할 수 없습니다.",
+        "등기 날짜 자료가 없어 권리 순위 판단은 등기사항증명서 확인이 필요합니다.",
         "유찰·재매각 이력이 있어 이번 회차 조건을 다시 확인해야 합니다."
       ],
       "analysis_sources": [
@@ -580,7 +447,7 @@
     {
       "id": "court:2025-1162:울산광역시북구연암동4021성원아파트2동3층310호",
       "tracking_key": "court:2025-1162:울산광역시북구연암동4021성원아파트2동3층310호",
-      "source_origin": "official_detail",
+      "source_origin": "official_court",
       "source_type": "court",
       "auction_kind": "법원경매",
       "case_no": "2025-1162",
@@ -592,7 +459,7 @@
       "address": "울산광역시 북구 연암동 402-1 성원아파트 2동 3층310호",
       "bid_date": "2026-08-20",
       "next_bid_date": "2026-08-20",
-      "last_bid_date": "2026-07-16",
+      "last_bid_date": "",
       "status": "입찰 예정",
       "status_raw": "유찰 2회 후 다음 매각",
       "auction_round": 3,
@@ -619,10 +486,10 @@
         "유찰 2회"
       ],
       "school_access": "미확인 — 현장·지도 확인 필요",
-      "rights_note": "공식 사건 상세·매각물건명세서·현황조사서·등기사항증명서를 확인하세요. 공식 상세 비고: 매수인에게 대항할 수 있는 을구 순위 12번 임차권등기 있음(2024. 2. 20. 등기, 임대차보증금 130,000,000원, 전입일 2022. 2. 3., 확정일자 2021. 12. 28.). 배당에서 보증금이 전액 변제되지 아니하면 잔액을 매수인이 인수함.",
+      "rights_note": "공식 사건 상세·매각물건명세서·현황조사서·등기사항증명서를 확인하세요.",
       "area_note": "법원 공식목록 건물면적 기준 — 전용면적·공급면적은 원문에서 최종 확인",
-      "source_name": "대한민국 법원경매정보 공식 상세조회",
-      "source_kind": "공식 사건 상세 응답",
+      "source_name": "대한민국 법원경매정보 공식 검색목록",
+      "source_kind": "공식 검색 응답",
       "source_url": "https://www.courtauction.go.kr/",
       "official_url": "https://www.courtauction.go.kr/",
       "court_docid": "B0004112025013000116211",
@@ -630,60 +497,30 @@
       "court_object_seq": "1",
       "auction_history": [
         {
-          "bid_date": "2026-06-11",
-          "status": "매각기일 경과",
-          "minimum_price": 136000000,
-          "minimum_ratio": 100,
-          "auction_round": 1
-        },
-        {
-          "bid_date": "2026-07-16",
-          "status": "매각기일 경과",
-          "minimum_price": 95200000,
-          "minimum_ratio": 70,
-          "auction_round": 1
-        },
-        {
           "bid_date": "2026-08-20",
           "status": "입찰 예정",
           "minimum_price": 66640000,
           "minimum_ratio": 49,
-          "auction_round": 1
-        },
-        {
-          "bid_date": "2026-08-27",
-          "status": "입찰 예정",
-          "minimum_price": null,
-          "minimum_ratio": null,
-          "auction_round": 2
+          "auction_round": 3
         }
       ],
-      "case_type": "부동산강제경매",
-      "claim_amount": 143163835,
-      "case_received_date": "2025-05-22",
-      "case_command_date": "2025-06-04",
-      "rights_reference": "2023.10.23. 가압류",
-      "special_notes": "매수인에게 대항할 수 있는 을구 순위 12번 임차권등기 있음(2024. 2. 20. 등기, 임대차보증금 130,000,000원, 전입일 2022. 2. 3., 확정일자 2021. 12. 28.). 배당에서 보증금이 전액 변제되지 아니하면 잔액을 매수인이 인수함.",
-      "official_detail_url": "https://www.courtauction.go.kr/pgj/pgj15B/selectAuctnCsSrchRslt.on",
+      "case_type": "",
+      "claim_amount": null,
+      "case_received_date": "",
+      "case_command_date": "",
+      "rights_reference": "",
+      "special_notes": "",
       "map_query": "울산광역시 북구 연암동 402-1 성원아파트 2동 3층310호",
       "map_url": "https://map.naver.com/p/search/%EC%9A%B8%EC%82%B0%EA%B4%91%EC%97%AD%EC%8B%9C%20%EB%B6%81%EA%B5%AC%20%EC%97%B0%EC%95%94%EB%8F%99%20402-1%20%EC%84%B1%EC%9B%90%EC%95%84%ED%8C%8C%ED%8A%B8%202%EB%8F%99%203%EC%B8%B5310%ED%98%B8",
-      "tenant_evidence": [
-        "임대차",
-        "임차권등기",
-        "보증금",
-        "확정일자"
-      ],
-      "tenant_status": "임차권 관련 문구 있음",
-      "tenant_note": "임차인 존재·보증금 인수 여부가 확정된다는 뜻은 아니며, 공식 서류 대조가 필요합니다.",
+      "tenant_evidence": [],
+      "tenant_status": "공개자료에서 임차인 정보 미확인",
+      "tenant_note": "임차인이 없다는 뜻이 아닙니다. 매각물건명세서·현황조사서에서 반드시 확인하세요.",
       "occupancy_status": "실제 점유·공실 여부 확인 필요",
       "risk_flags": [
-        "유찰·재매각 이력",
-        "임차권·보증금 문구",
-        "권리 관련 문구"
+        "유찰·재매각 이력"
       ],
       "risk_level": "주의 필요",
       "beginner_warnings": [
-        "임차권 관련 문구가 있습니다. 보증금 인수 여부·전입일·확정일자·배당요구 여부를 확인하기 전에는 입찰하지 마세요.",
         "임차인 없음으로 단정하지 말고, 매각물건명세서·현황조사서에서 임차인·보증금·전입일·확정일자·배당요구를 확인하세요.",
         "낙찰가 외에 취득세·법무사비·명도비·수리비·체납관리비 등 추가 비용을 예산에 넣으세요.",
         "등기사항증명서에서 말소기준권리와 매각으로 소멸하지 않을 수 있는 권리를 확인하세요.",
@@ -724,70 +561,19 @@
         "source_note": "시세는 자동 확정하지 않으며, 국토교통부·KB·현장 매물 자료를 대조해야 합니다."
       },
       "rights_analysis": {
-        "timeline": [
-          {
-            "date": "2021-12-28",
-            "date_display": "2021.12.28",
-            "label": "임차권등기",
-            "source": "공식 상세 비고 / 공개목록·권리 메모",
-            "evidence": "세 비고: 매수인에게 대항할 수 있는 을구 순위 12번 임차권등기 있음(2024. 2. 20. 등기, 임대차보증금 130,000,000원, 전입일 2022. 2. 3., 확정일자 2021. 12. 28.). 배당에서 보증금이 전액 변제되지 아니하면 잔액을 매수인이 인수함.",
-            "is_reference_candidate": false,
-            "status": "순위 확인 필요"
-          },
-          {
-            "date": "2022-02-03",
-            "date_display": "2022.02.03",
-            "label": "임차권등기",
-            "source": "공식 상세 비고 / 공개목록·권리 메모",
-            "evidence": "사항증명서를 확인하세요. 공식 상세 비고: 매수인에게 대항할 수 있는 을구 순위 12번 임차권등기 있음(2024. 2. 20. 등기, 임대차보증금 130,000,000원, 전입일 2022. 2. 3., 확정일자 2021. 12. 28.). 배당에서 보증금이 전액 변제되지 아니하면 잔액을 매수인이 인수함.",
-            "is_reference_candidate": false,
-            "status": "순위 확인 필요"
-          },
-          {
-            "date": "2023-10-23",
-            "date_display": "2023.10.23",
-            "label": "가압류",
-            "source": "공식 권리 참고문구",
-            "evidence": "2023.10.23. 가압류",
-            "is_reference_candidate": false,
-            "status": "순위 확인 필요"
-          },
-          {
-            "date": "2024-02-20",
-            "date_display": "2024.02.20",
-            "label": "임차권등기",
-            "source": "공식 상세 비고 / 공개목록·권리 메모",
-            "evidence": "공식 사건 상세·매각물건명세서·현황조사서·등기사항증명서를 확인하세요. 공식 상세 비고: 매수인에게 대항할 수 있는 을구 순위 12번 임차권등기 있음(2024. 2. 20. 등기, 임대차보증금 130,000,000원, 전입일 2022. 2. 3., 확정일자 2021. 12. 28.). 배당에서 보증금이 전액 변제되지 아니하면 잔액을 매수인이 인수함",
-            "is_reference_candidate": false,
-            "status": "순위 확인 필요"
-          }
-        ],
+        "timeline": [],
         "special_rights": [],
         "reference_candidate_date": "",
-        "summary": "등기 관련 날짜는 일부 확인되지만 말소기준권리 후보를 특정할 수 없습니다.",
+        "summary": "등기 날짜 자료 없음 — 등기사항증명서 확인 필요",
         "acquisition_summary": "현재 수집 문구만으로 낙찰자 인수권리를 확정할 수 없음 — 최신 서류 확인 필요",
         "source_note": "권리 순위·소멸은 자동 확정하지 않습니다. 최신 등기사항증명서와 매각물건명세서를 대조하세요."
       },
       "tenant_analysis": {
         "structured_data_available": false,
         "records": [],
-        "status": "구조화된 임차인 정보 없음 — 관련 문구만 확인",
-        "evidence_terms": [
-          "임대차",
-          "임차권등기",
-          "보증금",
-          "확정일자"
-        ],
-        "evidence": [
-          {
-            "source": "공식 상세 비고",
-            "text": "매수인에게 대항할 수 있는 을구 순위 12번 임차권등기 있음(2024. 2. 20. 등기, 임대차보증금 130,000,000원, 전입일 2022. 2. 3., 확정일자 2021. 12. 28.). 배당에서 보증금이 전액 변제되지 아니하면 잔액을 매수인이 인수함."
-          },
-          {
-            "source": "권리·임차인 메모",
-            "text": "공식 사건 상세·매각물건명세서·현황조사서·등기사항증명서를 확인하세요. 공식 상세 비고: 매수인에게 대항할 수 있는 을구 순위 12번 임차권등기 있음(2024. 2. 20. 등기, 임대차보증금 130,000,000원, 전입일 2022. 2. 3., 확정일자 2021. 12. 28.). 배당에서 보증금이 전액 변제되지 아니하면 잔액을 매수인이 인수함."
-          }
-        ],
+        "status": "공개자료에서 임차인별 정보 미확인",
+        "evidence_terms": [],
+        "evidence": [],
         "move_in_date": null,
         "fixed_date": null,
         "occupancy": "확인 필요",
@@ -796,7 +582,7 @@
         "distribution_requested": null,
         "distribution_date": null,
         "priority_assessment": "선순위·후순위 산정 불가 — 전입일·말소기준권리·점유 자료 필요",
-        "opposability_assessment": "대항력 가능성 — 점유·전입·확정일자·배당요구 확인 필요",
+        "opposability_assessment": "확인 필요 — 공개자료에서 전입·점유·확정일자 미확인",
         "expected_distribution": null,
         "estimated_unpaid_deposit": null,
         "estimated_takeover_amount": null,
@@ -805,8 +591,8 @@
       },
       "occupancy_analysis": {
         "type": "점유자 불명",
-        "difficulty": "높음",
-        "reason": "임차권 관련 문구는 있으나 실제 점유 여부가 확인되지 않았습니다.",
+        "difficulty": "확인 필요",
+        "reason": "소유자·임차인·공실을 특정할 공개문구가 없습니다.",
         "source_note": "현황조사서·현장·관리사무소 확인 필요"
       },
       "management_analysis": {
@@ -818,13 +604,12 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "초보자 주의",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
-        "임차권·대항력 관련 문구가 있어 보증금 인수 가능성을 확인해야 합니다.",
-        "임차권 관련 문구는 있으나 전입일·확정일자·배당요구 자료가 구조화되어 있지 않습니다.",
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
         "KB 시세·실거래가·호가 자료가 없어 보수적 시세를 계산할 수 없습니다.",
+        "등기 날짜 자료가 없어 권리 순위 판단은 등기사항증명서 확인이 필요합니다.",
         "유찰·재매각 이력이 있어 이번 회차 조건을 다시 확인해야 합니다."
       ],
       "analysis_sources": [
@@ -836,7 +621,7 @@
     {
       "id": "court:2025-11767:울산광역시남구야음동8681한라107동3층306호",
       "tracking_key": "court:2025-11767:울산광역시남구야음동8681한라107동3층306호",
-      "source_origin": "official_detail",
+      "source_origin": "official_court",
       "source_type": "court",
       "auction_kind": "법원경매",
       "case_no": "2025-11767",
@@ -848,7 +633,7 @@
       "address": "울산광역시 남구 야음동 868-1 한라 107동 3층306호",
       "bid_date": "2026-08-20",
       "next_bid_date": "2026-08-20",
-      "last_bid_date": "2026-07-16",
+      "last_bid_date": "",
       "status": "입찰 예정",
       "status_raw": "유찰 2회 후 다음 매각",
       "auction_round": 3,
@@ -877,8 +662,8 @@
       "school_access": "미확인 — 현장·지도 확인 필요",
       "rights_note": "공식 사건 상세·매각물건명세서·현황조사서·등기사항증명서를 확인하세요.",
       "area_note": "법원 공식목록 건물면적 기준 — 전용면적·공급면적은 원문에서 최종 확인",
-      "source_name": "대한민국 법원경매정보 공식 상세조회",
-      "source_kind": "공식 사건 상세 응답",
+      "source_name": "대한민국 법원경매정보 공식 검색목록",
+      "source_kind": "공식 검색 응답",
       "source_url": "https://www.courtauction.go.kr/",
       "official_url": "https://www.courtauction.go.kr/",
       "court_docid": "B0004112025013001176711",
@@ -886,41 +671,19 @@
       "court_object_seq": "1",
       "auction_history": [
         {
-          "bid_date": "2026-06-11",
-          "status": "매각기일 경과",
-          "minimum_price": 120000000,
-          "minimum_ratio": 100,
-          "auction_round": 1
-        },
-        {
-          "bid_date": "2026-07-16",
-          "status": "매각기일 경과",
-          "minimum_price": 84000000,
-          "minimum_ratio": 70,
-          "auction_round": 1
-        },
-        {
           "bid_date": "2026-08-20",
           "status": "입찰 예정",
           "minimum_price": 58800000,
           "minimum_ratio": 49,
-          "auction_round": 1
-        },
-        {
-          "bid_date": "2026-08-27",
-          "status": "입찰 예정",
-          "minimum_price": null,
-          "minimum_ratio": null,
-          "auction_round": 2
+          "auction_round": 3
         }
       ],
-      "case_type": "부동산임의경매",
-      "claim_amount": 45770000,
-      "case_received_date": "2025-05-07",
-      "case_command_date": "2025-05-12",
-      "rights_reference": "2016.1.22. 근저당권",
+      "case_type": "",
+      "claim_amount": null,
+      "case_received_date": "",
+      "case_command_date": "",
+      "rights_reference": "",
       "special_notes": "",
-      "official_detail_url": "https://www.courtauction.go.kr/pgj/pgj15B/selectAuctnCsSrchRslt.on",
       "map_query": "울산광역시 남구 야음동 868-1 한라 107동 3층306호",
       "map_url": "https://map.naver.com/p/search/%EC%9A%B8%EC%82%B0%EA%B4%91%EC%97%AD%EC%8B%9C%20%EB%82%A8%EA%B5%AC%20%EC%95%BC%EC%9D%8C%EB%8F%99%20868-1%20%ED%95%9C%EB%9D%BC%20107%EB%8F%99%203%EC%B8%B5306%ED%98%B8",
       "tenant_evidence": [],
@@ -928,8 +691,7 @@
       "tenant_note": "임차인이 없다는 뜻이 아닙니다. 매각물건명세서·현황조사서에서 반드시 확인하세요.",
       "occupancy_status": "실제 점유·공실 여부 확인 필요",
       "risk_flags": [
-        "유찰·재매각 이력",
-        "권리 관련 문구"
+        "유찰·재매각 이력"
       ],
       "risk_level": "주의 필요",
       "beginner_warnings": [
@@ -973,20 +735,10 @@
         "source_note": "시세는 자동 확정하지 않으며, 국토교통부·KB·현장 매물 자료를 대조해야 합니다."
       },
       "rights_analysis": {
-        "timeline": [
-          {
-            "date": "2016-01-22",
-            "date_display": "2016.01.22",
-            "label": "근저당권",
-            "source": "공식 권리 참고문구",
-            "evidence": "2016.1.22. 근저당권",
-            "is_reference_candidate": true,
-            "status": "말소기준권리 후보 — 공식 참고문구 기준"
-          }
-        ],
+        "timeline": [],
         "special_rights": [],
-        "reference_candidate_date": "2016-01-22",
-        "summary": "말소기준권리 후보 2016.01.22 — 등기사항증명서로 최종 확인 필요",
+        "reference_candidate_date": "",
+        "summary": "등기 날짜 자료 없음 — 등기사항증명서 확인 필요",
         "acquisition_summary": "현재 수집 문구만으로 낙찰자 인수권리를 확정할 수 없음 — 최신 서류 확인 필요",
         "source_note": "권리 순위·소멸은 자동 확정하지 않습니다. 최신 등기사항증명서와 매각물건명세서를 대조하세요."
       },
@@ -1009,7 +761,7 @@
         "estimated_unpaid_deposit": null,
         "estimated_takeover_amount": null,
         "takeover_assessment": "산정 불가 — 임차보증금·배당요구·권리순위 원문 확인 필요",
-        "reference_right_date": "2016-01-22"
+        "reference_right_date": null
       },
       "occupancy_analysis": {
         "type": "점유자 불명",
@@ -1031,6 +783,7 @@
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
         "KB 시세·실거래가·호가 자료가 없어 보수적 시세를 계산할 수 없습니다.",
+        "등기 날짜 자료가 없어 권리 순위 판단은 등기사항증명서 확인이 필요합니다.",
         "유찰·재매각 이력이 있어 이번 회차 조건을 다시 확인해야 합니다."
       ],
       "analysis_sources": [
@@ -1210,7 +963,7 @@
     {
       "id": "court:2025-12099:울산광역시남구신정동132350수아지오시티4층405호",
       "tracking_key": "court:2025-12099:울산광역시남구신정동132350수아지오시티4층405호",
-      "source_origin": "official_detail",
+      "source_origin": "official_court",
       "source_type": "court",
       "auction_kind": "법원경매",
       "case_no": "2025-12099",
@@ -1222,7 +975,7 @@
       "address": "울산광역시 남구 신정동 1323-50 수아지오시티 4층405호",
       "bid_date": "2026-08-20",
       "next_bid_date": "2026-08-20",
-      "last_bid_date": "2026-07-16",
+      "last_bid_date": "",
       "status": "입찰 예정",
       "status_raw": "유찰 1회 후 다음 매각",
       "auction_round": 2,
@@ -1251,8 +1004,8 @@
       "school_access": "미확인 — 현장·지도 확인 필요",
       "rights_note": "공식 사건 상세·매각물건명세서·현황조사서·등기사항증명서를 확인하세요.",
       "area_note": "법원 공식목록 건물면적 기준 — 전용면적·공급면적은 원문에서 최종 확인",
-      "source_name": "대한민국 법원경매정보 공식 상세조회",
-      "source_kind": "공식 사건 상세 응답",
+      "source_name": "대한민국 법원경매정보 공식 검색목록",
+      "source_kind": "공식 검색 응답",
       "source_url": "https://www.courtauction.go.kr/",
       "official_url": "https://www.courtauction.go.kr/",
       "court_docid": "B0004112025013001209911",
@@ -1260,50 +1013,30 @@
       "court_object_seq": "1",
       "auction_history": [
         {
-          "bid_date": "2026-07-16",
-          "status": "매각기일 경과",
-          "minimum_price": 150000000,
-          "minimum_ratio": 100,
-          "auction_round": 1
-        },
-        {
           "bid_date": "2026-08-20",
           "status": "입찰 예정",
           "minimum_price": 105000000,
           "minimum_ratio": 70,
-          "auction_round": 1
-        },
-        {
-          "bid_date": "2026-08-27",
-          "status": "입찰 예정",
-          "minimum_price": null,
-          "minimum_ratio": null,
           "auction_round": 2
         }
       ],
-      "case_type": "부동산임의경매",
-      "claim_amount": 139000000,
-      "case_received_date": "2025-07-07",
-      "case_command_date": "2025-07-11",
-      "rights_reference": "2023.7.4. 전세권",
+      "case_type": "",
+      "claim_amount": null,
+      "case_received_date": "",
+      "case_command_date": "",
+      "rights_reference": "",
       "special_notes": "",
-      "official_detail_url": "https://www.courtauction.go.kr/pgj/pgj15B/selectAuctnCsSrchRslt.on",
       "map_query": "울산광역시 남구 신정동 1323-50 수아지오시티 4층405호",
       "map_url": "https://map.naver.com/p/search/%EC%9A%B8%EC%82%B0%EA%B4%91%EC%97%AD%EC%8B%9C%20%EB%82%A8%EA%B5%AC%20%EC%8B%A0%EC%A0%95%EB%8F%99%201323-50%20%EC%88%98%EC%95%84%EC%A7%80%EC%98%A4%EC%8B%9C%ED%8B%B0%204%EC%B8%B5405%ED%98%B8",
-      "tenant_evidence": [
-        "전세권"
-      ],
-      "tenant_status": "임차권 관련 문구 있음",
-      "tenant_note": "임차인 존재·보증금 인수 여부가 확정된다는 뜻은 아니며, 공식 서류 대조가 필요합니다.",
+      "tenant_evidence": [],
+      "tenant_status": "공개자료에서 임차인 정보 미확인",
+      "tenant_note": "임차인이 없다는 뜻이 아닙니다. 매각물건명세서·현황조사서에서 반드시 확인하세요.",
       "occupancy_status": "실제 점유·공실 여부 확인 필요",
       "risk_flags": [
-        "유찰·재매각 이력",
-        "임차권·보증금 문구",
-        "특수권리 문구 — 순위·소멸 확인 필요"
+        "유찰·재매각 이력"
       ],
       "risk_level": "주의 필요",
       "beginner_warnings": [
-        "임차권 관련 문구가 있습니다. 보증금 인수 여부·전입일·확정일자·배당요구 여부를 확인하기 전에는 입찰하지 마세요.",
         "임차인 없음으로 단정하지 말고, 매각물건명세서·현황조사서에서 임차인·보증금·전입일·확정일자·배당요구를 확인하세요.",
         "낙찰가 외에 취득세·법무사비·명도비·수리비·체납관리비 등 추가 비용을 예산에 넣으세요.",
         "등기사항증명서에서 말소기준권리와 매각으로 소멸하지 않을 수 있는 권리를 확인하세요.",
@@ -1344,43 +1077,19 @@
         "source_note": "시세는 자동 확정하지 않으며, 국토교통부·KB·현장 매물 자료를 대조해야 합니다."
       },
       "rights_analysis": {
-        "timeline": [
-          {
-            "date": "2023-07-04",
-            "date_display": "2023.07.04",
-            "label": "전세권",
-            "source": "공식 권리 참고문구",
-            "evidence": "2023.7.4. 전세권",
-            "is_reference_candidate": true,
-            "status": "말소기준권리 후보 — 공식 참고문구 기준"
-          }
-        ],
-        "special_rights": [
-          {
-            "label": "전세권",
-            "status": "전세권 문구 — 순위·소멸 여부 확인 필요",
-            "source": "공식 권리 참고문구",
-            "evidence": "2023.7.4. 전세권"
-          }
-        ],
-        "reference_candidate_date": "2023-07-04",
-        "summary": "말소기준권리 후보 2023.07.04 — 등기사항증명서로 최종 확인 필요",
-        "acquisition_summary": "선순위 권리 존재 가능성 — 낙찰자 인수 여부 확인 필요",
+        "timeline": [],
+        "special_rights": [],
+        "reference_candidate_date": "",
+        "summary": "등기 날짜 자료 없음 — 등기사항증명서 확인 필요",
+        "acquisition_summary": "현재 수집 문구만으로 낙찰자 인수권리를 확정할 수 없음 — 최신 서류 확인 필요",
         "source_note": "권리 순위·소멸은 자동 확정하지 않습니다. 최신 등기사항증명서와 매각물건명세서를 대조하세요."
       },
       "tenant_analysis": {
         "structured_data_available": false,
         "records": [],
-        "status": "구조화된 임차인 정보 없음 — 관련 문구만 확인",
-        "evidence_terms": [
-          "전세권"
-        ],
-        "evidence": [
-          {
-            "source": "공식 권리 참고문구",
-            "text": "2023.7.4. 전세권"
-          }
-        ],
+        "status": "공개자료에서 임차인별 정보 미확인",
+        "evidence_terms": [],
+        "evidence": [],
         "move_in_date": null,
         "fixed_date": null,
         "occupancy": "확인 필요",
@@ -1389,17 +1098,17 @@
         "distribution_requested": null,
         "distribution_date": null,
         "priority_assessment": "선순위·후순위 산정 불가 — 전입일·말소기준권리·점유 자료 필요",
-        "opposability_assessment": "대항력 가능성 — 점유·전입·확정일자·배당요구 확인 필요",
+        "opposability_assessment": "확인 필요 — 공개자료에서 전입·점유·확정일자 미확인",
         "expected_distribution": null,
         "estimated_unpaid_deposit": null,
         "estimated_takeover_amount": null,
         "takeover_assessment": "산정 불가 — 임차보증금·배당요구·권리순위 원문 확인 필요",
-        "reference_right_date": "2023-07-04"
+        "reference_right_date": null
       },
       "occupancy_analysis": {
         "type": "점유자 불명",
-        "difficulty": "높음",
-        "reason": "임차권 관련 문구는 있으나 실제 점유 여부가 확인되지 않았습니다.",
+        "difficulty": "확인 필요",
+        "reason": "소유자·임차인·공실을 특정할 공개문구가 없습니다.",
         "source_note": "현황조사서·현장·관리사무소 확인 필요"
       },
       "management_analysis": {
@@ -1411,14 +1120,12 @@
         "source_note": "관리비 체납은 공용·전용 부분과 승계 여부를 관리사무소에서 확인하세요."
       },
       "estimated_takeover_amount": null,
-      "beginner_risk_level": "초보자 주의",
+      "beginner_risk_level": "추가 확인 필요",
       "beginner_risk_reasons": [
-        "특수권리 문구가 있어 선순위·소멸 여부 확인이 필요합니다.",
-        "임차권·대항력 관련 문구가 있어 보증금 인수 가능성을 확인해야 합니다.",
-        "임차권 관련 문구는 있으나 전입일·확정일자·배당요구 자료가 구조화되어 있지 않습니다.",
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
         "KB 시세·실거래가·호가 자료가 없어 보수적 시세를 계산할 수 없습니다.",
+        "등기 날짜 자료가 없어 권리 순위 판단은 등기사항증명서 확인이 필요합니다.",
         "유찰·재매각 이력이 있어 이번 회차 조건을 다시 확인해야 합니다."
       ],
       "analysis_sources": [
@@ -1936,7 +1643,7 @@
     {
       "id": "court:2025-880:울산광역시북구신천동799신천효성해링턴플레이스아파트104동2층201호",
       "tracking_key": "court:2025-880:울산광역시북구신천동799신천효성해링턴플레이스아파트104동2층201호",
-      "source_origin": "official_detail",
+      "source_origin": "official_court",
       "source_type": "court",
       "auction_kind": "법원경매",
       "case_no": "2025-880",
@@ -1948,7 +1655,7 @@
       "address": "울산광역시 북구 신천동 799 신천효성해링턴플레이스아파트 104동 2층201호",
       "bid_date": "2026-08-20",
       "next_bid_date": "2026-08-20",
-      "last_bid_date": "2026-07-20",
+      "last_bid_date": "",
       "status": "입찰 예정",
       "status_raw": "유찰 1회 후 다음 매각",
       "auction_round": 2,
@@ -1977,10 +1684,10 @@
         "1.재매각임. 매수신청보증금 30%."
       ],
       "school_access": "미확인 — 현장·지도 확인 필요",
-      "rights_note": "법원 공식목록 비고: 1.재매각임. 매수신청보증금 30%.. 공식 사건 상세·매각물건명세서·현황조사서·등기사항증명서를 확인하세요. 공식 상세 비고: 1.재매각임. 매수신청보증금 30%.",
+      "rights_note": "법원 공식목록 비고: 1.재매각임. 매수신청보증금 30%.. 공식 사건 상세·매각물건명세서·현황조사서·등기사항증명서를 확인하세요.",
       "area_note": "법원 공식목록 건물면적 기준 — 전용면적·공급면적은 원문에서 최종 확인",
-      "source_name": "대한민국 법원경매정보 공식 상세조회",
-      "source_kind": "공식 사건 상세 응답",
+      "source_name": "대한민국 법원경매정보 공식 검색목록",
+      "source_kind": "공식 검색 응답",
       "source_url": "https://www.courtauction.go.kr/",
       "official_url": "https://www.courtauction.go.kr/",
       "court_docid": "B0004112025013000088011",
@@ -1988,62 +1695,19 @@
       "court_object_seq": "1",
       "auction_history": [
         {
-          "bid_date": "2026-05-07",
-          "status": "매각기일 경과",
-          "minimum_price": 373000000,
-          "minimum_ratio": 100,
-          "auction_round": 1
-        },
-        {
-          "bid_date": "2026-06-11",
-          "status": "매각기일 경과",
-          "minimum_price": 261100000,
-          "minimum_ratio": 70,
-          "auction_round": 1
-        },
-        {
-          "bid_date": "2026-06-18",
-          "status": "유찰",
-          "minimum_price": null,
-          "minimum_ratio": null,
-          "auction_round": 2
-        },
-        {
-          "bid_date": "2026-07-17",
-          "status": "매각기일 경과",
-          "minimum_price": null,
-          "minimum_ratio": null,
-          "auction_round": 3
-        },
-        {
-          "bid_date": "2026-07-20",
-          "status": "매각기일 경과",
-          "minimum_price": null,
-          "minimum_ratio": null,
-          "auction_round": 3
-        },
-        {
           "bid_date": "2026-08-20",
           "status": "입찰 예정",
           "minimum_price": 261100000,
           "minimum_ratio": 70,
-          "auction_round": 1
-        },
-        {
-          "bid_date": "2026-08-27",
-          "status": "입찰 예정",
-          "minimum_price": null,
-          "minimum_ratio": null,
           "auction_round": 2
         }
       ],
-      "case_type": "부동산임의경매",
-      "claim_amount": 416011781,
-      "case_received_date": "2025-02-07",
-      "case_command_date": "2025-02-10",
-      "rights_reference": "2022.8.19. 근저당권",
-      "special_notes": "1.재매각임. 매수신청보증금 30%.",
-      "official_detail_url": "https://www.courtauction.go.kr/pgj/pgj15B/selectAuctnCsSrchRslt.on",
+      "case_type": "",
+      "claim_amount": null,
+      "case_received_date": "",
+      "case_command_date": "",
+      "rights_reference": "",
+      "special_notes": "",
       "map_query": "울산광역시 북구 신천동 799 신천효성해링턴플레이스아파트 104동 2층201호",
       "map_url": "https://map.naver.com/p/search/%EC%9A%B8%EC%82%B0%EA%B4%91%EC%97%AD%EC%8B%9C%20%EB%B6%81%EA%B5%AC%20%EC%8B%A0%EC%B2%9C%EB%8F%99%20799%20%EC%8B%A0%EC%B2%9C%ED%9A%A8%EC%84%B1%ED%95%B4%EB%A7%81%ED%84%B4%ED%94%8C%EB%A0%88%EC%9D%B4%EC%8A%A4%EC%95%84%ED%8C%8C%ED%8A%B8%20104%EB%8F%99%202%EC%B8%B5201%ED%98%B8",
       "tenant_evidence": [],
@@ -2051,8 +1715,7 @@
       "tenant_note": "임차인이 없다는 뜻이 아닙니다. 매각물건명세서·현황조사서에서 반드시 확인하세요.",
       "occupancy_status": "실제 점유·공실 여부 확인 필요",
       "risk_flags": [
-        "유찰·재매각 이력",
-        "권리 관련 문구"
+        "유찰·재매각 이력"
       ],
       "risk_level": "주의 필요",
       "beginner_warnings": [
@@ -2096,20 +1759,10 @@
         "source_note": "시세는 자동 확정하지 않으며, 국토교통부·KB·현장 매물 자료를 대조해야 합니다."
       },
       "rights_analysis": {
-        "timeline": [
-          {
-            "date": "2022-08-19",
-            "date_display": "2022.08.19",
-            "label": "근저당권",
-            "source": "공식 권리 참고문구",
-            "evidence": "2022.8.19. 근저당권",
-            "is_reference_candidate": true,
-            "status": "말소기준권리 후보 — 공식 참고문구 기준"
-          }
-        ],
+        "timeline": [],
         "special_rights": [],
-        "reference_candidate_date": "2022-08-19",
-        "summary": "말소기준권리 후보 2022.08.19 — 등기사항증명서로 최종 확인 필요",
+        "reference_candidate_date": "",
+        "summary": "등기 날짜 자료 없음 — 등기사항증명서 확인 필요",
         "acquisition_summary": "현재 수집 문구만으로 낙찰자 인수권리를 확정할 수 없음 — 최신 서류 확인 필요",
         "source_note": "권리 순위·소멸은 자동 확정하지 않습니다. 최신 등기사항증명서와 매각물건명세서를 대조하세요."
       },
@@ -2132,7 +1785,7 @@
         "estimated_unpaid_deposit": null,
         "estimated_takeover_amount": null,
         "takeover_assessment": "산정 불가 — 임차보증금·배당요구·권리순위 원문 확인 필요",
-        "reference_right_date": "2022-08-19"
+        "reference_right_date": null
       },
       "occupancy_analysis": {
         "type": "점유자 불명",
@@ -2154,6 +1807,7 @@
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
         "KB 시세·실거래가·호가 자료가 없어 보수적 시세를 계산할 수 없습니다.",
+        "등기 날짜 자료가 없어 권리 순위 판단은 등기사항증명서 확인이 필요합니다.",
         "유찰·재매각 이력이 있어 이번 회차 조건을 다시 확인해야 합니다."
       ],
       "analysis_sources": [
