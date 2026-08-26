@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-08-25 21:17",
-  "as_of": "2026-08-25",
+  "generated_at": "2026-08-26 03:44",
+  "as_of": "2026-08-26",
   "history_days": 90,
   "count": 19,
   "filters": {
@@ -62,6 +62,7 @@
     "https://www.winnerauction.co.kr/search/search_list.php?acourt=411&acharge=10&usage_codes=101&rows=20",
     "https://www.onbid.co.kr/op/cltrpbancinf/cltr/cltrcdtnsrch/CltrCdtnSrchController/mvmnCltrCdtnSrchClg.do",
     "https://www.onbid.co.kr/op/cltrpbancinf/clbtcltrclg/cltrclbtcltrclg/CltrClbtCltrClgController/inqCltrClbtRlstClg.do",
+    "https://www.winnerauction.co.kr/search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-26",
     "https://www.winnerauction.co.kr/search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-25",
     "https://www.winnerauction.co.kr/search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-24",
     "https://www.winnerauction.co.kr/search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-08-23",
@@ -151,11 +152,10 @@
     "https://www.winnerauction.co.kr/search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-05-31",
     "https://www.winnerauction.co.kr/search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-05-30",
     "https://www.winnerauction.co.kr/search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-05-29",
-    "https://www.winnerauction.co.kr/search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-05-28",
-    "https://www.winnerauction.co.kr/search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-05-27"
+    "https://www.winnerauction.co.kr/search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-05-28"
   ],
   "errors": [
-    "법원 공식목록: HTTPSConnectionPool(host='www.courtauction.go.kr', port=443): Max retries exceeded with url: / (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.courtauction.go.kr', port=443) at 0x7f98d9eda3f0>, 'Connection to www.courtauction.go.kr timed out. (connect timeout=30)'))"
+    "법원 공식목록: HTTPSConnectionPool(host='www.courtauction.go.kr', port=443): Max retries exceeded with url: / (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.courtauction.go.kr', port=443) at 0x7fecff713e30>, 'Connection to www.courtauction.go.kr timed out. (connect timeout=30)'))"
   ],
   "auctions": [
     {
