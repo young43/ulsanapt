@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-09 13:14",
+  "generated_at": "2026-09-09 18:07",
   "as_of": "2026-09-09",
   "history_days": 90,
   "count": 50,
@@ -155,7 +155,9 @@
     "https://www.winnerauction.co.kr/search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-06-12",
     "https://www.winnerauction.co.kr/search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-06-11"
   ],
-  "errors": [],
+  "errors": [
+    "2025타경1401: 상세조회 결과에 매각기일 이력이 없습니다."
+  ],
   "auctions": [
     {
       "id": "court:2025-12596:울산광역시북구효문동1039효문코오롱하늘채아파트101동15층1501호",
@@ -832,7 +834,7 @@
     {
       "id": "court:2025-1401:울산광역시북구염포동3043층309호",
       "tracking_key": "court:2025-1401:울산광역시북구염포동3043층309호",
-      "source_origin": "official_detail",
+      "source_origin": "official_court",
       "source_type": "court",
       "auction_kind": "법원경매",
       "case_no": "2025-1401",
@@ -844,7 +846,7 @@
       "address": "울산광역시 북구 염포동 304 3층309호",
       "bid_date": "2026-09-09",
       "next_bid_date": "2026-09-09",
-      "last_bid_date": "2026-08-05",
+      "last_bid_date": "",
       "status": "입찰 예정",
       "status_raw": "유찰 1회 후 다음 매각",
       "auction_round": 2,
@@ -872,10 +874,10 @@
         "1. 대상 물건 토지는 공부상 지목이 '전'으로 등재되어 있으나, 현황은 '대'임 2. 대상물건 집합건축물대장(전유부, 갑)상 용도가 '연립주택"
       ],
       "school_access": "미확인 — 현장·지도 확인 필요",
-      "rights_note": "법원 공식목록 비고: 1. 대상 물건 토지는 공부상 지목이 '전'으로 등재되어 있으나, 현황은 '대'임 2. 대상물건 집합건축물대장(전유부, 갑)상 용도가 '연립주택'으로 등재되어 있으나, 등기사항전부증명서상 '아파트'임. 공식 사건 상세·매각물건명세서·현황조사서·등기사항증명서를 확인하세요. 공식 상세 비고: 1. 대상 물건 토지는 공부상 지목이 '전'으로 등재되어 있으나, 현황은 '대'임 2. 대상물건 집합건축물대장(전유부, 갑)상 용도가 '연립주택'으로 등재되어 있으나, 등기사항전부증명서상 '아파트'임",
+      "rights_note": "법원 공식목록 비고: 1. 대상 물건 토지는 공부상 지목이 '전'으로 등재되어 있으나, 현황은 '대'임 2. 대상물건 집합건축물대장(전유부, 갑)상 용도가 '연립주택'으로 등재되어 있으나, 등기사항전부증명서상 '아파트'임. 공식 사건 상세·매각물건명세서·현황조사서·등기사항증명서를 확인하세요.",
       "area_note": "법원 공식목록 건물면적 기준 — 전용면적·공급면적은 원문에서 최종 확인",
-      "source_name": "대한민국 법원경매정보 공식 상세조회",
-      "source_kind": "공식 사건 상세 응답",
+      "source_name": "대한민국 법원경매정보 공식 검색목록",
+      "source_kind": "공식 검색 응답",
       "source_url": "https://www.courtauction.go.kr/",
       "official_url": "https://www.courtauction.go.kr/",
       "court_docid": "B0004112025013000140111",
@@ -883,34 +885,19 @@
       "court_object_seq": "1",
       "auction_history": [
         {
-          "bid_date": "2026-08-05",
-          "status": "매각기일 경과",
-          "minimum_price": 66000000,
-          "minimum_ratio": 100,
-          "auction_round": 1
-        },
-        {
           "bid_date": "2026-09-09",
           "status": "입찰 예정",
           "minimum_price": 46200000,
           "minimum_ratio": 70,
-          "auction_round": 1
-        },
-        {
-          "bid_date": "2026-09-16",
-          "status": "입찰 예정",
-          "minimum_price": null,
-          "minimum_ratio": null,
           "auction_round": 2
         }
       ],
-      "case_type": "부동산임의경매",
-      "claim_amount": 26152520,
-      "case_received_date": "2025-08-26",
-      "case_command_date": "2025-09-11",
-      "rights_reference": "2016. 07. 08. 근저당권",
-      "special_notes": "1. 대상 물건 토지는 공부상 지목이 '전'으로 등재되어 있으나, 현황은 '대'임 2. 대상물건 집합건축물대장(전유부, 갑)상 용도가 '연립주택'으로 등재되어 있으나, 등기사항전부증명서상 '아파트'임",
-      "official_detail_url": "https://www.courtauction.go.kr/pgj/pgj15B/selectAuctnCsSrchRslt.on",
+      "case_type": "",
+      "claim_amount": null,
+      "case_received_date": "",
+      "case_command_date": "",
+      "rights_reference": "",
+      "special_notes": "",
       "map_query": "울산광역시 북구 염포동 304 3층309호",
       "map_url": "https://map.naver.com/p/search/%EC%9A%B8%EC%82%B0%EA%B4%91%EC%97%AD%EC%8B%9C%20%EB%B6%81%EA%B5%AC%20%EC%97%BC%ED%8F%AC%EB%8F%99%20304%203%EC%B8%B5309%ED%98%B8",
       "tenant_evidence": [],
@@ -918,8 +905,7 @@
       "tenant_note": "임차인이 없다는 뜻이 아닙니다. 매각물건명세서·현황조사서에서 반드시 확인하세요.",
       "occupancy_status": "실제 점유·공실 여부 확인 필요",
       "risk_flags": [
-        "유찰·재매각 이력",
-        "권리 관련 문구"
+        "유찰·재매각 이력"
       ],
       "risk_level": "주의 필요",
       "beginner_warnings": [
@@ -963,20 +949,10 @@
         "source_note": "시세는 자동 확정하지 않으며, 국토교통부·KB·현장 매물 자료를 대조해야 합니다."
       },
       "rights_analysis": {
-        "timeline": [
-          {
-            "date": "2016-07-08",
-            "date_display": "2016.07.08",
-            "label": "근저당권",
-            "source": "공식 권리 참고문구",
-            "evidence": "2016. 07. 08. 근저당권",
-            "is_reference_candidate": true,
-            "status": "말소기준권리 후보 — 공식 참고문구 기준"
-          }
-        ],
+        "timeline": [],
         "special_rights": [],
-        "reference_candidate_date": "2016-07-08",
-        "summary": "말소기준권리 후보 2016.07.08 — 등기사항증명서로 최종 확인 필요",
+        "reference_candidate_date": "",
+        "summary": "등기 날짜 자료 없음 — 등기사항증명서 확인 필요",
         "acquisition_summary": "현재 수집 문구만으로 낙찰자 인수권리를 확정할 수 없음 — 최신 서류 확인 필요",
         "source_note": "권리 순위·소멸은 자동 확정하지 않습니다. 최신 등기사항증명서와 매각물건명세서를 대조하세요."
       },
@@ -999,7 +975,7 @@
         "estimated_unpaid_deposit": null,
         "estimated_takeover_amount": null,
         "takeover_assessment": "산정 불가 — 임차보증금·배당요구·권리순위 원문 확인 필요",
-        "reference_right_date": "2016-07-08"
+        "reference_right_date": null
       },
       "occupancy_analysis": {
         "type": "점유자 불명",
@@ -1021,6 +997,7 @@
         "임차인별 공개자료가 부족하여 대항력·배당·인수금액을 산정할 수 없습니다.",
         "현재 점유자와 명도 난이도를 공개자료만으로 확인할 수 없습니다.",
         "KB 시세·실거래가·호가 자료가 없어 보수적 시세를 계산할 수 없습니다.",
+        "등기 날짜 자료가 없어 권리 순위 판단은 등기사항증명서 확인이 필요합니다.",
         "유찰·재매각 이력이 있어 이번 회차 조건을 다시 확인해야 합니다."
       ],
       "analysis_sources": [
