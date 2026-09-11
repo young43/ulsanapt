@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-11 18:00",
+  "generated_at": "2026-09-11 22:53",
   "as_of": "2026-09-11",
   "history_days": 90,
   "count": 17,
@@ -156,9 +156,9 @@
     "https://www.winnerauction.co.kr/search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-06-13"
   ],
   "errors": [
-    "법원 공식목록: HTTPSConnectionPool(host='www.courtauction.go.kr', port=443): Max retries exceeded with url: / (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.courtauction.go.kr', port=443) at 0x7fb62e96a000>, 'Connection to www.courtauction.go.kr timed out. (connect timeout=30)'))",
-    "2025타경1496: HTTPSConnectionPool(host='www.courtauction.go.kr', port=443): Max retries exceeded with url: /pgj/pgj15B/selectAuctnCsSrchRslt.on (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.courtauction.go.kr', port=443) at 0x7fb62dbcca40>, 'Connection to www.courtauction.go.kr timed out. (connect timeout=30)'))",
-    "2025타경12858: HTTPSConnectionPool(host='www.courtauction.go.kr', port=443): Max retries exceeded with url: /pgj/pgj15B/selectAuctnCsSrchRslt.on (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.courtauction.go.kr', port=443) at 0x7fb62de66e70>, 'Connection to www.courtauction.go.kr timed out. (connect timeout=30)'))"
+    "법원 공식목록: HTTPSConnectionPool(host='www.courtauction.go.kr', port=443): Max retries exceeded with url: / (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.courtauction.go.kr', port=443) at 0x7f9b4893da90>, 'Connection to www.courtauction.go.kr timed out. (connect timeout=30)'))",
+    "2025타경1496: HTTPSConnectionPool(host='www.courtauction.go.kr', port=443): Max retries exceeded with url: /pgj/pgj15B/selectAuctnCsSrchRslt.on (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.courtauction.go.kr', port=443) at 0x7f9b48859130>, 'Connection to www.courtauction.go.kr timed out. (connect timeout=30)'))",
+    "2025타경12858: HTTPSConnectionPool(host='www.courtauction.go.kr', port=443): Max retries exceeded with url: /pgj/pgj15B/selectAuctnCsSrchRslt.on (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.courtauction.go.kr', port=443) at 0x7f9b4885b290>, 'Connection to www.courtauction.go.kr timed out. (connect timeout=30)'))"
   ],
   "auctions": [
     {
