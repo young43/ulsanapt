@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-12 12:30",
+  "generated_at": "2026-09-12 17:31",
   "as_of": "2026-09-12",
   "history_days": 90,
   "count": 17,
@@ -156,9 +156,9 @@
     "https://www.winnerauction.co.kr/search/calendar_list.php?acharge=10&acourt=411&aorder=b.event_year%2Cb.event_no%2Ca.no&ipdate1=2026-06-14"
   ],
   "errors": [
-    "법원 공식목록: HTTPSConnectionPool(host='www.courtauction.go.kr', port=443): Max retries exceeded with url: / (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.courtauction.go.kr', port=443) at 0x7fc691949610>, 'Connection to www.courtauction.go.kr timed out. (connect timeout=30)'))",
-    "2025타경1496: HTTPSConnectionPool(host='www.courtauction.go.kr', port=443): Max retries exceeded with url: /pgj/pgj15B/selectAuctnCsSrchRslt.on (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.courtauction.go.kr', port=443) at 0x7fc690d8f500>, 'Connection to www.courtauction.go.kr timed out. (connect timeout=30)'))",
-    "2025타경12858: HTTPSConnectionPool(host='www.courtauction.go.kr', port=443): Max retries exceeded with url: /pgj/pgj15B/selectAuctnCsSrchRslt.on (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.courtauction.go.kr', port=443) at 0x7fc690d8edb0>, 'Connection to www.courtauction.go.kr timed out. (connect timeout=30)'))"
+    "법원 공식목록: Expecting value: line 1 column 1 (char 0)",
+    "2025타경1496: Expecting value: line 1 column 1 (char 0)",
+    "2025타경12858: Expecting value: line 1 column 1 (char 0)"
   ],
   "auctions": [
     {
